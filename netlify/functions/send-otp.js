@@ -9,7 +9,8 @@ exports.handler = async function(event, context) {
   try {
     const { phone, otp } = JSON.parse(event.body);
     const API_KEY = process.env.FAST2SMS_API_KEY;
-    const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${API_KEY}&variables_values=${otp}&route=otp&numbers=${phone}`;
+    const message = `Your NEXUS OTP is: ${otp}. Valid for 10 minutes. Do not share with anyone.`;
+    const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${API_KEY}&message=${encodeURIComponent(message)}&route=q_transactional&numbers=${phone}`;
     const response = await fetch(url);
     const data = await response.json();
     if (data.return === true) {
