@@ -8,12 +8,35 @@ exports.handler = async function(event, context) {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   try {
     const { phone, otp } = JSON.parse(event.body);
-    const API_KEY = process.env.FAST2SMS_API_KEY;
-    const message = `Your NEXUS OTP is: ${otp}. Valid for 10 minutes. Do not share with anyone.`;
-    const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${API_KEY}&message=${encodeURIComponent(message)}&route=q_transactional&numbers=${phone}`;
-    const response = await fetch(url);
+
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken  = process.env.TWILIO_AUTH_TOKEN;
+    const fromPhone  = process.env.TWILIO_PHONE;
+
+    const body = `Your NEXUS OTP is: ${otp}. Valid for 10 minutes. Do not share.`;
+    const toPhone = `+91${phone}`;
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+    const params = new URLSearchParams();
+    params.append('To', toPhone);
+    params.append('From', fromPhone);
+    params.append('Body', body);
+
+    const credentials = Buffer.from(`${accountSid}:${authToken}`).toString('base64');
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${credentials}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
+    });
+
     const data = await response.json();
-    if (data.return === true) {
+
+    if (data.sid) {
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: JSON.stringify(data) }) };
