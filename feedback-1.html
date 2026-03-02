@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Lodge — Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#2563eb;--blue2:#1d4ed8;--blue3:#dbeafe;--blue4:#eff6ff;
+  --green:#16a34a;--green2:#dcfce7;
+  --gold:#f59e0b;--gold2:#fef3c7;
+  --pink:#ec4899;--purple:#8b5cf6;
+  --text:#1e293b;--muted:#64748b;--white:#fff;
+  --bg:linear-gradient(135deg,#e0f0ff 0%,#f0fff4 50%,#fdf4ff 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;min-height:100vh;background:var(--bg);overflow-x:hidden;position:relative;}
+
+/* BG BLOBS */
+.blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:blobFloat 10s ease-in-out infinite;}
+.blob1{width:500px;height:500px;background:rgba(37,99,235,0.07);top:-150px;left:-150px;animation-delay:0s;}
+.blob2{width:400px;height:400px;background:rgba(22,163,74,0.07);bottom:-100px;right:-100px;animation-delay:-4s;}
+.blob3{width:300px;height:300px;background:rgba(139,92,246,0.06);top:50%;left:50%;animation-delay:-7s;}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-30px) scale(1.05)}66%{transform:translate(-20px,20px) scale(0.95)}}
+
+/* FLOATING PARTICLES */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.particle{position:absolute;border-radius:50%;animation:particleRise linear infinite;opacity:0;}
+@keyframes particleRise{0%{opacity:0;transform:translateY(100vh)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translateY(-100px) translateX(var(--dx));}}
+
+/* MAIN CONTAINER */
+.container{position:relative;z-index:10;max-width:700px;margin:0 auto;padding:40px 20px 80px;}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:48px;animation:fadeDown 0.7s ease both;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--blue3);color:var(--blue);padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:20px;box-shadow:0 4px 16px rgba(37,99,235,0.10);}
+.header h1{font-family:'Nunito',sans-serif;font-size:38px;font-weight:900;color:var(--text);line-height:1.2;margin-bottom:12px;}
+.header h1 span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header p{color:var(--muted);font-size:15px;line-height:1.8;}
+
+/* CARD */
+.card{background:#fff;border-radius:28px;padding:48px 40px;box-shadow:0 20px 60px rgba(37,99,235,0.10);animation:fadeUp 0.7s 0.2s ease both;position:relative;overflow:hidden;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink),var(--green));background-size:300% 100%;animation:gradientShift 4s linear infinite;}
+@keyframes gradientShift{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* SECTION LABEL */
+.sec-label{font-size:11px;font-weight:700;letter-spacing:3px;color:var(--blue);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';flex:1;height:1px;background:var(--blue3);}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--blue3);}
+
+/* STAR RATING */
+.rating-section{margin-bottom:36px;}
+.rating-title{font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px;text-align:center;}
+.stars-wrap{display:flex;justify-content:center;gap:12px;margin-bottom:12px;}
+.star{font-size:44px;cursor:pointer;transition:all 0.2s;filter:grayscale(1);transform:scale(0.9);line-height:1;}
+.star:hover,.star.active{filter:grayscale(0);transform:scale(1.2);}
+.star.active{animation:starPop 0.3s cubic-bezier(0.16,1,0.3,1);}
+@keyframes starPop{0%{transform:scale(0.8)}50%{transform:scale(1.4)}100%{transform:scale(1.2)}}
+.rating-text{text-align:center;font-size:14px;font-weight:600;color:var(--muted);min-height:24px;transition:all 0.3s;}
+.rating-text.show{color:var(--gold);animation:fadeUp 0.3s ease;}
+
+/* EMOJI MOOD */
+.mood-section{margin-bottom:36px;}
+.mood-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:16px;}
+.mood-grid{display:flex;gap:12px;flex-wrap:wrap;}
+.mood-btn{flex:1;min-width:80px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border:2px solid #e2e8f0;border-radius:16px;cursor:pointer;transition:all 0.3s;background:#fff;font-family:'Poppins',sans-serif;}
+.mood-btn:hover{border-color:var(--blue);background:var(--blue4);transform:translateY(-4px);}
+.mood-btn.selected{border-color:var(--blue);background:var(--blue4);transform:translateY(-4px);box-shadow:0 8px 20px rgba(37,99,235,0.15);}
+.mood-emoji{font-size:32px;transition:transform 0.3s;}
+.mood-btn:hover .mood-emoji,.mood-btn.selected .mood-emoji{transform:scale(1.2) rotate(10deg);}
+.mood-label{font-size:11px;font-weight:600;color:var(--muted);}
+.mood-btn.selected .mood-label{color:var(--blue);}
+
+/* CATEGORY CHIPS */
+.category-section{margin-bottom:36px;}
+.category-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:16px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{padding:8px 18px;border:2px solid #e2e8f0;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s;background:#fff;color:var(--muted);}
+.chip:hover{border-color:var(--blue);color:var(--blue);background:var(--blue4);}
+.chip.selected{border-color:var(--blue);color:#fff;background:var(--blue);box-shadow:0 4px 12px rgba(37,99,235,0.25);}
+
+/* INPUT FIELDS */
+.form-section{margin-bottom:36px;}
+.form-group{margin-bottom:20px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.form-group input,.form-group textarea{width:100%;padding:14px 16px;border:2px solid #e2e8f0;border-radius:14px;font-size:15px;font-family:'Poppins',sans-serif;color:var(--text);background:#fff;transition:all 0.3s;resize:none;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 4px rgba(37,99,235,0.08);background:var(--blue4);}
+.form-group textarea{min-height:120px;line-height:1.7;}
+.char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* PHOTO UPLOAD */
+.upload-section{margin-bottom:36px;}
+.upload-box{border:2px dashed #cbd5e1;border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:all 0.3s;background:#fafafa;}
+.upload-box:hover{border-color:var(--blue);background:var(--blue4);}
+.upload-box.drag{border-color:var(--blue);background:var(--blue4);transform:scale(1.02);}
+.upload-icon{font-size:40px;margin-bottom:8px;}
+.upload-text{font-size:14px;color:var(--muted);font-weight:500;}
+.upload-text span{color:var(--blue);font-weight:700;}
+.upload-preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.preview-item{width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid var(--blue3);animation:popIn 0.3s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+
+/* RECOMMEND */
+.recommend-section{margin-bottom:36px;}
+.recommend-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:16px;}
+.recommend-btns{display:flex;gap:12px;}
+.rec-btn{flex:1;padding:16px;border:2px solid #e2e8f0;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;background:#fff;font-family:'Poppins',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.rec-btn:hover{transform:translateY(-3px);}
+.rec-btn.yes{color:var(--green);}
+.rec-btn.yes:hover,.rec-btn.yes.selected{border-color:var(--green);background:var(--green2);box-shadow:0 8px 20px rgba(22,163,74,0.15);}
+.rec-btn.no{color:#ef4444;}
+.rec-btn.no:hover,.rec-btn.no.selected{border-color:#ef4444;background:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.15);}
+
+/* SUBMIT BTN */
+.submit-wrap{text-align:center;}
+.submit-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;padding:18px 48px;border-radius:100px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.3s;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(37,99,235,0.3);}
+.submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--purple),var(--pink));opacity:0;transition:opacity 0.3s;}
+.submit-btn:hover::before{opacity:1;}
+.submit-btn:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(37,99,235,0.4);}
+.submit-btn:active{transform:translateY(-2px);}
+.submit-btn span{position:relative;z-index:1;}
+.submit-btn.loading{pointer-events:none;}
+.submit-btn .loader{display:none;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.submit-btn.loading .btn-label{display:none;}
+.submit-btn.loading .loader{display:block;}
+.submit-note{color:var(--muted);font-size:12px;margin-top:12px;}
+
+/* SUCCESS SCREEN */
+.success-screen{display:none;text-align:center;padding:40px 20px;animation:fadeUp 0.6s ease;}
+.success-screen.show{display:block;}
+.card.success-mode{min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.success-anim{width:120px;height:120px;margin:0 auto 24px;position:relative;}
+.success-circle{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--green),#22c55e);display:flex;align-items:center;justify-content:center;animation:successPop 0.6s cubic-bezier(0.16,1,0.3,1);}
+@keyframes successPop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+.success-check{font-size:56px;animation:checkBounce 0.5s 0.3s ease both;}
+@keyframes checkBounce{0%{opacity:0;transform:scale(0)}70%{transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:9999;}
+.confetti-piece{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg);}100%{opacity:0;transform:translateY(100vh) rotate(720deg);}}
+.success-title{font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:var(--text);margin-bottom:8px;}
+.success-sub{color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:32px;}
+.success-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:32px;}
+.success-tag{background:var(--blue4);color:var(--blue);padding:6px 16px;border-radius:100px;font-size:13px;font-weight:600;}
+.back-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.3s;}
+.back-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(37,99,235,0.3);}
+
+/* PROGRESS */
+.form-progress{display:flex;align-items:center;gap:8px;margin-bottom:32px;}
+.progress-step{flex:1;height:4px;border-radius:100px;background:#e2e8f0;transition:background 0.5s,box-shadow 0.5s;}
+.progress-step.done{background:linear-gradient(90deg,var(--blue),var(--purple));box-shadow:0 0 8px rgba(37,99,235,0.3);}
+.progress-pct{font-size:12px;font-weight:700;color:var(--blue);min-width:36px;text-align:right;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .card{padding:32px 20px;}
+  .header h1{font-size:28px;}
+  .stars-wrap .star{font-size:36px;}
+  .mood-grid{gap:8px;}
+  .mood-btn{min-width:60px;padding:12px 4px;}
+  .recommend-btns{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div class="particles" id="particles"></div>
+<div class="confetti-container" id="confetti"></div>
+
+<div class="container">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-badge">⭐ Share Your Experience</div>
+    <h1>How was your stay at<br><span>Anti Lodge?</span></h1>
+    <p>Your feedback helps us improve and helps other students make better decisions.</p>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card" id="formCard">
+    <!-- PROGRESS BAR -->
+    <div class="form-progress">
+      <div class="progress-step done" id="ps1"></div>
+      <div class="progress-step" id="ps2"></div>
+      <div class="progress-step" id="ps3"></div>
+      <div class="progress-step" id="ps4"></div>
+      <div class="progress-step" id="ps5"></div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+
+    <!-- STAR RATING -->
+    <div class="rating-section">
+      <div class="sec-label">OVERALL RATING</div>
+      <div class="rating-title">How would you rate Anti Lodge? ✨</div>
+      <div class="stars-wrap" id="starsWrap">
+        <span class="star" onclick="setRating(1)">⭐</span>
+        <span class="star" onclick="setRating(2)">⭐</span>
+        <span class="star" onclick="setRating(3)">⭐</span>
+        <span class="star" onclick="setRating(4)">⭐</span>
+        <span class="star" onclick="setRating(5)">⭐</span>
+      </div>
+      <div class="rating-text" id="ratingText">Tap a star to rate</div>
+    </div>
+
+    <!-- MOOD -->
+    <div class="mood-section">
+      <div class="sec-label">YOUR MOOD</div>
+      <div class="mood-title">How do you feel about your stay? 🎭</div>
+      <div class="mood-grid">
+        <button class="mood-btn" onclick="setMood(this,'Loved it')"><span class="mood-emoji">😍</span><span class="mood-label">Loved it</span></button>
+        <button class="mood-btn" onclick="setMood(this,'Happy')"><span class="mood-emoji">😊</span><span class="mood-label">Happy</span></button>
+        <button class="mood-btn" onclick="setMood(this,'Okay')"><span class="mood-emoji">😐</span><span class="mood-label">Okay</span></button>
+        <button class="mood-btn" onclick="setMood(this,'Sad')"><span class="mood-emoji">😞</span><span class="mood-label">Sad</span></button>
+        <button class="mood-btn" onclick="setMood(this,'Angry')"><span class="mood-emoji">😤</span><span class="mood-label">Angry</span></button>
+      </div>
+    </div>
+
+    <!-- CATEGORY -->
+    <div class="category-section">
+      <div class="sec-label">CATEGORY</div>
+      <div class="category-title">What are you giving feedback about? 🏷️</div>
+      <div class="chips" id="chipsWrap">
+        <span class="chip" onclick="toggleChip(this)">🛏️ Room Quality</span>
+        <span class="chip" onclick="toggleChip(this)">🔒 Safety</span>
+        <span class="chip" onclick="toggleChip(this)">🧹 Cleanliness</span>
+        <span class="chip" onclick="toggleChip(this)">💰 Pricing</span>
+        <span class="chip" onclick="toggleChip(this)">📚 Study Environment</span>
+        <span class="chip" onclick="toggleChip(this)">👨‍💼 Staff Behavior</span>
+        <span class="chip" onclick="toggleChip(this)">📍 Location</span>
+        <span class="chip" onclick="toggleChip(this)">🌟 Overall</span>
+      </div>
+    </div>
+
+    <!-- FORM FIELDS -->
+    <div class="form-section">
+      <div class="sec-label">YOUR DETAILS</div>
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="f_name" placeholder="Enter your name" oninput="updateProgress()">
+      </div>
+      <div class="form-group">
+        <label>Mobile Number (Optional)</label>
+        <input type="tel" id="f_phone" placeholder="10-digit mobile number" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+      <div class="form-group">
+        <label>Your Village / City</label>
+        <input type="text" id="f_city" placeholder="Where are you from?">
+      </div>
+      <div class="form-group">
+        <label>Your Feedback *</label>
+        <textarea id="f_feedback" placeholder="Share your honest experience at Anti Lodge. What did you like? What can we improve? Your feedback matters! 🙏" oninput="countChars(this);updateProgress()" maxlength="500"></textarea>
+        <div class="char-count"><span id="charCount">0</span>/500</div>
+      </div>
+    </div>
+
+    <!-- RECOMMEND -->
+    <div class="recommend-section">
+      <div class="sec-label">RECOMMENDATION</div>
+      <div class="recommend-title">Would you recommend Anti Lodge to other students? 🤝</div>
+      <div class="recommend-btns">
+        <button class="rec-btn yes" onclick="setRecommend(this,'yes')">👍 Yes, Definitely!</button>
+        <button class="rec-btn no" onclick="setRecommend(this,'no')">👎 Not Really</button>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap">
+      <button class="submit-btn" onclick="submitFeedback()" id="submitBtn">
+        <div class="loader"></div>
+        <span class="btn-label">🚀 Submit Feedback</span>
+      </button>
+      <p class="submit-note">Your feedback will be sent to Anti Lodge team via WhatsApp</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// PARTICLES
+(function(){
+  const c=document.getElementById('particles');
+  const colors=['#2563eb','#16a34a','#8b5cf6','#ec4899','#f59e0b'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=Math.random()*6+3;
+    p.style.cssText=`
+      left:${Math.random()*100}%;
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      opacity:${Math.random()*0.3+0.1};
+      animation-duration:${6+Math.random()*10}s;
+      animation-delay:${Math.random()*10}s;
+      --dx:${(Math.random()-0.5)*150}px;
+    `;
+    c.appendChild(p);
+  }
+})();
+
+// STATE
+let rating=0, mood='', recommend='';
+const ratingLabels=['','😢 Very Bad','😕 Not Good','😐 Average','😊 Good','🤩 Excellent!'];
+
+// STAR RATING
+function setRating(n){
+  rating=n;
+  document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<n));
+  const el=document.getElementById('ratingText');
+  el.textContent=ratingLabels[n];
+  el.className='rating-text show';
+  updateProgress();
+  // Burst animation
+  createStarBurst();
+}
+
+function createStarBurst(){
+  const wrap=document.getElementById('starsWrap');
+  const rect=wrap.getBoundingClientRect();
+  for(let i=0;i<12;i++){
+    const p=document.createElement('div');
+    p.style.cssText=`position:fixed;left:${rect.left+rect.width/2}px;top:${rect.top+rect.height/2}px;width:8px;height:8px;border-radius:50%;background:${['#f59e0b','#fbbf24','#fcd34d'][Math.floor(Math.random()*3)]};pointer-events:none;z-index:9999;animation:burst 0.6s ease forwards;`;
+    const angle=Math.random()*360;
+    const dist=40+Math.random()*60;
+    p.style.setProperty('--tx',Math.cos(angle*Math.PI/180)*dist+'px');
+    p.style.setProperty('--ty',Math.sin(angle*Math.PI/180)*dist+'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),700);
+  }
+}
+const burstStyle=document.createElement('style');
+burstStyle.textContent=`@keyframes burst{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}`;
+document.head.appendChild(burstStyle);
+
+// MOOD
+function setMood(el,m){
+  mood=m;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+}
+
+// CHIPS
+function toggleChip(el){
+  el.classList.toggle('selected');
+  updateProgress();
+}
+
+// RECOMMEND
+function setRecommend(el,v){
+  recommend=v;
+  document.querySelectorAll('.rec-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+}
+
+// CHAR COUNT
+function countChars(el){
+  document.getElementById('charCount').textContent=el.value.length;
+}
+
+// PROGRESS
+function updateProgress(){
+  let done=0;
+  if(rating>0)done++;
+  if(mood)done++;
+  if(document.querySelectorAll('.chip.selected').length>0)done++;
+  if(document.getElementById('f_name').value.trim())done++;
+  if(document.getElementById('f_feedback').value.trim().length>10)done++;
+  const pct=Math.round((done/5)*100);
+  for(let i=1;i<=5;i++) document.getElementById(`ps${i}`).classList.toggle('done',i<=done);
+  document.getElementById('progressPct').textContent=pct+'%';
+}
+
+// SUBMIT
+async function submitFeedback(){
+  const name=document.getElementById('f_name').value.trim();
+  const feedback=document.getElementById('f_feedback').value.trim();
+  if(!name){alert('Please enter your name!');return;}
+  if(!feedback||feedback.length<10){alert('Please write at least 10 characters of feedback!');return;}
+  if(!rating){alert('Please give a star rating!');return;}
+
+  const btn=document.getElementById('submitBtn');
+  btn.classList.add('loading');
+
+  const chips=[...document.querySelectorAll('.chip.selected')].map(c=>c.textContent).join(', ')||'General';
+  const phone=document.getElementById('f_phone').value||'Not provided';
+  const city=document.getElementById('f_city').value||'Not mentioned';
+  const stars='⭐'.repeat(rating);
+
+  const msg=`🏠 *Anti Lodge — Student Feedback*
+
+${stars} Rating: ${rating}/5
+😊 Mood: ${mood||'Not selected'}
+📍 From: ${city}
+
+👤 Name: ${name}
+📱 Mobile: ${phone}
+🏷️ Category: ${chips}
+
+💬 Feedback:
+${feedback}
+
+🤝 Would Recommend: ${recommend==='yes'?'✅ Yes':'❌ No'}
+
+_Sent from Anti Lodge Feedback Page_`;
+
+  // Simulate loading
+  await new Promise(r=>setTimeout(r,1500));
+  btn.classList.remove('loading');
+
+  // Show success
+  showSuccess(name, rating);
+
+  // Open WhatsApp
+  setTimeout(()=>{
+    window.open('https://wa.me/919942346634?text='+encodeURIComponent(msg),'_blank');
+  },800);
+}
+
+function showSuccess(name, stars){
+  const card=document.getElementById('formCard');
+  card.innerHTML=`
+    <div class="success-screen show">
+      <div class="success-anim">
+        <div class="success-circle">
+          <span class="success-check">✓</span>
+        </div>
+      </div>
+      <h2 class="success-title">Thank You, ${name}! 🎉</h2>
+      <p class="success-sub">Your feedback has been submitted successfully!<br>Our team will review it and reach out to you.<br>Your words help us serve students better. 🙏</p>
+      <div class="success-tags">
+        <span class="success-tag">${'⭐'.repeat(stars)} ${stars}/5 Rating</span>
+        <span class="success-tag">✅ Feedback Received</span>
+        <span class="success-tag">💬 Opening WhatsApp...</span>
+      </div>
+      <button class="back-btn" onclick="window.location.href='/antilodge'">🏠 Back to Anti Lodge</button>
+    </div>
+  `;
+  card.classList.add('success-mode');
+  launchConfetti();
+}
+
+// CONFETTI
+function launchConfetti(){
+  const colors=['#2563eb','#16a34a','#f59e0b','#ec4899','#8b5cf6','#06b6d4'];
+  const c=document.getElementById('confetti');
+  for(let i=0;i<100;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const left=Math.random()*100;
+    const dur=2+Math.random()*3;
+    const delay=Math.random()*2;
+    const size=8+Math.random()*8;
+    const rotate=Math.random()*360;
+    p.style.cssText=`left:${left}vw;top:0;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};animation-duration:${dur}s;animation-delay:${delay}s;transform:rotate(${rotate}deg);`;
+    c.appendChild(p);
+  }
+  setTimeout(()=>c.innerHTML='',5000);
+}
+
+// Initial progress update
+updateProgress();
+</script>
+</body>
+</html>
