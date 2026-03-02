@@ -7,36 +7,26 @@ exports.handler = async function(event, context) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   try {
-    const { phone, otp } = JSON.parse(event.body);
+    const { phone } = JSON.parse(event.body);
+    const API_KEY = process.env.TWOFACTOR_API_KEY;
 
-    const accountSid = process.env.TWILIO_ACCOUNT_SID;
-    const authToken  = process.env.TWILIO_AUTH_TOKEN;
-    const serviceSid = process.env.TWILIO_VERIFY_SID;
+    const url = `https://2factor.in/API/V1/${API_KEY}/SMS/${phone}/AUTOGEN`;
 
-    const toPhone = `+91${phone}`;
-    const url = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-
-    const params = new URLSearchParams();
-    params.append('To', toPhone);
-    params.append('Channel', 'sms');
-
-    const credentials = Buffer.from(`${accountSid}:${authToken}`).toString('base64');
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${credentials}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: params.toString()
-    });
-
+    const response = await fetch(url);
     const data = await response.json();
 
-    if (data.sid) {
-      return { statusCode: 200, headers, body: JSON.stringify({ success: true, sid: data.sid }) };
+    if (data.Status === 'Success') {
+      return { 
+        statusCode: 200, 
+        headers, 
+        body: JSON.stringify({ success: true, sessionId: data.Details }) 
+      };
     } else {
-      return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: JSON.stringify(data) }) };
+      return { 
+        statusCode: 400, 
+        headers, 
+        body: JSON.stringify({ success: false, message: data.Details }) 
+      };
     }
   } catch (error) {
     return { statusCode: 500, headers, body: JSON.stringify({ success: false, message: error.message }) };
