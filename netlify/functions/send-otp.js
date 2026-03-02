@@ -13,7 +13,7 @@ exports.handler = async function(event, context) {
     const authToken  = process.env.TWILIO_AUTH_TOKEN;
     const fromPhone  = process.env.TWILIO_PHONE;
 
-    const body = `Your NEXUS OTP is: ${otp}. Valid for 10 minutes. Do not share.`;
+    const body = `🔐 NEXUS Security Alert\n\nYour One-Time Password (OTP) is:\n\n[ ${otp} ]\n\nValid for 10 minutes only.\nDo NOT share this code with anyone.\n\n— Team NEXUS\n👨‍💻 Powered by Sufiyan Absar`;
     const toPhone = `+91${phone}`;
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
