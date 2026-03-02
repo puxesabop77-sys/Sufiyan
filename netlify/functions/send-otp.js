@@ -11,17 +11,14 @@ exports.handler = async function(event, context) {
 
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken  = process.env.TWILIO_AUTH_TOKEN;
-    const fromPhone  = process.env.TWILIO_PHONE;
+    const serviceSid = process.env.TWILIO_VERIFY_SID;
 
-    const body = `🔐 NEXUS Security Alert\n\nYour One-Time Password (OTP) is:\n\n[ ${otp} ]\n\nValid for 10 minutes only.\nDo NOT share this code with anyone.\n\n— Team NEXUS\n👨‍💻 Powered by Sufiyan Absar`;
     const toPhone = `+91${phone}`;
-
-    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    const url = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
 
     const params = new URLSearchParams();
     params.append('To', toPhone);
-    params.append('From', fromPhone);
-    params.append('Body', body);
+    params.append('Channel', 'sms');
 
     const credentials = Buffer.from(`${accountSid}:${authToken}`).toString('base64');
 
@@ -37,7 +34,7 @@ exports.handler = async function(event, context) {
     const data = await response.json();
 
     if (data.sid) {
-      return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+      return { statusCode: 200, headers, body: JSON.stringify({ success: true, sid: data.sid }) };
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: JSON.stringify(data) }) };
     }
