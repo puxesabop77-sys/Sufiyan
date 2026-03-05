@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="rDOPHZZI1ySXFZI8hlRiybdmiYGMTodknAoOZ4Wyab0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Auth</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--neon:#00ffe0;--neon2:#ff00aa;--bg:#020812;--card:rgba(0,255,224,0.04);--border:rgba(0,255,224,0.15);--text:#c8fff8;--muted:rgba(200,255,248,0.4);--error:#ff4d6d;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,224,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,224,0.04) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 20s linear infinite;z-index:0;}
+  @keyframes gridMove{0%{transform:translateY(0)}100%{transform:translateY(60px)}}
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);animation:orbFloat 8s ease-in-out infinite;z-index:0;pointer-events:none;}
+  .orb1{width:400px;height:400px;background:rgba(0,255,224,0.07);top:-100px;left:-100px;}
+  .orb2{width:300px;height:300px;background:rgba(255,0,170,0.07);bottom:-80px;right:-80px;animation-delay:-3s;}
+  @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,30px) scale(0.95)}}
+  .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:999;}
+  .particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .particle{position:absolute;width:2px;height:2px;background:var(--neon);border-radius:50%;animation:particleFly linear infinite;opacity:0;}
+  @keyframes particleFly{0%{opacity:0;transform:translateY(100vh) translateX(0)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translateY(-100px) translateX(var(--drift))}}
+  .card{position:relative;z-index:10;width:420px;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:48px 40px;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(0,255,224,0.05),inset 0 1px 0 rgba(0,255,224,0.1);animation:cardAppear 0.8s cubic-bezier(0.16,1,0.3,1) both;}
+  @keyframes cardAppear{from{opacity:0;transform:translateY(40px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .card::before,.card::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--neon);border-style:solid;}
+  .card::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+  .card::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+  .logo{text-align:center;margin-bottom:32px;}
+  .logo-text{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:8px;color:var(--neon);text-shadow:0 0 20px rgba(0,255,224,0.5),0 0 40px rgba(0,255,224,0.2);animation:glitch 4s infinite;}
+  @keyframes glitch{0%,95%,100%{text-shadow:0 0 20px rgba(0,255,224,0.5),0 0 40px rgba(0,255,224,0.2);transform:none}96%{text-shadow:-2px 0 var(--neon2),2px 0 var(--neon);transform:translateX(2px)}97%{text-shadow:2px 0 var(--neon2),-2px 0 var(--neon);transform:translateX(-2px)}}
+  .logo-sub{font-size:11px;letter-spacing:5px;color:var(--muted);margin-top:6px;}
+  .tabs{display:flex;margin-bottom:28px;border-bottom:1px solid var(--border);}
+  .tab-btn{flex:1;background:none;border:none;color:var(--muted);font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;padding:12px;cursor:pointer;transition:all 0.3s;position:relative;}
+  .tab-btn.active{color:var(--neon);}
+  .tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--neon);box-shadow:0 0 8px var(--neon);}
+  .steps{display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
+  .step-dot{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:10px;color:var(--muted);transition:all 0.4s;}
+  .step-dot.active{border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,255,224,0.3);}
+  .step-dot.done{background:rgba(0,255,224,0.15);border-color:var(--neon);color:var(--neon);}
+  .step-line{flex:1;height:1px;background:var(--border);max-width:50px;transition:background 0.4s;}
+  .step-line.active{background:var(--neon);box-shadow:0 0 6px var(--neon);}
+  .form-group{margin-bottom:18px;}
+  label{display:block;font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:8px;font-weight:600;}
+  .input-wrap{position:relative;}
+  .input-wrap .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;}
+  input[type="tel"],input[type="password"],input[type="text"]{width:100%;background:rgba(0,255,224,0.03);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;padding:13px 14px 13px 42px;outline:none;border-radius:2px;transition:all 0.3s;letter-spacing:1px;}
+  input:focus{border-color:var(--neon);background:rgba(0,255,224,0.06);box-shadow:0 0 20px rgba(0,255,224,0.08);}
+  input::placeholder{color:rgba(200,255,248,0.2);}
+  .phone-prefix{position:absolute;left:42px;top:50%;transform:translateY(-50%);color:var(--neon);font-size:15px;pointer-events:none;}
+  .phone-input{padding-left:82px !important;}
+  .toggle-pass{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:16px;}
+  .otp-group{display:flex;gap:8px;justify-content:center;}
+  .otp-input{width:50px !important;height:54px;text-align:center;font-family:'Orbitron',monospace !important;font-size:20px !important;padding:0 !important;letter-spacing:0 !important;}
+  .strength-bar{margin-top:8px;display:flex;gap:4px;}
+  .strength-seg{flex:1;height:3px;background:var(--border);border-radius:2px;transition:all 0.3s;}
+  .strength-seg.weak{background:var(--error);}
+  .strength-seg.medium{background:#ffaa00;box-shadow:0 0 6px #ffaa00;}
+  .strength-seg.strong{background:var(--neon);box-shadow:0 0 6px var(--neon);}
+  .strength-label{font-size:10px;letter-spacing:2px;margin-top:4px;color:var(--muted);}
+  .btn{width:100%;padding:15px;background:transparent;border:1px solid var(--neon);color:var(--neon);font-family:'Orbitron',monospace;font-size:12px;letter-spacing:4px;cursor:pointer;border-radius:2px;position:relative;overflow:hidden;transition:all 0.3s;margin-top:8px;}
+  .btn::before{content:'';position:absolute;inset:0;background:var(--neon);transform:translateX(-101%);transition:transform 0.3s ease;z-index:0;}
+  .btn:hover::before{transform:translateX(0);}
+  .btn:hover{color:var(--bg);box-shadow:0 0 30px rgba(0,255,224,0.3);}
+  .btn span{position:relative;z-index:1;}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .btn:disabled::before{display:none;}
+  .btn-ghost{background:rgba(0,255,224,0.05);border-color:rgba(0,255,224,0.3);color:var(--muted);font-size:11px;letter-spacing:2px;padding:10px;margin-top:4px;}
+  .btn-ghost:hover{color:var(--bg);}
+  .btn-loader{display:none;width:16px;height:16px;border:2px solid transparent;border-top-color:currentColor;border-radius:50%;animation:spin 0.6s linear infinite;margin:0 auto;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn.loading .btn-text{display:none;}
+  .btn.loading .btn-loader{display:block;}
+  .alert{padding:10px 14px;border-radius:2px;font-size:13px;letter-spacing:1px;margin-bottom:14px;display:none;animation:alertPop 0.3s ease;}
+  @keyframes alertPop{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+  .alert.error{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.4);color:var(--error);}
+  .alert.success{background:rgba(0,255,224,0.07);border:1px solid rgba(0,255,224,0.3);color:var(--neon);}
+  .phase{display:none;animation:phaseIn 0.5s cubic-bezier(0.16,1,0.3,1) both;}
+  .phase.active{display:block;}
+  @keyframes phaseIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+  /* REDIRECT SCREEN */
+  .redirect-screen{text-align:center;padding:20px 0;}
+  .redirect-icon{font-size:64px;margin-bottom:16px;animation:spin 1s linear infinite;}
+  .redirect-title{font-family:'Orbitron',monospace;font-size:16px;letter-spacing:4px;color:var(--neon);margin-bottom:8px;}
+  .redirect-sub{color:var(--muted);font-size:12px;letter-spacing:2px;}
+  .redirect-bar{width:100%;height:3px;background:var(--border);border-radius:2px;margin-top:20px;overflow:hidden;}
+  .redirect-fill{height:100%;background:var(--neon);box-shadow:0 0 8px var(--neon);animation:redirectLoad 2s ease forwards;}
+  @keyframes redirectLoad{from{width:0%}to{width:100%}}
+
+  .success-screen{text-align:center;padding:20px 0;}
+  .success-icon{width:80px;height:80px;margin:0 auto 24px;position:relative;}
+  .success-ring{width:80px;height:80px;border:2px solid var(--neon);border-radius:50%;position:absolute;animation:ringPulse 2s ease infinite;box-shadow:0 0 20px rgba(0,255,224,0.3);}
+  @keyframes ringPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:0.7}}
+  .success-check{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--neon);text-shadow:0 0 20px var(--neon);}
+  .success-title{font-family:'Orbitron',monospace;font-size:18px;letter-spacing:4px;color:var(--neon);margin-bottom:8px;}
+  .timer{text-align:center;font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:12px;}
+  .timer-neon{color:var(--neon);font-family:'Orbitron',monospace;}
+  .resend-link{color:var(--neon);cursor:pointer;text-decoration:underline;}
+  .note{text-align:center;font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:16px;}
+  .note a{color:var(--neon);cursor:pointer;}
+  @media(max-width:460px){.card{width:calc(100vw - 20px);padding:32px 20px;}.otp-input{width:42px !important;height:48px;font-size:16px !important;}.logo-text{font-size:22px;letter-spacing:5px;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="scanlines"></div>
+<div class="particles" id="particles"></div>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-text">NEXUS</div>
+    <div class="logo-sub">ANTI LODGE PORTAL</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('signup')">SIGN UP</button>
+    <button class="tab-btn" onclick="switchTab('signin')">SIGN IN</button>
+  </div>
+  <div class="alert" id="alert"></div>
+
+  <!-- SIGNUP -->
+  <div id="signup-flow">
+    <div class="steps" id="steps">
+      <div class="step-dot active" id="step1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="step2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="step3">3</div>
+    </div>
+    <!-- Phase 1: Phone -->
+    <div class="phase active" id="phase1">
+      <div class="form-group">
+        <label>MOBILE NUMBER</label>
+        <div class="input-wrap">
+          <span class="icon">📱</span>
+          <span class="phone-prefix">+91</span>
+          <input type="tel" id="phone" class="phone-input" maxlength="10" placeholder="XXXXXXXXXX" oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
+      <button class="btn" onclick="sendOTP()" id="sendOtpBtn">
+        <div class="btn-loader"></div>
+        <span class="btn-text">SEND OTP →</span>
+      </button>
+    </div>
+    <!-- Phase 2: OTP -->
+    <div class="phase" id="phase2">
+      <div class="form-group">
+        <label style="text-align:center;display:block">ENTER 6-DIGIT OTP</label>
+        <div class="otp-group">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+        </div>
+      </div>
+      <div class="timer" id="timerBox"></div>
+      <button class="btn" onclick="verifyOTP()" id="verifyBtn" style="margin-top:20px">
+        <div class="btn-loader"></div>
+        <span class="btn-text">VERIFY OTP →</span>
+      </button>
+      <button class="btn btn-ghost" onclick="goToPhase(1)"><span>← CHANGE NUMBER</span></button>
+    </div>
+    <!-- Phase 3: Password -->
+    <div class="phase" id="phase3">
+      <div class="form-group">
+        <label>CREATE PASSWORD</label>
+        <div class="input-wrap">
+          <span class="icon">🔐</span>
+          <input type="password" id="createPass" placeholder="MIN 8 CHARACTERS" oninput="checkStrength(this.value)">
+          <span class="toggle-pass" onclick="togglePass('createPass',this)">👁</span>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-seg" id="seg1"></div>
+          <div class="strength-seg" id="seg2"></div>
+          <div class="strength-seg" id="seg3"></div>
+          <div class="strength-seg" id="seg4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel">ENTER PASSWORD</div>
+      </div>
+      <div class="form-group">
+        <label>CONFIRM PASSWORD</label>
+        <div class="input-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="confirmPass" placeholder="REPEAT PASSWORD">
+          <span class="toggle-pass" onclick="togglePass('confirmPass',this)">👁</span>
+        </div>
+      </div>
+      <button class="btn" onclick="createAccount()" id="createBtn">
+        <div class="btn-loader"></div>
+        <span class="btn-text">CREATE ACCOUNT ⚡</span>
+      </button>
+    </div>
+    <!-- Phase 4: Redirect -->
+    <div class="phase" id="phase4">
+      <div class="redirect-screen">
+        <div class="redirect-icon">🏠</div>
+        <div class="redirect-title">ACCESS GRANTED</div>
+        <div class="redirect-sub">REDIRECTING TO ANTI LODGE...</div>
+        <div class="redirect-bar"><div class="redirect-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNIN -->
+  <div id="signin-flow" style="display:none">
+    <div class="form-group">
+      <label>MOBILE NUMBER</label>
+      <div class="input-wrap">
+        <span class="icon">📱</span>
+        <span class="phone-prefix">+91</span>
+        <input type="tel" id="siPhone" class="phone-input" maxlength="10" placeholder="XXXXXXXXXX" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>PASSWORD</label>
+      <div class="input-wrap">
+        <span class="icon">🔐</span>
+        <input type="password" id="siPass" placeholder="YOUR PASSWORD">
+        <span class="toggle-pass" onclick="togglePass('siPass',this)">👁</span>
+      </div>
+    </div>
+    <button class="btn" onclick="signIn()" id="signinBtn">
+      <div class="btn-loader"></div>
+      <span class="btn-text">INITIATE ACCESS →</span>
+    </button>
+    <div class="note"><a onclick="switchTab('signup')">CREATE NEW ACCOUNT</a></div>
+  </div>
+</div>
+
+<script>
+// ✅ Anti Lodge ka URL — same folder mein hai toh yeh kaam karega
+const ANTILODGE_URL = '/antilodge';
+
+let currentPhone='', sessionId='', timerInterval=null;
+
+// Particles
+(function(){const c=document.getElementById('particles');for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${4+Math.random()*8}s;animation-delay:${Math.random()*8}s;--drift:${(Math.random()-0.5)*200}px`;c.appendChild(p);}})();
+
+// OTP inputs
+document.querySelectorAll('.otp-input').forEach((inp,i,all)=>{
+  inp.addEventListener('input',()=>{inp.value=inp.value.replace(/\D/g,'');if(inp.value&&i<5)all[i+1].focus();});
+  inp.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!inp.value&&i>0)all[i-1].focus();});
+  inp.addEventListener('paste',e=>{e.preventDefault();const t=e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);t.split('').forEach((ch,j)=>{if(all[i+j])all[i+j].value=ch;});if(all[Math.min(i+t.length,5)])all[Math.min(i+t.length,5)].focus();});
+});
+
+const showAlert=(msg,type='error')=>{const el=document.getElementById('alert');el.textContent=msg;el.className=`alert ${type}`;el.style.display='block';};
+const clearAlert=()=>{document.getElementById('alert').style.display='none';};
+const setLoading=(id,v)=>{const b=document.getElementById(id);b.classList.toggle('loading',v);b.disabled=v;};
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+
+// Redirect to Anti Lodge
+function redirectToAntiLodge(){
+  goToPhase(4);
+  document.getElementById('steps').style.display='none';
+  setTimeout(()=>{ window.location.href = ANTILODGE_URL; }, 2500);
+}
+
+async function sendOTP(){
+  clearAlert();
+  const phone=document.getElementById('phone').value.trim();
+  if(!/^\d{10}$/.test(phone)){showAlert('⚡ VALID 10-DIGIT NUMBER ENTER KARO');return;}
+
+  // ✅ Check if number already registered
+  const users=JSON.parse(localStorage.getItem('nexus_users')||'{}');
+  if(users[phone]){
+    showAlert('⚡ YEH NUMBER PEHLE SE REGISTERED HAI — SIGN IN KARO!');
+    setTimeout(()=>{
+      switchTab('signin');
+      document.getElementById('siPhone').value=phone;
+      clearAlert();
+      showAlert(`✓ +91 ${phone} REGISTERED HAI — PASSWORD ENTER KARO`,'success');
+    }, 1800);
+    return;
+  }
+
+  currentPhone=phone;
+  setLoading('sendOtpBtn',true);
+  try{
+    const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});
+    const d=await r.json();
+    if(d.success){sessionId=d.sessionId;showAlert(`✓ OTP SENT TO +91 ${phone}`,'success');goToPhase(2);startTimer();}
+    else{showAlert(`✕ ERROR: ${d.message||'OTP send nahi hua'}`);}
+  }catch(e){showAlert('✕ NETWORK ERROR — DOBARA TRY KARO');}
+  setLoading('sendOtpBtn',false);
+}
+
+async function verifyOTP(){
+  clearAlert();
+  const inputs=document.querySelectorAll('.otp-input');
+  const entered=Array.from(inputs).map(i=>i.value).join('');
+  if(entered.length<6){showAlert('⚡ POORA 6-DIGIT OTP ENTER KARO');return;}
+  setLoading('verifyBtn',true);
+  try{
+    const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId,otp:entered})});
+    const d=await r.json();
+    if(d.success){clearInterval(timerInterval);clearAlert();goToPhase(3);}
+    else{showAlert('✕ GALAT OTP — DOBARA TRY KARO');inputs.forEach(i=>{i.value='';i.style.borderColor='var(--error)';});inputs[0].focus();setTimeout(()=>inputs.forEach(i=>i.style.borderColor=''),1200);}
+  }catch(e){showAlert('✕ NETWORK ERROR — DOBARA TRY KARO');}
+  setLoading('verifyBtn',false);
+}
+
+function startTimer(){
+  let sec=60;
+  const box=document.getElementById('timerBox');
+  box.innerHTML=`RESEND IN <span class="timer-neon">${sec}s</span>`;
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    sec--;const s=box.querySelector('.timer-neon');if(s)s.textContent=sec+'s';
+    if(sec<=0){clearInterval(timerInterval);box.innerHTML=`<span class="resend-link" onclick="goToPhase(1)">↺ RESEND OTP</span>`;}
+  },1000);
+}
+
+function checkStrength(val){
+  const segs=[1,2,3,4].map(i=>document.getElementById(`seg${i}`));
+  const label=document.getElementById('strengthLabel');
+  segs.forEach(s=>s.className='strength-seg');
+  if(!val){label.textContent='ENTER PASSWORD';return;}
+  let score=0;
+  if(val.length>=8)score++;if(/[A-Z]/.test(val))score++;if(/\d/.test(val))score++;if(/[^A-Za-z0-9]/.test(val))score++;
+  const levels=['','WEAK','WEAK','MEDIUM','STRONG'];
+  const cls=['','weak','weak','medium','strong'];
+  label.textContent=levels[score]||'TYPE MORE';
+  label.style.color=score<=1?'var(--error)':score<=2?'#ffaa00':'var(--neon)';
+  for(let i=0;i<score;i++)segs[i].classList.add(cls[score]);
+}
+
+async function createAccount(){
+  clearAlert();
+  const pass=document.getElementById('createPass').value;
+  const conf=document.getElementById('confirmPass').value;
+  if(pass.length<8){showAlert('⚡ PASSWORD KAM SE KAM 8 CHARACTERS KA HO');return;}
+  if(pass!==conf){showAlert('✕ PASSWORDS MATCH NAHI KAR RAHE');return;}
+  setLoading('createBtn',true);
+  await delay(800);
+  const users=JSON.parse(localStorage.getItem('nexus_users')||'{}');
+  users[currentPhone]={password:pass,created:Date.now()};
+  localStorage.setItem('nexus_users',JSON.stringify(users));
+  setLoading('createBtn',false);
+  // ✅ REDIRECT TO ANTI LODGE
+  redirectToAntiLodge();
+}
+
+async function signIn(){
+  clearAlert();
+  const phone=document.getElementById('siPhone').value.trim();
+  const pass=document.getElementById('siPass').value;
+  if(!/^\d{10}$/.test(phone)){showAlert('⚡ VALID MOBILE NUMBER ENTER KARO');return;}
+  if(!pass){showAlert('⚡ PASSWORD ENTER KARO');return;}
+  setLoading('signinBtn',true);
+  await delay(900);
+  const users=JSON.parse(localStorage.getItem('nexus_users')||'{}');
+  if(users[phone]&&users[phone].password===pass){
+    showAlert(`✓ WELCOME BACK! +91 ${phone}`,'success');
+    await delay(800);
+    // ✅ REDIRECT TO ANTI LODGE
+    window.location.href = ANTILODGE_URL;
+  }else{
+    showAlert('✕ GALAT NUMBER YA PASSWORD — ACCESS DENIED');
+  }
+  setLoading('signinBtn',false);
+}
+
+function togglePass(id,btn){const inp=document.getElementById(id);inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';}
+
+function goToPhase(n){
+  for(let i=1;i<=4;i++)document.getElementById(`phase${i}`).classList.toggle('active',i===n);
+  if(n<4){for(let i=1;i<=3;i++){const d=document.getElementById(`step${i}`);d.className='step-dot'+(i<n?' done':i===n?' active':'');}
+  document.getElementById('line1').className='step-line'+(n>1?' active':'');
+  document.getElementById('line2').className='step-line'+(n>2?' active':'');}
+}
+
+function switchTab(tab){
+  const s=tab==='signup';
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&s)||(i===1&&!s)));
+  document.getElementById('signup-flow').style.display=s?'block':'none';
+  document.getElementById('signin-flow').style.display=s?'none':'block';
+  document.getElementById('steps').style.display=s?'flex':'none';
+  clearAlert();if(s)goToPhase(1);
+}
+</script>
+</body>
+</html>
