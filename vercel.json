@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/antilodge", "destination": "/antilodge.html" },
     { "source": "/feedback", "destination": "/feedback.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/birthday", "destination": "/birthday.html" }
   ]
 }
