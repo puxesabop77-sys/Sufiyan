@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="rDOPHZZI1ySXFZI8hlRiybdmiYGMTodknAoOZ4Wyab0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Affordable student lodge in Bahadurganj offering ₹650 per month rooms for village students preparing for exams and coaching.">
+<meta name="keywords" content="Student lodge Bahadurganj, Affordable rooms Kishanganj, ₹650 student hostel, Village student accommodation">
+<title>Anti Lodge Bahadurganj | ₹650 Student Rooms</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1a6bcc;--blue2:#2563eb;--blue3:#dbeafe;--blue4:#eff6ff;
+  --green:#16a34a;--green2:#dcfce7;
+  --orange:#f97316;--orange2:#fff7ed;
+  --text:#1e293b;--muted:#64748b;--white:#ffffff;
+  --shadow:0 4px 24px rgba(37,99,235,0.10);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;color:var(--text);background:#f0f7ff;overflow-x:hidden;}
+
+/* ANNOUNCEMENT BAR */
+.announce{background:linear-gradient(90deg,var(--blue2),var(--green));color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;letter-spacing:1px;animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.85}}
+
+/* NAVBAR */
+nav{background:#fff;box-shadow:var(--shadow);position:sticky;top:0;z-index:1000;padding:0 5%;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px;}
+.logo{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:var(--blue2);}
+.logo span{color:var(--green);}
+.nav-links{display:flex;gap:24px;align-items:center;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--blue2);}
+.lang-btn{background:var(--blue4);border:2px solid var(--blue2);color:var(--blue2);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.3s;}
+.lang-btn:hover{background:var(--blue2);color:#fff;}
+.book-nav{background:var(--blue2);color:#fff;padding:8px 20px;border-radius:20px;font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;}
+.book-nav:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,99,235,0.3);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#e0f0ff 0%,#f0fff4 50%,#e0f0ff 100%);padding:80px 5% 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,0.08),transparent 70%);border-radius:50%;animation:heroOrb 8s ease-in-out infinite;}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(22,163,74,0.08),transparent 70%);border-radius:50%;animation:heroOrb 10s ease-in-out infinite reverse;}
+@keyframes heroOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-20px)}}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-badge{display:inline-block;background:var(--green2);color:var(--green);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:20px;animation:fadeUp 0.6s ease both;}
+.hero h1{font-family:'Nunito',sans-serif;font-size:42px;font-weight:900;line-height:1.2;margin-bottom:16px;animation:fadeUp 0.6s 0.1s ease both;}
+.hero h1 span{color:var(--blue2);}
+.hero p{color:var(--muted);font-size:16px;line-height:1.8;margin-bottom:32px;animation:fadeUp 0.6s 0.2s ease both;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;animation:fadeUp 0.6s 0.3s ease both;}
+.btn-primary{background:var(--blue2);color:#fff;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.btn-primary:hover{background:var(--blue);transform:translateY(-3px);box-shadow:0 8px 20px rgba(37,99,235,0.3);}
+.btn-wa{background:#25d366;color:#fff;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;}
+.btn-wa:hover{background:#1db954;transform:translateY(-3px);box-shadow:0 8px 20px rgba(37,211,102,0.3);}
+.hero-card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 20px 60px rgba(37,99,235,0.12);animation:fadeUp 0.6s 0.2s ease both;position:relative;z-index:1;}
+.price-tag{background:linear-gradient(135deg,var(--blue2),var(--green));color:#fff;border-radius:16px;padding:20px;text-align:center;margin-bottom:20px;}
+.price-tag .amount{font-family:'Nunito',sans-serif;font-size:48px;font-weight:900;}
+.price-tag .period{font-size:14px;opacity:0.9;}
+.features-list{list-style:none;}
+.features-list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:var(--text);}
+.features-list li:last-child{border-bottom:none;}
+.features-list li::before{content:'✓';background:var(--green2);color:var(--green);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* STATS */
+.stats{background:#fff;padding:40px 5%;box-shadow:var(--shadow);}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.stat-card{text-align:center;padding:24px;border-radius:var(--radius);transition:transform 0.3s;}
+.stat-card:hover{transform:translateY(-4px);}
+.stat-num{font-family:'Nunito',sans-serif;font-size:36px;font-weight:900;color:var(--blue2);}
+.stat-label{color:var(--muted);font-size:13px;margin-top:4px;}
+
+/* SECTION COMMON */
+section{padding:80px 5%;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-tag{display:inline-block;background:var(--blue4);color:var(--blue2);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.section-title{font-family:'Nunito',sans-serif;font-size:32px;font-weight:900;margin-bottom:8px;}
+.section-sub{color:var(--muted);font-size:15px;margin-bottom:48px;}
+
+/* AVAILABILITY */
+.availability{background:linear-gradient(135deg,var(--blue4),var(--green2));}
+.avail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:40px;}
+.avail-card{background:#fff;border-radius:var(--radius);padding:28px;text-align:center;box-shadow:var(--shadow);transition:transform 0.3s;}
+.avail-card:hover{transform:translateY(-6px);}
+.avail-num{font-family:'Nunito',sans-serif;font-size:52px;font-weight:900;margin-bottom:8px;}
+.avail-num.total{color:var(--blue2);}
+.avail-num.available{color:var(--green);}
+.avail-num.occupied{color:var(--orange);}
+.avail-label{color:var(--muted);font-size:14px;font-weight:600;}
+.progress-wrap{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;font-weight:600;}
+.progress-bar{background:#e2e8f0;border-radius:100px;height:16px;overflow:hidden;margin-bottom:8px;}
+.progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--blue2),var(--green));transition:width 1.5s ease;position:relative;}
+.progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite;}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.warning-banner{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px;margin-top:20px;font-size:14px;font-weight:600;color:#92400e;}
+
+/* BOOKING FORM */
+.booking{background:#fff;}
+.form-card{background:linear-gradient(135deg,var(--blue4),#fff);border-radius:24px;padding:48px;box-shadow:0 20px 60px rgba(37,99,235,0.10);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:13px;font-weight:600;color:var(--text);}
+.form-group input,.form-group select,.form-group textarea{padding:13px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;font-family:'Poppins',sans-serif;transition:all 0.3s;background:#fff;color:var(--text);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue2);outline:none;box-shadow:0 0 0 4px rgba(37,99,235,0.08);}
+.form-group textarea{resize:vertical;min-height:100px;}
+.submit-btn{background:linear-gradient(135deg,var(--blue2),var(--green));color:#fff;border:none;padding:16px 32px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;transition:all 0.3s;font-family:'Poppins',sans-serif;}
+.submit-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(37,99,235,0.3);}
+.form-note{text-align:center;color:var(--muted);font-size:13px;margin-top:12px;}
+.booking-id{background:var(--green2);color:var(--green);padding:4px 12px;border-radius:8px;font-weight:700;font-size:12px;}
+
+/* POPUP */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.popup-overlay.show{display:flex;}
+.popup{background:#fff;border-radius:24px;padding:48px;text-align:center;max-width:400px;width:90%;animation:popIn 0.4s cubic-bezier(0.16,1,0.3,1);}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+.popup-icon{font-size:64px;margin-bottom:16px;}
+.popup h3{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;margin-bottom:8px;color:var(--green);}
+.popup p{color:var(--muted);font-size:14px;line-height:1.7;}
+
+/* TESTIMONIALS */
+.testimonials{background:linear-gradient(135deg,#f0f7ff,#f0fff4);}
+.test-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+.test-card{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:transform 0.3s;position:relative;}
+.test-card:hover{transform:translateY(-6px);}
+.test-card::before{content:'"';position:absolute;top:16px;right:20px;font-size:80px;color:var(--blue3);font-family:'Nunito',sans-serif;line-height:1;}
+.stars{color:#f59e0b;font-size:18px;margin-bottom:12px;}
+.test-text{color:var(--text);font-size:15px;line-height:1.8;margin-bottom:16px;font-style:italic;}
+.test-author{display:flex;align-items:center;gap:12px;}
+.test-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;}
+.test-name{font-weight:700;font-size:14px;}
+.test-role{color:var(--muted);font-size:12px;}
+
+/* ADMIN */
+.admin{background:#1e293b;color:#fff;}
+.admin .section-tag{background:rgba(37,99,235,0.2);color:#93c5fd;}
+.admin .section-title{color:#fff;}
+.admin .section-sub{color:#94a3b8;}
+.admin-grid{display:grid;grid-template-columns:250px 1fr;gap:24px;}
+.admin-sidebar{background:#0f172a;border-radius:var(--radius);padding:24px;}
+.admin-logo{font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;color:var(--blue2);margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #1e293b;}
+.admin-menu{list-style:none;}
+.admin-menu li{padding:12px 16px;border-radius:10px;font-size:14px;cursor:pointer;transition:all 0.2s;color:#94a3b8;display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.admin-menu li.active,.admin-menu li:hover{background:var(--blue2);color:#fff;}
+.admin-main{display:flex;flex-direction:column;gap:20px;}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.admin-stat{background:#0f172a;border-radius:12px;padding:20px;}
+.admin-stat-num{font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:var(--blue2);}
+.admin-stat-label{color:#64748b;font-size:12px;margin-top:4px;}
+.admin-table{background:#0f172a;border-radius:var(--radius);overflow:hidden;}
+.table-header{padding:16px 20px;border-bottom:1px solid #1e293b;font-size:14px;font-weight:600;color:#94a3b8;}
+.table-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;padding:14px 20px;border-bottom:1px solid #0d1a2d;font-size:13px;align-items:center;}
+.table-row:last-child{border-bottom:none;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge.pending{background:rgba(245,158,11,0.2);color:#f59e0b;}
+.badge.approved{background:rgba(22,163,74,0.2);color:#16a34a;}
+.action-btns{display:flex;gap:8px;}
+.action-btn{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;}
+.action-btn.approve{background:rgba(22,163,74,0.2);color:#16a34a;}
+.action-btn.approve:hover{background:var(--green);color:#fff;}
+.action-btn.reject{background:rgba(239,68,68,0.2);color:#ef4444;}
+.action-btn.reject:hover{background:#ef4444;color:#fff;}
+
+/* CONTACT */
+.contact{background:#fff;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+.contact-info{display:flex;flex-direction:column;gap:20px;}
+.contact-item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:var(--blue4);border-radius:var(--radius);transition:transform 0.3s;}
+.contact-item:hover{transform:translateX(6px);}
+.contact-icon{width:48px;height:48px;background:var(--blue2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.contact-text{font-size:14px;line-height:1.8;}
+.contact-text strong{display:block;font-size:13px;color:var(--muted);margin-bottom:2px;}
+.contact-text a{color:var(--blue2);text-decoration:none;font-weight:600;}
+.map-placeholder{background:linear-gradient(135deg,var(--blue4),var(--green2));border-radius:var(--radius);height:300px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden;}
+.map-placeholder::before{content:'📍 Bahadurganj, Kishanganj';position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:var(--shadow);}
+
+/* FAQ */
+.faq{background:linear-gradient(135deg,var(--blue4),#f0fff4);}
+.faq-list{display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.faq-q{padding:20px 24px;font-weight:600;font-size:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background 0.2s;}
+.faq-q:hover{background:var(--blue4);}
+.faq-q .arrow{transition:transform 0.3s;color:var(--blue2);}
+.faq-item.open .faq-q .arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease;color:var(--muted);font-size:14px;line-height:1.8;}
+.faq-item.open .faq-a{max-height:200px;}
+.faq-a-inner{padding:0 24px 20px;}
+
+/* FOOTER */
+footer{background:#0f172a;color:#94a3b8;padding:40px 5% 20px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:32px;}
+.footer-logo{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:#fff;margin-bottom:12px;}
+.footer-logo span{color:var(--green);}
+.footer-desc{font-size:13px;line-height:1.8;}
+.footer-links h4{color:#fff;font-size:14px;font-weight:700;margin-bottom:16px;}
+.footer-links ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.footer-links a{color:#94a3b8;text-decoration:none;font-size:13px;transition:color 0.2s;}
+.footer-links a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid #1e293b;padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:12px;}
+.footer-bottom span{color:#475569;}
+
+/* FLOATING BUTTONS */
+.float-wa{position:fixed;bottom:24px;right:24px;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 16px rgba(37,211,102,0.4);z-index:999;text-decoration:none;transition:all 0.3s;animation:floatBounce 3s ease-in-out infinite;}
+.float-wa:hover{transform:scale(1.1);}
+@keyframes floatBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.float-book{position:fixed;bottom:90px;right:24px;background:var(--blue2);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(37,99,235,0.3);z-index:999;transition:all 0.3s;}
+.float-book:hover{background:var(--blue);transform:translateY(-2px);}
+
+/* MOBILE NAV */
+.mobile-menu{display:none;position:fixed;inset:0;background:#fff;z-index:9998;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:20px;font-weight:700;color:var(--text);text-decoration:none;}
+.mobile-close{position:absolute;top:20px;right:20px;background:none;border:none;font-size:28px;cursor:pointer;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+  .avail-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .test-grid{grid-template-columns:1fr;}
+  .admin-grid{grid-template-columns:1fr;}
+  .admin-sidebar{display:none;}
+  .admin-stats{grid-template-columns:repeat(2,1fr);}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero h1{font-size:30px;}
+  .table-row{grid-template-columns:1fr 1fr auto;font-size:12px;}
+  .table-row>*:nth-child(3),.table-row>*:nth-child(4){display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT -->
+<div class="announce" id="announce">🎉 <span data-en="Admissions Open 2026 — Limited Rooms Available!" data-hi="2026 में प्रवेश शुरू — सीमित कमरे उपलब्ध!">Admissions Open 2026 — Limited Rooms Available!</span></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">Anti<span>Lodge</span></div>
+    <div class="nav-links">
+      <a href="#home" data-en="Home" data-hi="होम">Home</a>
+      <a href="#availability" data-en="Rooms" data-hi="कमरे">Rooms</a>
+      <a href="#booking" data-en="Book" data-hi="बुक करें">Book</a>
+      <a href="#testimonials" data-en="Reviews" data-hi="समीक्षा">Reviews</a>
+      <a href="#contact" data-en="Contact" data-hi="संपर्क">Contact</a>
+      <a href="#admin" data-en="Admin" data-hi="एडमिन">Admin</a>
+      <a href="/feedback" data-en="Feedback" data-hi="फीडबैक" style="color:var(--green);font-weight:700;">⭐ Feedback</a>
+      <a href="/birthday" style="color:#f59e0b;font-weight:700;">🎂 Birthday</a>
+      <button class="lang-btn" onclick="toggleLang()">हिंदी</button>
+      <a href="#booking" class="book-nav" data-en="Book Now" data-hi="अभी बुक करें">Book Now</a>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="#home" onclick="toggleMobileMenu()">Home</a>
+  <a href="#availability" onclick="toggleMobileMenu()">Rooms</a>
+  <a href="#booking" onclick="toggleMobileMenu()">Book Now</a>
+  <a href="#testimonials" onclick="toggleMobileMenu()">Reviews</a>
+  <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+  <button class="lang-btn" onclick="toggleLang();toggleMobileMenu()">हिंदी / EN</button>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">📍 Bahadurganj, Kishanganj</div>
+      <h1 data-en="Affordable & Safe <span style='color:var(--blue2)'>Rooms for Students</span>" data-hi="छात्रों के लिए <span style='color:var(--blue2)'>सस्ते और सुरक्षित कमरे</span>">Affordable & Safe <span style='color:var(--blue2)'>Rooms for Students</span></h1>
+      <p data-en="Helping students from villages focus on their dreams without worrying about accommodation. Clean rooms, peaceful environment, ₹650/month." data-hi="गांव से आए छात्रों को आवास की चिंता किए बिना अपने सपनों पर ध्यान केंद्रित करने में मदद। साफ कमरे, शांत वातावरण, ₹650/माह।">Helping students from villages focus on their dreams without worrying about accommodation. Clean rooms, peaceful environment, ₹650/month.</p>
+      <div class="hero-btns">
+        <a href="#booking" class="btn-primary">🏠 <span data-en="Book a Room" data-hi="कमरा बुक करें">Book a Room</span></a>
+        <a href="https://wa.me/919942346634" target="_blank" class="btn-wa">💬 <span data-en="WhatsApp Us" data-hi="व्हाट्सएप करें">WhatsApp Us</span></a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="price-tag">
+        <div class="amount">₹650</div>
+        <div class="period" data-en="per month • All inclusive" data-hi="प्रति माह • सब कुछ शामिल">per month • All inclusive</div>
+      </div>
+      <ul class="features-list">
+        <li data-en="Clean & Safe Rooms" data-hi="साफ और सुरक्षित कमरे">Clean & Safe Rooms</li>
+        <li data-en="24/7 Security" data-hi="24/7 सुरक्षा">24/7 Security</li>
+        <li data-en="Peaceful Study Environment" data-hi="शांत अध्ययन वातावरण">Peaceful Study Environment</li>
+        <li data-en="Near Coaching Centers" data-hi="कोचिंग सेंटर के पास">Near Coaching Centers</li>
+        <li data-en="Affordable for Village Students" data-hi="गांव के छात्रों के लिए किफायती">Affordable for Village Students</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat-card">
+      <div class="stat-num" id="statStudents">0</div>
+      <div class="stat-label" data-en="Happy Students" data-hi="खुश छात्र">Happy Students</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">₹650</div>
+      <div class="stat-label" data-en="Per Month Only" data-hi="प्रति माह केवल">Per Month Only</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statYears">0</div>
+      <div class="stat-label" data-en="Years of Service" data-hi="सेवा के वर्ष">Years of Service</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">50</div>
+      <div class="stat-label" data-en="Total Rooms" data-hi="कुल कमरे">Total Rooms</div>
+    </div>
+  </div>
+</div>
+
+<!-- AVAILABILITY -->
+<section class="availability" id="availability">
+  <div class="section-inner">
+    <div class="section-tag" data-en="LIVE STATUS" data-hi="लाइव स्थिति">LIVE STATUS</div>
+    <h2 class="section-title" data-en="Room Availability" data-hi="कमरे की उपलब्धता">Room Availability</h2>
+    <p class="section-sub" data-en="Real-time room status at Anti Lodge" data-hi="एंटी लॉज में रियल-टाइम कमरे की स्थिति">Real-time room status at Anti Lodge</p>
+    <div class="avail-grid">
+      <div class="avail-card">
+        <div class="avail-num total">50</div>
+        <div class="avail-label" data-en="Total Rooms" data-hi="कुल कमरे">Total Rooms</div>
+      </div>
+      <div class="avail-card">
+        <div class="avail-num available" id="availCount">12</div>
+        <div class="avail-label" data-en="Available Rooms" data-hi="उपलब्ध कमरे">Available Rooms</div>
+      </div>
+      <div class="avail-card">
+        <div class="avail-num occupied">38</div>
+        <div class="avail-label" data-en="Occupied Rooms" data-hi="भरे हुए कमरे">Occupied Rooms</div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span data-en="Occupancy Rate" data-hi="अधिभोग दर">Occupancy Rate</span>
+        <span>76%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="warning-banner">
+        ⚠️ <span data-en="Only 12 rooms left! Book soon before they fill up." data-hi="केवल 12 कमरे बचे हैं! भरने से पहले जल्दी बुक करें।">Only 12 rooms left! Book soon before they fill up.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING FORM -->
+<section class="booking" id="booking">
+  <div class="section-inner">
+    <div class="section-tag" data-en="BOOK NOW" data-hi="अभी बुक करें">BOOK NOW</div>
+    <h2 class="section-title" data-en="Online Booking Form" data-hi="ऑनलाइन बुकिंग फॉर्म">Online Booking Form</h2>
+    <p class="section-sub" data-en="Fill the form and your details will be sent directly to WhatsApp" data-hi="फॉर्म भरें और आपके विवरण सीधे व्हाट्सएप पर भेजे जाएंगे">Fill the form and your details will be sent directly to WhatsApp</p>
+    <div class="form-card">
+      <div class="form-grid" id="bookingForm">
+        <div class="form-group">
+          <label data-en="Full Name *" data-hi="पूरा नाम *">Full Name *</label>
+          <input type="text" id="f_name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label data-en="Father's Name *" data-hi="पिता का नाम *">Father's Name *</label>
+          <input type="text" id="f_father" placeholder="Enter father's name" required>
+        </div>
+        <div class="form-group">
+          <label data-en="Village Name *" data-hi="गांव का नाम *">Village Name *</label>
+          <input type="text" id="f_village" placeholder="Your village name" required>
+        </div>
+        <div class="form-group">
+          <label data-en="Mobile Number *" data-hi="मोबाइल नंबर *">Mobile Number *</label>
+          <input type="tel" id="f_phone" placeholder="10-digit mobile number" maxlength="10" required>
+        </div>
+        <div class="form-group">
+          <label data-en="Class / Coaching Name *" data-hi="कक्षा / कोचिंग नाम *">Class / Coaching Name *</label>
+          <input type="text" id="f_class" placeholder="e.g. Class 10, IAS Coaching" required>
+        </div>
+        <div class="form-group">
+          <label data-en="Duration of Stay *" data-hi="रहने की अवधि *">Duration of Stay *</label>
+          <select id="f_duration" required>
+            <option value="" data-en="Select duration" data-hi="अवधि चुनें">Select duration</option>
+            <option value="1 Month" data-en="1 Month" data-hi="1 महीना">1 Month</option>
+            <option value="3 Months" data-en="3 Months" data-hi="3 महीने">3 Months</option>
+            <option value="6 Months" data-en="6 Months" data-hi="6 महीने">6 Months</option>
+            <option value="1 Year" data-en="1 Year" data-hi="1 साल">1 Year</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label data-en="ID Proof (mention type)" data-hi="पहचान प्रमाण (प्रकार बताएं)">ID Proof (mention type)</label>
+          <input type="text" id="f_id" placeholder="e.g. Aadhar Card, School ID">
+        </div>
+        <div class="form-group full">
+          <label data-en="Message (Optional)" data-hi="संदेश (वैकल्पिक)">Message (Optional)</label>
+          <textarea id="f_msg" placeholder="Any special requirements or questions..."></textarea>
+        </div>
+        <div class="form-group full">
+          <button class="submit-btn" onclick="submitBooking()">
+            📱 <span data-en="Request Booking via WhatsApp" data-hi="व्हाट्सएप से बुकिंग अनुरोध करें">Request Booking via WhatsApp</span>
+          </button>
+          <p class="form-note" data-en="After clicking, your details will open in WhatsApp. Press Send to complete booking." data-hi="क्लिक करने के बाद, आपके विवरण व्हाट्सएप में खुलेंगे। बुकिंग पूरी करने के लिए Send दबाएं।">After clicking, your details will open in WhatsApp. Press Send to complete booking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-inner">
+    <div class="section-tag" data-en="REVIEWS" data-hi="समीक्षा">REVIEWS</div>
+    <h2 class="section-title" data-en="Student Testimonials" data-hi="छात्रों की राय">Student Testimonials</h2>
+    <p class="section-sub" data-en="What our students say about Anti Lodge" data-hi="हमारे छात्र एंटी लॉज के बारे में क्या कहते हैं">What our students say about Anti Lodge</p>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text" data-en='"Peaceful environment and affordable rent. Perfect for serious students preparing for board exams. I scored well because I could focus here."' data-hi='"शांत वातावरण और किफायती किराया। बोर्ड परीक्षा की तैयारी कर रहे गंभीर छात्रों के लिए बिल्कुल सही। मैं यहाँ ध्यान केंद्रित कर सका।"'>"Peaceful environment and affordable rent. Perfect for serious students preparing for board exams. I scored well because I could focus here."</p>
+        <div class="test-author">
+          <div class="test-avatar">R</div>
+          <div>
+            <div class="test-name">Rahul Kumar</div>
+            <div class="test-role" data-en="Class 10 Student" data-hi="कक्षा 10 छात्र">Class 10 Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text" data-en='"Best option for village students preparing for board exams. The staff is helpful and the rooms are clean. ₹650 is very reasonable."' data-hi='"गांव के छात्रों के लिए सबसे अच्छा विकल्प। स्टाफ मददगार है और कमरे साफ हैं। ₹650 बहुत उचित है।"'>"Best option for village students preparing for board exams. The staff is helpful and the rooms are clean. ₹650 is very reasonable."</p>
+        <div class="test-author">
+          <div class="test-avatar">I</div>
+          <div>
+            <div class="test-name">Imran Ansari</div>
+            <div class="test-role" data-en="Coaching Student" data-hi="कोचिंग छात्र">Coaching Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text" data-en='"My parents were worried about my accommodation but Anti Lodge gave them confidence. Safe, clean and very affordable."' data-hi='"मेरे माता-पिता मेरे आवास को लेकर चिंतित थे लेकिन एंटी लॉज ने उन्हें विश्वास दिलाया। सुरक्षित, साफ और बहुत किफायती।"'>"My parents were worried about my accommodation but Anti Lodge gave them confidence. Safe, clean and very affordable."</p>
+        <div class="test-author">
+          <div class="test-avatar">P</div>
+          <div>
+            <div class="test-name">Priya Sharma</div>
+            <div class="test-role" data-en="Class 12 Student" data-hi="कक्षा 12 छात्रा">Class 12 Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★☆</div>
+        <p class="test-text" data-en='"Great place for students from villages. The location is perfect — near coaching centers and market. Highly recommended!"' data-hi='"गांव के छात्रों के लिए बेहतरीन जगह। स्थान एकदम सही है — कोचिंग सेंटर और बाजार के पास। अत्यधिक अनुशंसित!"'>"Great place for students from villages. The location is perfect — near coaching centers and market. Highly recommended!"</p>
+        <div class="test-author">
+          <div class="test-avatar">A</div>
+          <div>
+            <div class="test-name">Aman Singh</div>
+            <div class="test-role" data-en="IAS Aspirant" data-hi="IAS अभ्यर्थी">IAS Aspirant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN PANEL -->
+<section class="admin" id="admin">
+  <div class="section-inner">
+    <div class="section-tag">ADMIN PANEL</div>
+    <h2 class="section-title" data-en="Admin Dashboard" data-hi="एडमिन डैशबोर्ड">Admin Dashboard</h2>
+    <p class="section-sub" data-en="UI Demo — Manage bookings, rooms and students" data-hi="UI डेमो — बुकिंग, कमरे और छात्रों का प्रबंधन करें">UI Demo — Manage bookings, rooms and students</p>
+    <div class="admin-grid">
+      <div class="admin-sidebar">
+        <div class="admin-logo">AntiLodge Admin</div>
+        <ul class="admin-menu">
+          <li class="active">📊 Dashboard</li>
+          <li>🏠 Rooms</li>
+          <li>👥 Students</li>
+          <li>📋 Bookings</li>
+          <li>💰 Income</li>
+          <li>📢 Announce</li>
+          <li>⚙️ Settings</li>
+        </ul>
+      </div>
+      <div class="admin-main">
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="admin-stat-num">38</div>
+            <div class="admin-stat-label" data-en="Total Students" data-hi="कुल छात्र">Total Students</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" style="color:#16a34a">12</div>
+            <div class="admin-stat-label" data-en="Available Rooms" data-hi="उपलब्ध कमरे">Available Rooms</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" style="color:#f59e0b">₹24,700</div>
+            <div class="admin-stat-label" data-en="Monthly Income" data-hi="मासिक आय">Monthly Income</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" style="color:#f97316">5</div>
+            <div class="admin-stat-label" data-en="Pending Requests" data-hi="लंबित अनुरोध">Pending Requests</div>
+          </div>
+        </div>
+        <div class="admin-table">
+          <div class="table-header" data-en="📋 Recent Booking Requests" data-hi="📋 हाल की बुकिंग अनुरोध">📋 Recent Booking Requests</div>
+          <div class="table-row" style="color:#64748b;font-size:11px;font-weight:700;border-bottom:1px solid #1e293b;">
+            <span>NAME</span><span>VILLAGE</span><span>DURATION</span><span>STATUS</span><span>ACTION</span>
+          </div>
+          <div class="table-row">
+            <span style="color:#fff">Rahul Kumar</span>
+            <span>Kishanganj</span>
+            <span>3 Months</span>
+            <span><span class="badge pending">Pending</span></span>
+            <span><div class="action-btns"><button class="action-btn approve">✓</button><button class="action-btn reject">✕</button></div></span>
+          </div>
+          <div class="table-row">
+            <span style="color:#fff">Imran Ansari</span>
+            <span>Bahadurganj</span>
+            <span>6 Months</span>
+            <span><span class="badge approved">Approved</span></span>
+            <span><div class="action-btns"><button class="action-btn approve">✓</button><button class="action-btn reject">✕</button></div></span>
+          </div>
+          <div class="table-row">
+            <span style="color:#fff">Priya Devi</span>
+            <span>Thakurganj</span>
+            <span>1 Month</span>
+            <span><span class="badge pending">Pending</span></span>
+            <span><div class="action-btns"><button class="action-btn approve">✓</button><button class="action-btn reject">✕</button></div></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <div class="section-tag" data-en="CONTACT US" data-hi="संपर्क करें">CONTACT US</div>
+    <h2 class="section-title" data-en="Get in Touch" data-hi="संपर्क करें">Get in Touch</h2>
+    <p class="section-sub" data-en="We're here to help you find the right room" data-hi="हम आपको सही कमरा खोजने में मदद करने के लिए यहाँ हैं">We're here to help you find the right room</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div class="contact-text">
+            <strong data-en="WhatsApp / Phone" data-hi="व्हाट्सएप / फोन">WhatsApp / Phone</strong>
+            <a href="https://wa.me/919942346634">+91 9942346634</a><br>
+            <a href="tel:+916204717288">+91 6204717288</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-text">
+            <strong data-en="Email" data-hi="ईमेल">Email</strong>
+            <a href="/cdn-cgi/l/email-protection#fb939e978b9a958f9297949f9c9ebb9c969a9297d5989496"><span class="__cf_email__" data-cfemail="8be3eee7fbeae5ffe2e7e4efeceecbece6eae2e7a5e8e4e6">[email&#160;protected]</span></a><br>
+            <a href="/cdn-cgi/l/email-protection#90f1fee4f9fcfff4f7f5d0e0e2ffe4fffebefdf5"><span class="__cf_email__" data-cfemail="a1c0cfd5c8cdcec5c6c4e1d1d3ced5cecf8fccc4">[email&#160;protected]</span></a><br>
+            <a href="/cdn-cgi/l/email-protection#52333c263b3e3d3635377c393b213a333c35333c3812353f333b3e7c313d3f"><span class="__cf_email__" data-cfemail="04656a706d686b6063612a6f6d776c656a63656a6e446369656d682a676b69">[email&#160;protected]</span></a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div class="contact-text">
+            <strong>Telegram</strong>
+            <a href="https://t.me/Antilodge" target="_blank">t.me/Antilodge</a><br>
+            <a href="https://t.me/antilodgeconnectbot" target="_blank">t.me/antilodgeconnectbot</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🌐</div>
+          <div class="contact-text">
+            <strong data-en="Official Website" data-hi="आधिकारिक वेबसाइट">Official Website</strong>
+            <a href="https://antilodge.created.app" target="_blank">antilodge.created.app</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="map-placeholder">📍</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-tag">FAQ</div>
+    <h2 class="section-title" data-en="Frequently Asked Questions" data-hi="अक्सर पूछे जाने वाले प्रश्न">Frequently Asked Questions</h2>
+    <p class="section-sub" data-en="Everything you need to know about Anti Lodge" data-hi="एंटी लॉज के बारे में जो कुछ जानना चाहते हैं">Everything you need to know about Anti Lodge</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-en="What is the monthly rent?" data-hi="मासिक किराया क्या है?">What is the monthly rent? <span class="arrow">▼</span></div>
+        <div class="faq-a"><div class="faq-a-inner" data-en="The rent is ₹650 per month which includes room and basic amenities. It is one of the most affordable student accommodations in Bahadurganj." data-hi="किराया ₹650 प्रति माह है जिसमें कमरा और बुनियादी सुविधाएं शामिल हैं। यह बाहदुरगंज में सबसे किफायती छात्र आवासों में से एक है।">The rent is ₹650 per month which includes room and basic amenities.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-en="Is it safe for students from villages?" data-hi="क्या यह गांव के छात्रों के लिए सुरक्षित है?">Is it safe for students from villages? <span class="arrow">▼</span></div>
+        <div class="faq-a"><div class="faq-a-inner" data-en="Yes, Anti Lodge provides 24/7 security and a safe environment. Many students from surrounding villages stay here comfortably." data-hi="हाँ, एंटी लॉज 24/7 सुरक्षा और सुरक्षित वातावरण प्रदान करता है। आसपास के गांवों के कई छात्र यहाँ आराम से रहते हैं।">Yes, Anti Lodge provides 24/7 security and a safe environment.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-en="How to book a room?" data-hi="कमरा कैसे बुक करें?">How to book a room? <span class="arrow">▼</span></div>
+        <div class="faq-a"><div class="faq-a-inner" data-en="Fill the online booking form above. Your details will automatically be sent to our WhatsApp. Our team will contact you within 24 hours." data-hi="ऊपर दिया गया ऑनलाइन बुकिंग फॉर्म भरें। आपके विवरण स्वचालित रूप से हमारे व्हाट्सएप पर भेजे जाएंगे। हमारी टीम 24 घंटे के भीतर आपसे संपर्क करेगी।">Fill the online booking form above. Your details will automatically be sent to our WhatsApp.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)" data-en="What documents are required?" data-hi="कौन से दस्तावेज़ आवश्यक हैं?">What documents are required? <span class="arrow">▼</span></div>
+        <div class="faq-a"><div class="faq-a-inner" data-en="You need a valid ID proof such as Aadhar Card, School/College ID, or any government issued document. Parents' consent may also be required for minor students." data-hi="आपको आधार कार्ड, स्कूल/कॉलेज आईडी, या किसी सरकारी दस्तावेज जैसे वैध पहचान प्रमाण की आवश्यकता है।">You need a valid ID proof such as Aadhar Card or School/College ID.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Anti<span>Lodge</span></div>
+        <p class="footer-desc" data-en="Providing affordable and safe accommodation for students in Bahadurganj, Kishanganj since years. Your dream, our responsibility." data-hi="वर्षों से बाहदुरगंज, किशनगंज में छात्रों को किफायती और सुरक्षित आवास प्रदान कर रहे हैं।">Providing affordable and safe accommodation for students in Bahadurganj, Kishanganj since years. Your dream, our responsibility.</p>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Quick Links" data-hi="त्वरित लिंक">Quick Links</h4>
+        <ul>
+          <li><a href="#home" data-en="Home" data-hi="होम">Home</a></li>
+          <li><a href="#availability" data-en="Rooms" data-hi="कमरे">Rooms</a></li>
+          <li><a href="#booking" data-en="Book Now" data-hi="अभी बुक करें">Book Now</a></li>
+          <li><a href="#testimonials" data-en="Reviews" data-hi="समीक्षा">Reviews</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Contact" data-hi="संपर्क">Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/919942346634">WhatsApp: +91 9942346634</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#ed8588819d8c8399848182898a88ad8a808c8481c38e8280"><span class="__cf_email__" data-cfemail="4e262b223e2f203a2722212a292b0e29232f2722602d2123">[email&#160;protected]</span></a></li>
+          <li><a href="https://t.me/Antilodge">Telegram: @Antilodge</a></li>
+          <li><a href="https://antilodge.created.app">antilodge.created.app</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Anti Lodge Bahadurganj. All rights reserved.</span>
+      <span>👨‍💻 Developed by <strong style="color:#93c5fd">Sufiyan Absar</strong></span>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<a href="https://wa.me/919942346634" target="_blank" class="float-wa">💬</a>
+<a href="/birthday" style="position:fixed;bottom:228px;right:24px;background:linear-gradient(135deg,#FFD700,#FF006E);color:#fff;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(255,215,0,0.4);z-index:999;transition:all 0.3s;animation:floatBounce 3s ease-in-out infinite 0.5s;">🎂 Birthday</a>
+<a href="/feedback" style="position:fixed;bottom:160px;right:24px;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(245,158,11,0.4);z-index:999;transition:all 0.3s;animation:floatBounce 3s ease-in-out infinite;">⭐ Feedback</a>
+<a href="#booking" class="float-book" data-en="🏠 Book Now" data-hi="🏠 बुक करें">🏠 Book Now</a>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <div class="popup-icon">💬</div>
+    <h3 data-en="Redirecting to WhatsApp..." data-hi="व्हाट्सएप पर रीडायरेक्ट हो रहा है...">Redirecting to WhatsApp...</h3>
+    <p data-en="Your booking details have been prepared. Press SEND in WhatsApp to complete your booking request." data-hi="आपके बुकिंग विवरण तैयार हो गए हैं। बुकिंग अनुरोध पूरा करने के लिए व्हाट्सएप में SEND दबाएं।">Your booking details have been prepared. Press SEND in WhatsApp to complete your booking request.</p>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// LANGUAGE TOGGLE
+let isHindi = false;
+function toggleLang(){
+  isHindi = !isHindi;
+  document.querySelector('.lang-btn').textContent = isHindi ? 'English' : 'हिंदी';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const txt = isHindi ? el.getAttribute('data-hi') : el.getAttribute('data-en');
+    if(txt) el.innerHTML = txt;
+  });
+}
+
+// MOBILE MENU
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// COUNTER ANIMATION
+function animateCounter(id, target, duration=2000){
+  let start = 0;
+  const el = document.getElementById(id);
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if(start >= target){ el.textContent = target; clearInterval(timer); return; }
+    el.textContent = Math.floor(start);
+  }, 16);
+}
+
+// PROGRESS BAR
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '76%';
+    animateCounter('statStudents', 200);
+    animateCounter('statYears', 5);
+  }, 500);
+});
+
+// FAQ TOGGLE
+function toggleFaq(el){
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// BOOKING FORM → WHATSAPP
+function submitBooking(){
+  const name = document.getElementById('f_name').value.trim();
+  const father = document.getElementById('f_father').value.trim();
+  const village = document.getElementById('f_village').value.trim();
+  const phone = document.getElementById('f_phone').value.trim();
+  const cls = document.getElementById('f_class').value.trim();
+  const duration = document.getElementById('f_duration').value;
+  const idProof = document.getElementById('f_id').value.trim() || 'Not mentioned';
+  const msg = document.getElementById('f_msg').value.trim() || 'No message';
+
+  if(!name || !father || !village || !phone || !cls || !duration){
+    alert(isHindi ? 'कृपया सभी आवश्यक फ़ील्ड भरें!' : 'Please fill all required fields!');
+    return;
+  }
+  if(!/^\d{10}$/.test(phone)){
+    alert(isHindi ? 'कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें!' : 'Please enter valid 10-digit mobile number!');
+    return;
+  }
+
+  // Generate booking ID
+  const bookingId = 'AL-2026-' + String(Math.floor(Math.random()*900)+100).padStart(3,'0');
+
+  const waMsg = `📌 *New Room Booking Request – Anti Lodge*
+🆔 Booking ID: ${bookingId}
+
+👤 Name: ${name}
+👨 Father's Name: ${father}
+🏡 Village: ${village}
+📱 Mobile: ${phone}
+📚 Class / Coaching: ${cls}
+📅 Duration: ${duration}
+🪪 ID Proof: ${idProof}
+📝 Message: ${msg}
+
+Please confirm room availability.
+
+_Sent from AntiLodge Website_`;
+
+  // Show popup
+  document.getElementById('popup').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('popup').classList.remove('show');
+    window.open('https://wa.me/919942346634?text=' + encodeURIComponent(waMsg), '_blank');
+  }, 2000);
+}
+
+// Close popup on click
+document.getElementById('popup').addEventListener('click', function(){
+  this.classList.remove('show');
+});
+
+// SCROLL ANIMATIONS
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+  });
+}, {threshold:0.1});
+
+document.querySelectorAll('.avail-card,.test-card,.contact-item,.faq-item,.admin-stat').forEach(el => {
+  el.style.opa
