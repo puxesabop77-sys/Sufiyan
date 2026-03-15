@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Receipt Admin | Anti Lodge</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#070b14;color:#e2e8f0;min-height:100vh}
+:root{--b:#3b82f6;--g:#10b981;--r:#ef4444;--gold:#f59e0b;--surface:#0d1424;--surface2:#111827;--border:#1e2d45;--border2:#243350}
+
+/* LOGIN */
+#loginWrap{position:fixed;inset:0;background:#070b14;display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{width:380px;max-width:90vw;background:#0d1424;border:1px solid #243350;border-radius:24px;padding:48px 40px;position:relative;overflow:hidden;animation:slideUp .6s cubic-bezier(.16,1,.3,1)}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#3b82f6,#10b981)}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.login-logo p{font-size:12px;color:#64748b;letter-spacing:2px}
+.lfield{margin-bottom:18px}
+.lfield label{display:block;font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase}
+.lfield input{width:100%;background:#111827;border:1px solid #243350;color:#e2e8f0;padding:13px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:all .25s}
+.lfield input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,#3b82f6,#6366f1);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;border-radius:10px;cursor:pointer;transition:all .3s}
+.lbtn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
+.lerr{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:8px;padding:10px 14px;font-size:13px;margin-top:12px;display:none;text-align:center}
+.lerr.show{display:block}
+
+/* SHELL */
+#shell{display:none}
+.topbar{background:#0d1424;border-bottom:1px solid #1e2d45;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+.topbar-logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff}
+.topbar-logo span{color:#3b82f6}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.ttime{font-size:12px;color:#64748b;font-family:'DM Sans',sans-serif;background:#111827;padding:6px 12px;border-radius:8px;border:1px solid #1e2d45}
+.logoutbtn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.logoutbtn:hover{background:rgba(239,68,68,.2)}
+.content{max-width:1200px;margin:0 auto;padding:28px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:#0d1424;border:1px solid #1e2d45;border-radius:12px;padding:6px}
+.tab{flex:1;padding:10px;border:none;background:none;color:#64748b;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s}
+.tab.active{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff}
+
+/* PANELS */
+.panel{display:none}.panel.active{display:block;animation:panelIn .3s ease}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.box{background:#0d1424;border:1px solid #1e2d45;border-radius:16px;padding:24px;margin-bottom:20px}
+.box h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.box h3 span{font-size:18px}
+
+/* FORM */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.frow.full{grid-template-columns:1fr}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup label{font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase}
+.fgroup input,.fgroup select{background:#111827;border:1px solid #243350;color:#e2e8f0;padding:11px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .25s}
+.fgroup input:focus,.fgroup select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.fgroup select option{background:#111827}
+.rid-box{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.rid-label{font-size:11px;color:#64748b;letter-spacing:1px;font-weight:700}
+.rid-val{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:800;color:#3b82f6;letter-spacing:1px}
+.abtn{padding:11px 22px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.abtn.primary{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff}
+.abtn.primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.3)}
+.abtn.success{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#10b981}
+.abtn.success:hover{background:rgba(16,185,129,.25)}
+.abtn.danger{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.abtn.danger:hover{background:rgba(239,68,68,.2)}
+.abtn.ghost{background:#111827;border:1px solid #243350;color:#94a3b8}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.stat{background:#0d1424;border:1px solid #1e2d45;border-radius:14px;padding:20px;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc)}
+.stat-num{font-family:'DM Sans',sans-serif;font-size:30px;font-weight:800;color:#fff}
+.stat-label{font-size:11px;color:#64748b;margin-top:4px;letter-spacing:.5px}
+.stat-icon{position:absolute;right:16px;top:16px;font-size:22px;opacity:.3}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;letter-spacing:1px;color:#64748b;padding:10px 14px;border-bottom:1px solid #1e2d45;font-weight:700;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid #111827;font-size:13px;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge.upi{background:rgba(59,130,246,.15);color:#93c5fd}
+.badge.cash{background:rgba(16,185,129,.15);color:#6ee7b7}
+.badge.bank{background:rgba(245,158,11,.15);color:#fcd34d}
+.search-box{width:100%;background:#111827;border:1px solid #243350;color:#e2e8f0;padding:10px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:16px}
+.search-box:focus{border-color:#3b82f6}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:#0d1424;border:1px solid #243350;border-radius:10px;padding:12px 18px;font-size:13px;display:flex;align-items:center;gap:10px;min-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastIn .3s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{border-left:3px solid #10b981}
+.toast.error{border-left:3px solid #ef4444}
+.toast.info{border-left:3px solid #3b82f6}
+
+@media(max-width:700px){.frow{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.content{padding:16px}.tabs .tab{font-size:11px;padding:8px 6px}}
+</style>
+</head>
+<body>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- LOGIN -->
+<div id="loginWrap">
+<div class="login-box">
+  <div class="login-logo">
+    <h2>⚡ Anti Lodge</h2>
+    <p>RECEIPT ADMIN PANEL</p>
+  </div>
+  <div class="lfield"><label>Admin Password</label>
+    <input type="password" id="lpass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+  </div>
+  <button class="lbtn" onclick="doLogin()">AUTHENTICATE →</button>
+  <div class="lerr" id="lerr">⚠ Wrong password. Access denied.</div>
+</div>
+</div>
+
+<!-- SHELL -->
+<div id="shell">
+  <div class="topbar">
+    <div class="topbar-logo">Anti<span>Lodge</span> · Receipts</div>
+    <div class="topbar-right">
+      <div class="ttime" id="clock"></div>
+      <button class="logoutbtn" onclick="doLogout()">⏻ Logout</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs">
+      <button class="tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</button>
+      <button class="tab" onclick="showPanel('add',this)">➕ Add Receipt</button>
+      <button class="tab" onclick="showPanel('all',this)">📋 All Receipts</button>
+      <button class="tab" onclick="showPanel('search',this)">🔍 Search</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats" id="statsRow"></div>
+      <div class="box">
+        <h3><span>🕐</span> Recent Receipts</h3>
+        <div class="tbl-wrap"><table id="recentTbl">
+          <thead><tr><th>RECEIPT ID</th><th>STUDENT</th><th>ROOM</th><th>AMOUNT</th><th>METHOD</th><th>DATE</th><th>ACTION</th></tr></thead>
+          <tbody id="recentTbody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ADD RECEIPT -->
+    <div class="panel" id="panel-add">
+      <div class="box">
+        <h3><span>🆔</span> Auto-Generated Receipt ID</h3>
+        <div class="rid-box">
+          <div><div class="rid-label">RECEIPT NUMBER</div><div class="rid-val" id="ridDisplay">AL-2026-001</div></div>
+          <button class="abtn ghost" onclick="regenID()">↻ Regenerate</button>
+        </div>
+      </div>
+      <div class="box">
+        <h3><span>📝</span> Student Details</h3>
+        <div class="frow">
+          <div class="fgroup"><label>Student Name *</label><input type="text" id="f_name" placeholder="Full name"></div>
+          <div class="fgroup"><label>Father's Name *</label><input type="text" id="f_father" placeholder="Father's full name"></div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label>Course / Coaching *</label><input type="text" id="f_course" placeholder="e.g. Class 10, NEET Coaching"></div>
+          <div class="fgroup"><label>Room Number / Type *</label><input type="text" id="f_room" placeholder="e.g. Triple Sharing, Room 4"></div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label>Mobile Number</label><input type="tel" id="f_phone" placeholder="10-digit" maxlength="10"></div>
+          <div class="fgroup"><label>Village / City</label><input type="text" id="f_city" placeholder="Student's village or city"></div>
+        </div>
+      </div>
+      <div class="box">
+        <h3><span>💳</span> Payment Details</h3>
+        <div class="frow">
+          <div class="fgroup"><label>Payment Amount (₹) *</label><input type="number" id="f_amount" placeholder="e.g. 650"></div>
+          <div class="fgroup"><label>Payment Method *</label>
+            <select id="f_method">
+              <option value="">Select method</option>
+              <option value="UPI">UPI (PhonePe / GPay / Paytm)</option>
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fgroup"><label>Payment Date *</label><input type="date" id="f_date"></div>
+          <div class="fgroup"><label>Payment For (Month)</label><input type="text" id="f_month" placeholder="e.g. April 2026, Security Deposit"></div>
+        </div>
+        <div class="frow full">
+          <div class="fgroup"><label>Notes (Optional)</label><input type="text" id="f_notes" placeholder="Any additional notes..."></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="abtn primary" onclick="saveReceipt()">💾 Save & Generate Receipt</button>
+        <button class="abtn success" onclick="previewReceipt()">👁️ Preview Receipt</button>
+        <button class="abtn ghost" onclick="clearForm()">✕ Clear Form</button>
+      </div>
+    </div>
+
+    <!-- ALL RECEIPTS -->
+    <div class="panel" id="panel-all">
+      <div class="box">
+        <h3><span>📋</span> All Receipts</h3>
+        <input class="search-box" id="allSearch" placeholder="🔍 Search by name, receipt ID, room..." oninput="renderAll()">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>RECEIPT ID</th><th>STUDENT</th><th>FATHER</th><th>ROOM</th><th>AMOUNT</th><th>METHOD</th><th>DATE</th><th>ACTIONS</th></tr></thead>
+          <tbody id="allTbody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="panel" id="panel-search">
+      <div class="box">
+        <h3><span>🔍</span> Find Receipt by ID or Name</h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+          <input class="search-box" id="srchInput" placeholder="Enter Receipt ID (e.g. AL-2026-001) or student name..." style="flex:1;margin:0">
+          <button class="abtn primary" onclick="doSearch()">Search</button>
+        </div>
+        <div id="srchResult"></div>
+      </div>
+      <div class="box">
+        <h3><span>🔗</span> Share Receipt Link</h3>
+        <p style="font-size:13px;color:#64748b;margin-bottom:12px">Generate a shareable link for a receipt that students can open directly.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <input class="search-box" id="shareInput" placeholder="Enter Receipt ID..." style="flex:1;margin:0">
+          <button class="abtn success" onclick="genShareLink()">🔗 Generate Link</button>
+        </div>
+        <div id="shareResult" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RKEY = 'al_receipts';
+const PASS = 'Sufiyan Panel Active';
+let currentID = '';
+
+// ── AUTH ──────────────────────────────────────────────────
+function doLogin(){
+  const p = document.getElementById('lpass').value;
+  if(p === PASS){
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('shell').style.display='block';
+    initAdmin();
+    toast('Welcome back! 👋','success');
+  } else {
+    document.getElementById('lerr').classList.add('show');
+    document.getElementById('lpass').value='';
+  }
+}
+function doLogout(){
+  document.getElementById('shell').style.display='none';
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('lpass').value='';
+  document.getElementById('lerr').classList.remove('show');
+}
+document.getElementById('lpass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ── INIT ──────────────────────────────────────────────────
+function initAdmin(){
+  startClock();
+  generateID();
+  setTodayDate();
+  renderDashboard();
+  renderAll();
+}
+
+function startClock(){
+  setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN');},1000);
+}
+function setTodayDate(){
+  document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+}
+
+// ── PANELS ────────────────────────────────────────────────
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='all') renderAll();
+  if(id==='dashboard') renderDashboard();
+}
+
+// ── RECEIPT ID ────────────────────────────────────────────
+function generateID(){
+  const receipts = getReceipts();
+  const num = receipts.length + 1;
+  const year = new Date().getFullYear();
+  const rand = Math.floor(Math.random()*90)+10;
+  currentID = `AL-${year}-${String(num).padStart(3,'0')}${rand}`;
+  document.getElementById('ridDisplay').textContent = currentID;
+}
+function regenID(){
+  const year = new Date().getFullYear();
+  const rand = Math.floor(Math.random()*9000)+1000;
+  currentID = `AL-${year}-${rand}`;
+  document.getElementById('ridDisplay').textContent = currentID;
+}
+
+// ── DATA ──────────────────────────────────────────────────
+function getReceipts(){
+  try{ return JSON.parse(localStorage.getItem(RKEY)||'[]'); }
+  catch{ return []; }
+}
+function saveReceipts(data){
+  localStorage.setItem(RKEY, JSON.stringify(data));
+}
+
+// ── SAVE ──────────────────────────────────────────────────
+function saveReceipt(){
+  const name=document.getElementById('f_name').value.trim();
+  const father=document.getElementById('f_father').value.trim();
+  const course=document.getElementById('f_course').value.trim();
+  const room=document.getElementById('f_room').value.trim();
+  const amount=document.getElementById('f_amount').value.trim();
+  const method=document.getElementById('f_method').value;
+  const date=document.getElementById('f_date').value;
+  if(!name||!father||!course||!room||!amount||!method||!date){
+    toast('Please fill all required fields!','error'); return;
+  }
+  const receipt = {
+    id: currentID,
+    name, father, course, room,
+    phone: document.getElementById('f_phone').value,
+    city: document.getElementById('f_city').value,
+    amount: parseFloat(amount),
+    method, date,
+    month: document.getElementById('f_month').value || 'Monthly Rent',
+    notes: document.getElementById('f_notes').value,
+    createdAt: new Date().toISOString(),
+    createdBy: 'Admin'
+  };
+  const receipts = getReceipts();
+  // Check for duplicate ID
+  if(receipts.find(r=>r.id===currentID)){
+    regenID(); receipt.id = currentID;
+  }
+  receipts.unshift(receipt);
+  saveReceipts(receipts);
+  toast(`✅ Receipt ${currentID} saved!`,'success');
+  // Open receipt in new tab
+  setTimeout(()=>window.open(`/student-receipt?id=${encodeURIComponent(receipt.id)}`,'_blank'),500);
+  clearForm();
+  generateID();
+  renderDashboard();
+  renderAll();
+}
+
+function clearForm(){
+  ['f_name','f_father','f_course','f_room','f_phone','f_city','f_amount','f_month','f_notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_method').value='';
+  setTodayDate();
+  generateID();
+}
+
+function previewReceipt(){
+  const name=document.getElementById('f_name').value.trim();
+  if(!name){toast('Please enter student name first!','error');return;}
+  const receipt={
+    id:currentID,
+    name, father:document.getElementById('f_father').value,
+    course:document.getElementById('f_course').value,
+    room:document.getElementById('f_room').value,
+    phone:document.getElementById('f_phone').value,
+    city:document.getElementById('f_city').value,
+    amount:document.getElementById('f_amount').value,
+    method:document.getElementById('f_method').value,
+    date:document.getElementById('f_date').value,
+    month:document.getElementById('f_month').value||'Monthly Rent',
+    notes:document.getElementById('f_notes').value,
+    preview:true
+  };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(receipt))));
+  window.open(`/student-receipt?preview=${encoded}`,'_blank');
+}
+
+// ── RENDER DASHBOARD ──────────────────────────────────────
+function renderDashboard(){
+  const R = getReceipts();
+  const total = R.length;
+  const totalAmt = R.reduce((s,r)=>s+(r.amount||0),0);
+  const thisMonth = R.filter(r=>{
+    const d=new Date(r.date||r.createdAt);
+    const n=new Date();
+    return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear();
+  });
+  const upi = R.filter(r=>r.method==='UPI').length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat" style="--sc:linear-gradient(90deg,#3b82f6,#6366f1)"><div class="stat-icon">📋</div><div class="stat-num">${total}</div><div class="stat-label">TOTAL RECEIPTS</div></div>
+    <div class="stat" style="--sc:linear-gradient(90deg,#10b981,#06b6d4)"><div class="stat-icon">💰</div><div class="stat-num">₹${totalAmt.toLocaleString('en-IN')}</div><div class="stat-label">TOTAL COLLECTED</div></div>
+    <div class="stat" style="--sc:linear-gradient(90deg,#f59e0b,#ef4444)"><div class="stat-icon">📅</div><div class="stat-num">${thisMonth.length}</div><div class="stat-label">THIS MONTH</div></div>
+    <div class="stat" style="--sc:linear-gradient(90deg,#ec4899,#8b5cf6)"><div class="stat-icon">📱</div><div class="stat-num">${upi}</div><div class="stat-label">UPI PAYMENTS</div></div>`;
+  const tbody = document.getElementById('recentTbody');
+  const recent = R.slice(0,10);
+  if(!recent.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#64748b;padding:32px">No receipts yet. Add one!</td></tr>';return;}
+  tbody.innerHTML = recent.map(r=>rowHTML(r)).join('');
+}
+
+function renderAll(){
+  const R = getReceipts();
+  const q = (document.getElementById('allSearch')?.value||'').toLowerCase();
+  const filtered = q ? R.filter(r=>(r.name+r.id+r.room+r.father+r.method).toLowerCase().includes(q)) : R;
+  const tbody = document.getElementById('allTbody');
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:#64748b;padding:32px">No receipts found.</td></tr>';return;}
+  tbody.innerHTML = filtered.map(r=>`
+    <td><code style="color:#93c5fd;font-size:12px">${r.id}</code></td>
+    <td style="font-weight:600">${r.name}</td>
+    <td style="color:#94a3b8">${r.father||'—'}</td>
+    <td style="color:#94a3b8">${r.room}</td>
+    <td style="color:#10b981;font-weight:700">₹${(r.amount||0).toLocaleString('en-IN')}</td>
+    <td><span class="badge ${(r.method||'').toLowerCase().replace(' ','')}">${r.method||'—'}</span></td>
+    <td style="color:#94a3b8;font-size:12px">${r.date||'—'}</td>
+    <td><div style="display:flex;gap:6px">
+      <button class="abtn success" style="padding:5px 10px;font-size:11px" onclick="openReceipt('${r.id}')">👁️ View</button>
+      <button class="abtn danger" style="padding:5px 10px;font-size:11px" onclick="deleteReceipt('${r.id}')">🗑️</button>
+    </div></td>
+  `.replace('<td>','<tr><td>').replace('</td>\n    <td><div','</td><td><div')).map(s=>s+'</tr>').join('');
+}
+
+function rowHTML(r){
+  return `<tr>
+    <td><code style="color:#93c5fd;font-size:12px">${r.id}</code></td>
+    <td style="font-weight:600">${r.name}</td>
+    <td style="color:#94a3b8">${r.room}</td>
+    <td style="color:#10b981;font-weight:700">₹${(r.amount||0).toLocaleString('en-IN')}</td>
+    <td><span class="badge ${(r.method||'').toLowerCase().replace(' ','')}">${r.method||'—'}</span></td>
+    <td style="color:#94a3b8;font-size:12px">${r.date||'—'}</td>
+    <td><button class="abtn success" style="padding:5px 10px;font-size:11px" onclick="openReceipt('${r.id}')">👁️ View</button></td>
+  </tr>`;
+}
+
+function openReceipt(id){
+  window.open(`/student-receipt?id=${encodeURIComponent(id)}`,'_blank');
+}
+function deleteReceipt(id){
+  if(!confirm('Delete this receipt?')) return;
+  const R = getReceipts().filter(r=>r.id!==id);
+  saveReceipts(R);
+  renderAll();
+  renderDashboard();
+  toast('Receipt deleted','error');
+}
+
+// ── SEARCH ────────────────────────────────────────────────
+function doSearch(){
+  const q = document.getElementById('srchInput').value.trim().toLowerCase();
+  if(!q){document.getElementById('srchResult').innerHTML='';return;}
+  const R = getReceipts();
+  const found = R.filter(r=>(r.id+r.name+r.father).toLowerCase().includes(q));
+  if(!found.length){
+    document.getElementById('srchResult').innerHTML='<p style="color:#94a3b8;font-size:14px">No receipt found matching "'+q+'"</p>';
+    return;
+  }
+  document.getElementById('srchResult').innerHTML = found.map(r=>`
+    <div style="background:#111827;border:1px solid #243350;border-radius:12px;padding:18px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:13px;color:#64748b;margin-bottom:2px">Receipt ID</div>
+        <div style="font-size:16px;font-weight:700;color:#93c5fd">${r.id}</div>
+        <div style="font-size:14px;margin-top:4px">${r.name} · ${r.room} · ₹${(r.amount||0).toLocaleString('en-IN')} · ${r.date}</div>
+      </div>
+      <button class="abtn success" onclick="openReceipt('${r.id}')">👁️ View Receipt</button>
+    </div>`).join('');
+}
+
+function genShareLink(){
+  const id = document.getElementById('shareInput').value.trim();
+  if(!id){toast('Enter a Receipt ID!','error');return;}
+  const url = `${location.origin}/student-receipt?id=${encodeURIComponent(id)}`;
+  navigator.clipboard&&navigator.clipboard.writeText(url).then(()=>toast('Link copied! ✅','success'));
+  document.getElementById('shareResult').innerHTML=`
+    <div style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:12px 16px">
+      <div style="font-size:11px;color:#64748b;margin-bottom:6px;letter-spacing:1px">RECEIPT LINK</div>
+      <code style="font-size:13px;color:#93c5fd;word-break:break-all">${url}</code>
+    </div>`;
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg,type='info'){
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+</script>
+</body>
+</html>

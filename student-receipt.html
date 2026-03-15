@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Payment Receipt | Anti Lodge Bahadurganj</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- QR Code lib -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- PDF lib -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f0f4f8;min-height:100vh;padding:20px}
+
+/* TOOLBAR */
+.toolbar{max-width:800px;margin:0 auto 20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.toolbar-left{display:flex;gap:10px;flex-wrap:wrap}
+.tbtn{padding:10px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;transition:all .25s;text-decoration:none}
+.tbtn.primary{background:#2563eb;color:#fff}
+.tbtn.primary:hover{background:#1d4ed8;transform:translateY(-2px)}
+.tbtn.success{background:#10b981;color:#fff}
+.tbtn.success:hover{background:#059669;transform:translateY(-2px)}
+.tbtn.ghost{background:#fff;color:#374151;border:1.5px solid #e5e7eb}
+.tbtn.ghost:hover{border-color:#2563eb;color:#2563eb}
+
+/* SEARCH BAR */
+.search-bar{max-width:800px;margin:0 auto 20px;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 16px rgba(0,0,0,.07);display:flex;gap:10px;align-items:center}
+.search-bar input{flex:1;padding:10px 16px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;color:#1e293b;transition:all .2s}
+.search-bar input:focus{border-color:#2563eb}
+.search-bar button{padding:10px 20px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+
+/* NOT FOUND */
+.notfound{max-width:800px;margin:0 auto;background:#fff;border-radius:20px;padding:60px 20px;text-align:center;box-shadow:0 2px 16px rgba(0,0,0,.07)}
+.notfound .icon{font-size:64px;margin-bottom:16px}
+.notfound h2{font-family:'Syne',sans-serif;font-size:22px;color:#374151;margin-bottom:8px}
+.notfound p{color:#6b7280;font-size:14px}
+
+/* ═══ RECEIPT ════════════════════════════════════════════ */
+#receiptWrap{max-width:800px;margin:0 auto}
+
+.receipt{
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 4px 32px rgba(0,0,0,.10);
+  position:relative;
+}
+
+/* WATERMARK */
+.receipt::before{
+  content:'ANTI LODGE';
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-35deg);
+  font-family:'Syne',sans-serif;font-size:80px;font-weight:800;
+  color:rgba(37,99,235,.04);white-space:nowrap;
+  pointer-events:none;z-index:0;letter-spacing:8px;
+}
+
+/* HEADER */
+.r-header{
+  background:linear-gradient(135deg,#0b0f1a 0%,#1e3a5f 60%,#0b0f1a 100%);
+  padding:28px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.r-header::before{
+  content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%);border-radius:50%;
+}
+.r-logo-area{display:flex;align-items:center;gap:16px}
+.r-logo-box{width:60px;height:60px;background:linear-gradient(135deg,#2563eb,#0ea5e9);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;flex-shrink:0}
+.r-lodge-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;line-height:1.2}
+.r-lodge-sub{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-top:3px}
+.r-header-right{text-align:right}
+.r-receipt-tag{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-bottom:4px}
+.r-receipt-id{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#93c5fd;letter-spacing:1px}
+.r-date-issued{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* STATUS BANNER */
+.r-status{
+  background:linear-gradient(90deg,#10b981,#059669);
+  padding:10px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.r-status-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff;letter-spacing:.5px}
+.r-status-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.r-status-right{font-size:12px;color:rgba(255,255,255,.7)}
+
+/* BODY */
+.r-body{padding:28px 36px}
+
+/* AMOUNT HERO */
+.r-amount-hero{
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);
+  border:2px solid #bfdbfe;border-radius:16px;
+  padding:20px 24px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.r-amount-label{font-size:12px;color:#3b82f6;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.r-amount-val{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#1d4ed8;line-height:1}
+.r-amount-sub{font-size:13px;color:#64748b;margin-top:4px}
+.r-method-badge{background:#2563eb;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+
+/* DETAILS GRID */
+.r-details{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.r-detail-item{background:#f8fafc;border-radius:12px;padding:14px 16px;border:1px solid #f1f5f9}
+.r-detail-label{font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase}
+.r-detail-val{font-size:15px;font-weight:600;color:#1e293b;word-break:break-word}
+
+/* DIVIDER */
+.r-divider{border:none;border-top:1px dashed #e2e8f0;margin:20px 0}
+
+/* SIGNATURES */
+.r-signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.r-sig-item{text-align:center}
+.r-sig-line{border-top:1.5px solid #334155;padding-top:8px;margin-top:32px;font-size:12px;color:#64748b}
+
+/* QR */
+.r-qr-section{display:flex;align-items:center;gap:20px;background:#f8fafc;border-radius:14px;padding:16px;margin-bottom:20px;flex-wrap:wrap}
+.r-qr-box{flex-shrink:0}
+.r-qr-box img,.r-qr-box canvas{border-radius:8px!important}
+.r-qr-info{}
+.r-qr-title{font-size:13px;font-weight:700;color:#374151;margin-bottom:4px}
+.r-qr-sub{font-size:12px;color:#64748b;line-height:1.7}
+.r-verify-url{font-size:12px;color:#2563eb;font-family:'DM Sans',sans-serif;margin-top:6px;word-break:break-all}
+
+/* FOOTER */
+.r-footer{
+  background:#f8fafc;border-top:1px solid #f1f5f9;
+  padding:16px 36px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.r-footer-left{font-size:11px;color:#94a3b8;line-height:1.7}
+.r-footer-right{font-size:11px;color:#94a3b8;text-align:right}
+
+/* PREVIEW BADGE */
+.preview-badge{
+  background:linear-gradient(135deg,#f59e0b,#f97316);
+  color:#fff;padding:8px 20px;text-align:center;
+  font-weight:700;font-size:13px;letter-spacing:1px;
+  display:none;
+}
+.preview-badge.show{display:block}
+
+/* PRINT ONLY */
+@media print{
+  body{background:#fff;padding:0}
+  .toolbar,.search-bar,.preview-badge{display:none!important}
+  .receipt{box-shadow:none;border-radius:0}
+  #receiptWrap{max-width:100%}
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  body{padding:12px}
+  .r-header{padding:20px 18px;flex-wrap:wrap;gap:12px}
+  .r-body{padding:20px 18px}
+  .r-details{grid-template-columns:1fr}
+  .r-signatures{grid-template-columns:1fr}
+  .r-footer{padding:14px 18px}
+  .r-amount-hero{flex-direction:column;align-items:flex-start}
+  .r-amount-val{font-size:34px}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .toolbar-left{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar" id="toolbar" style="display:none">
+  <div class="toolbar-left">
+    <button class="tbtn primary" onclick="downloadPDF()">⬇️ Download PDF</button>
+    <button class="tbtn success" onclick="window.print()">🖨️ Print Receipt</button>
+    <button class="tbtn ghost" onclick="copyLink()">🔗 Copy Link</button>
+  </div>
+  <a href="/admin-receipt" class="tbtn ghost">🔙 Back to Admin</a>
+</div>
+
+<!-- SEARCH (shown when no receipt loaded) -->
+<div class="search-bar" id="searchBar">
+  <input type="text" id="ridInput" placeholder="Enter Receipt ID (e.g. AL-2026-001)..." onkeydown="if(event.key==='Enter')loadBySearch()">
+  <button onclick="loadBySearch()">Search</button>
+</div>
+
+<!-- NOT FOUND -->
+<div class="notfound" id="notfound" style="display:none">
+  <div class="icon">🔍</div>
+  <h2>Receipt Not Found</h2>
+  <p id="notfoundMsg">No receipt with this ID found. Please check and try again.</p>
+  <button class="tbtn ghost" style="margin:16px auto 0;display:inline-flex" onclick="location.reload()">↺ Try Again</button>
+</div>
+
+<!-- RECEIPT -->
+<div id="receiptWrap" style="display:none">
+<div class="receipt" id="receipt">
+
+  <div class="preview-badge" id="previewBadge">⚠️ PREVIEW — NOT SAVED</div>
+
+  <!-- HEADER -->
+  <div class="r-header">
+    <div class="r-logo-area">
+      <div class="r-logo-box">AL</div>
+      <div>
+        <div class="r-lodge-name">Anti Lodge</div>
+        <div class="r-lodge-sub">BAHADURGANJ, KISHANGANJ · BIHAR</div>
+      </div>
+    </div>
+    <div class="r-header-right">
+      <div class="r-receipt-tag">PAYMENT RECEIPT</div>
+      <div class="r-receipt-id" id="r_id">—</div>
+      <div class="r-date-issued" id="r_issued">—</div>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="r-status">
+    <div class="r-status-left"><div class="r-status-dot"></div> PAYMENT CONFIRMED</div>
+    <div class="r-status-right">Talat Welfare Lodge (Anti Lodge)</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="r-body">
+
+    <!-- AMOUNT HERO -->
+    <div class="r-amount-hero">
+      <div>
+        <div class="r-amount-label">AMOUNT PAID</div>
+        <div class="r-amount-val" id="r_amount">₹0</div>
+        <div class="r-amount-sub" id="r_month">—</div>
+      </div>
+      <div class="r-method-badge" id="r_method_badge">💳 —</div>
+    </div>
+
+    <!-- STUDENT DETAILS -->
+    <div class="r-details">
+      <div class="r-detail-item">
+        <div class="r-detail-label">Student Name</div>
+        <div class="r-detail-val" id="r_name">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Father's Name</div>
+        <div class="r-detail-val" id="r_father">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Course / Coaching</div>
+        <div class="r-detail-val" id="r_course">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Room Number / Type</div>
+        <div class="r-detail-val" id="r_room">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Mobile Number</div>
+        <div class="r-detail-val" id="r_phone">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Village / City</div>
+        <div class="r-detail-val" id="r_city">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Payment Date</div>
+        <div class="r-detail-val" id="r_date">—</div>
+      </div>
+      <div class="r-detail-item">
+        <div class="r-detail-label">Payment Method</div>
+        <div class="r-detail-val" id="r_method">—</div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div id="r_notes_wrap" style="display:none;background:#fefce8;border:1px solid #fde68a;border-radius:12px;padding:14px 16px;margin-bottom:20px">
+      <div style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:1px;margin-bottom:4px">NOTES</div>
+      <div style="font-size:14px;color:#78350f" id="r_notes"></div>
+    </div>
+
+    <hr class="r-divider">
+
+    <!-- QR CODE -->
+    <div class="r-qr-section">
+      <div class="r-qr-box" id="qrBox"></div>
+      <div class="r-qr-info">
+        <div class="r-qr-title">🔐 Verification QR Code</div>
+        <div class="r-qr-sub">Scan this QR to verify the authenticity of this receipt online.</div>
+        <div class="r-verify-url" id="r_verifyUrl"></div>
+      </div>
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="r-signatures">
+      <div class="r-sig-item">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">Student Signature</div>
+        <div class="r-sig-line" id="r_sig_student">— Student Name —</div>
+      </div>
+      <div class="r-sig-item">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">Authorized Signature</div>
+        <div class="r-sig-line">Anti Lodge Management</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="r-footer">
+    <div class="r-footer-left">
+      Anti Lodge · Bahadurganj, Kishanganj, Bihar 855101<br>
+      📱 +91 9942346634 · ✉️ helpantilodge@gmail.com
+    </div>
+    <div class="r-footer-right">
+      antilodge.vercel.app<br>
+      <span id="r_generated_at" style="color:#cbd5e1"></span>
+    </div>
+  </div>
+
+</div><!-- /receipt -->
+</div><!-- /receiptWrap -->
+
+<script>
+const RKEY = 'al_receipts';
+
+function getReceipts(){
+  try{return JSON.parse(localStorage.getItem(RKEY)||'[]');}catch{return [];}
+}
+
+function getParam(name){
+  return new URLSearchParams(location.search).get(name);
+}
+
+function formatDate(dateStr){
+  if(!dateStr) return '—';
+  try{
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  }catch{return dateStr;}
+}
+
+function methodIcon(m){
+  if(!m) return '💳';
+  if(m.toLowerCase().includes('upi')) return '📱';
+  if(m.toLowerCase().includes('cash')) return '💵';
+  if(m.toLowerCase().includes('bank')) return '🏦';
+  return '💳';
+}
+
+function amountInWords(n){
+  const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  if(n===0) return 'Zero';
+  if(n<20) return ones[n];
+  if(n<100) return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');
+  if(n<1000) return ones[Math.floor(n/100)]+' Hundred'+(n%100?' '+amountInWords(n%100):'');
+  if(n<100000) return amountInWords(Math.floor(n/1000))+' Thousand'+(n%1000?' '+amountInWords(n%1000):'');
+  return amountInWords(Math.floor(n/100000))+' Lakh'+(n%100000?' '+amountInWords(n%100000):'');
+}
+
+function renderReceipt(r, isPreview=false){
+  const verifyUrl = `${location.origin}/student-receipt?id=${encodeURIComponent(r.id)}`;
+
+  // Show elements
+  document.getElementById('receiptWrap').style.display='block';
+  document.getElementById('toolbar').style.display='flex';
+  document.getElementById('searchBar').style.display='none';
+  document.getElementById('notfound').style.display='none';
+
+  if(isPreview) document.getElementById('previewBadge').classList.add('show');
+
+  // Fill data
+  document.getElementById('r_id').textContent = r.id;
+  document.getElementById('r_issued').textContent = 'Issued: ' + formatDate(r.date || new Date().toISOString().split('T')[0]);
+  document.getElementById('r_amount').textContent = '₹' + (r.amount||0).toLocaleString('en-IN');
+  document.getElementById('r_month').textContent = (r.month||'Monthly Rent') + ' · ' + amountInWords(Number(r.amount)||0) + ' Rupees Only';
+  document.getElementById('r_method_badge').textContent = methodIcon(r.method) + ' ' + (r.method||'—');
+  document.getElementById('r_name').textContent = r.name||'—';
+  document.getElementById('r_father').textContent = r.father||'—';
+  document.getElementById('r_course').textContent = r.course||'—';
+  document.getElementById('r_room').textContent = r.room||'—';
+  document.getElementById('r_phone').textContent = r.phone ? '+91 '+r.phone : '—';
+  document.getElementById('r_city').textContent = r.city||'—';
+  document.getElementById('r_date').textContent = formatDate(r.date);
+  document.getElementById('r_method').textContent = r.method||'—';
+  document.getElementById('r_sig_student').textContent = '— ' + (r.name||'Student') + ' —';
+  document.getElementById('r_verify_url') && (document.getElementById('r_verify_url').textContent = verifyUrl);
+  document.getElementById('r_verifyUrl').textContent = verifyUrl;
+  document.getElementById('r_generated_at').textContent = 'Generated: ' + new Date().toLocaleString('en-IN');
+
+  if(r.notes){
+    document.getElementById('r_notes_wrap').style.display='block';
+    document.getElementById('r_notes').textContent = r.notes;
+  }
+
+  // QR Code
+  document.getElementById('qrBox').innerHTML='';
+  try{
+    new QRCode(document.getElementById('qrBox'),{
+      text: verifyUrl,
+      width:80,height:80,
+      colorDark:'#0b0f1a',colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+  }catch(e){}
+
+  document.title = `Receipt ${r.id} | Anti Lodge`;
+}
+
+function showNotFound(msg){
+  document.getElementById('notfound').style.display='block';
+  document.getElementById('notfoundMsg').textContent = msg||'Receipt not found.';
+  document.getElementById('searchBar').style.display='flex';
+}
+
+// ── LOAD ──────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  const id = getParam('id');
+  const preview = getParam('preview');
+
+  if(preview){
+    try{
+      const r = JSON.parse(decodeURIComponent(escape(atob(preview))));
+      renderReceipt(r, true);
+    }catch{showNotFound('Preview data is invalid.');}
+    return;
+  }
+
+  if(id){
+    const receipts = getReceipts();
+    const r = receipts.find(x=>x.id===decodeURIComponent(id));
+    if(r) renderReceipt(r,false);
+    else showNotFound(`No receipt found with ID: ${id}`);
+    return;
+  }
+
+  // No params — show search
+  document.getElementById('searchBar').style.display='flex';
+});
+
+function loadBySearch(){
+  const id = document.getElementById('ridInput').value.trim();
+  if(!id) return;
+  const receipts = getReceipts();
+  const r = receipts.find(x=>x.id.toLowerCase()===id.toLowerCase()||x.name.toLowerCase()===id.toLowerCase());
+  if(r){ renderReceipt(r,false); history.replaceState(null,'',`?id=${encodeURIComponent(r.id)}`); }
+  else showNotFound(`No receipt found for: "${id}"`);
+}
+
+// ── PDF DOWNLOAD ──────────────────────────────────────────
+function downloadPDF(){
+  const el = document.getElementById('receipt');
+  const id = document.getElementById('r_id').textContent;
+  const name = document.getElementById('r_name').textContent;
+  const opt = {
+    margin:[8,8,8,8],
+    filename:`AntiLodge-Receipt-${id}.pdf`,
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,letterRendering:true},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+  };
+  // Hide preview badge for PDF
+  document.getElementById('previewBadge').style.display='none';
+  html2pdf().set(opt).from(el).save().then(()=>{
+    if(document.getElementById('previewBadge').classList.contains('show'))
+      document.getElementById('previewBadge').style.display='block';
+  });
+}
+
+function copyLink(){
+  const url = location.href;
+  navigator.clipboard&&navigator.clipboard.writeText(url).then(()=>{
+    const btn = event.target;
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='🔗 Copy Link',2000);
+  });
+}
+</script>
+</body>
+</html>
