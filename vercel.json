@@ -247,6 +247,14 @@
     {
       "source": "/payment-receipt",
       "destination": "/student-receipt.html"
+    },
+    {
+      "source": "/students",
+      "destination": "/students.html"
+    },
+    {
+      "source": "/admin-students",
+      "destination": "/admin-students.html"
     }
   ]
     }
