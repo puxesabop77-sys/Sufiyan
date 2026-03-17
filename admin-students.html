@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Students Admin | Anti Lodge</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#070b14;color:#e2e8f0;min-height:100vh}
+:root{--b:#3b82f6;--g:#10b981;--r:#ef4444;--gold:#f59e0b}
+
+/* LOGIN */
+#lg{position:fixed;inset:0;background:#070b14;display:flex;align-items:center;justify-content:center;z-index:9999}
+.lb{width:360px;max-width:90vw;background:#0d1424;border:1px solid #243350;border-radius:20px;padding:44px 36px;position:relative;overflow:hidden}
+.lb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--b),var(--g))}
+.lb h2{font-family:'Syne',sans-serif;font-size:20px;color:#fff;margin-bottom:4px}
+.lb p{font-size:12px;color:#64748b;letter-spacing:2px;margin-bottom:28px}
+.lf input{width:100%;background:#111827;border:1px solid #243350;color:#e2e8f0;padding:12px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:border-color .2s}
+.lf input:focus{border-color:var(--b)}
+.lf button{width:100%;padding:13px;background:linear-gradient(135deg,var(--b),#6366f1);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;border-radius:10px;cursor:pointer}
+.lerr{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:8px;padding:9px 13px;font-size:13px;margin-top:10px;display:none;text-align:center}
+.lerr.show{display:block}
+
+/* SHELL */
+#shell{display:none}
+.bar{background:#0d1424;border-bottom:1px solid #1e2d45;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.bar-logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff}
+.bar-logo span{color:var(--b)}
+.bar-right{display:flex;gap:10px;align-items:center}
+.clk{font-size:12px;color:#64748b;background:#111827;padding:5px 11px;border-radius:8px;border:1px solid #1e2d45}
+.obtn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5;padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sc{background:#0d1424;border:1px solid #1e2d45;border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc)}
+.sc-n{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:800;color:#fff}
+.sc-l{font-size:11px;color:#64748b;margin-top:3px;letter-spacing:.5px}
+.sc-i{position:absolute;right:14px;top:14px;font-size:20px;opacity:.3}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:#0d1424;border:1px solid #1e2d45;border-radius:12px;padding:5px;margin-bottom:20px}
+.tab{flex:1;padding:9px;border:none;background:none;color:#64748b;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s}
+.tab.on{background:linear-gradient(135deg,var(--b),#6366f1);color:#fff}
+
+/* PANEL */
+.pnl{display:none}.pnl.on{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOX */
+.box{background:#0d1424;border:1px solid #1e2d45;border-radius:14px;padding:22px;margin-bottom:18px}
+.box-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:7px}
+
+/* FORM */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fgrid.full{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase}
+.fg input,.fg select{background:#111827;border:1px solid #243350;color:#e2e8f0;padding:10px 13px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.fg select option{background:#111827}
+
+.btn{padding:10px 20px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.btn.p{background:linear-gradient(135deg,var(--b),#6366f1);color:#fff}
+.btn.p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.3)}
+.btn.g{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#10b981}
+.btn.d{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.btn.gh{background:#111827;border:1px solid #243350;color:#94a3b8}
+
+/* TABLE */
+.twrap{overflow-x:auto}
+.srch{width:100%;background:#111827;border:1px solid #243350;color:#e2e8f0;padding:9px 13px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-bottom:14px}
+.srch:focus{border-color:var(--b)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;letter-spacing:1px;color:#64748b;padding:9px 12px;border-bottom:1px solid #1e2d45;font-weight:700;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid #111827;font-size:13px;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.bdg{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.bdg.a{background:rgba(16,185,129,.15);color:#6ee7b7}
+.bdg.i{background:rgba(239,68,68,.12);color:#fca5a5}
+.bdg.ts{background:rgba(245,158,11,.12);color:#fcd34d}
+.bdg.ds{background:rgba(99,102,241,.12);color:#a5b4fc}
+
+/* TOAST */
+.tc{position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px}
+.tst{background:#0d1424;border:1px solid #243350;border-radius:9px;padding:11px 16px;font-size:13px;display:flex;align-items:center;gap:9px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:tIn .3s ease}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.tst.s{border-left:3px solid var(--g)}
+.tst.e{border-left:3px solid var(--r)}
+.tst.i{border-left:3px solid var(--b)}
+
+@media(max-width:700px){
+  .stats{grid-template-columns:1fr 1fr}
+  .fgrid{grid-template-columns:1fr}
+  .wrap{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="tc" id="tc"></div>
+
+<!-- LOGIN -->
+<div id="lg">
+<div class="lb">
+  <h2>⚡ Anti Lodge</h2>
+  <p>STUDENTS ADMIN PANEL</p>
+  <div class="lf">
+    <input type="password" id="lp" placeholder="Admin Password" onkeydown="if(event.key==='Enter')dL()">
+    <button onclick="dL()">LOGIN →</button>
+  </div>
+  <div class="lerr" id="le">⚠ Wrong password.</div>
+</div>
+</div>
+
+<!-- SHELL -->
+<div id="shell">
+  <div class="bar">
+    <div class="bar-logo">Anti<span>Lodge</span> · Students</div>
+    <div class="bar-right">
+      <div class="clk" id="clk"></div>
+      <button class="obtn" onclick="dOut()">⏻ Logout</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- STATS -->
+    <div class="stats" id="statsRow"></div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab on" onclick="sP('add',this)">➕ Add Student</button>
+      <button class="tab" onclick="sP('all',this)">👥 All Students</button>
+      <button class="tab" onclick="sP('active',this)">✅ Active</button>
+      <button class="tab" onclick="sP('settings',this)">⚙️ Settings</button>
+    </div>
+
+    <!-- ADD STUDENT -->
+    <div class="pnl on" id="pnl-add">
+      <div class="box">
+        <div class="box-title"><span>🎓</span> Student Information</div>
+        <div class="fgrid">
+          <div class="fg"><label>Student Name *</label><input type="text" id="a_name" placeholder="Full name"></div>
+          <div class="fg"><label>Father's Name *</label><input type="text" id="a_father" placeholder="Father's full name"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Mobile Number</label><input type="tel" id="a_phone" placeholder="10-digit" maxlength="10"></div>
+          <div class="fg"><label>Village / City *</label><input type="text" id="a_city" placeholder="Home village or city"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Course / Coaching</label><input type="text" id="a_course" placeholder="e.g. Class 10, NEET Coaching"></div>
+          <div class="fg"><label>School / Institute</label><input type="text" id="a_school" placeholder="School or coaching name"></div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-title"><span>🏠</span> Room & Stay Details</div>
+        <div class="fgrid">
+          <div class="fg"><label>Room Type *</label>
+            <select id="a_room">
+              <option value="">Select room type</option>
+              <option>Triple Sharing (₹650/month)</option>
+              <option>Double Sharing (₹750/month)</option>
+              <option>Single Room (₹1500/month)</option>
+            </select>
+          </div>
+          <div class="fg"><label>Room Number</label><input type="text" id="a_roomno" placeholder="e.g. Room 4, Bed 2"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Joining Date *</label><input type="date" id="a_join"></div>
+          <div class="fg"><label>Expected Leaving Date</label><input type="date" id="a_leave"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Monthly Rent (₹)</label><input type="number" id="a_rent" placeholder="e.g. 650"></div>
+          <div class="fg"><label>Status</label>
+            <select id="a_status">
+              <option value="Active">✅ Active (Currently Staying)</option>
+              <option value="Inactive">❌ Inactive / Left</option>
+            </select>
+          </div>
+        </div>
+        <div class="fgrid full">
+          <div class="fg"><label>Notes (Optional)</label><input type="text" id="a_notes" placeholder="Any additional notes..."></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn p" onclick="addStudent()">💾 Save Student</button>
+        <button class="btn gh" onclick="clearAdd()">✕ Clear</button>
+      </div>
+    </div>
+
+    <!-- ALL STUDENTS -->
+    <div class="pnl" id="pnl-all">
+      <div class="box">
+        <div class="box-title"><span>👥</span> All Students</div>
+        <input class="srch" id="srchAll" placeholder="🔍 Search by name, village, room, course..." oninput="renderAll()">
+        <div class="twrap"><table>
+          <thead><tr><th>#</th><th>NAME</th><th>FATHER</th><th>VILLAGE</th><th>ROOM</th><th>JOINING</th><th>RENT</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="tbAll"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ACTIVE STUDENTS -->
+    <div class="pnl" id="pnl-active">
+      <div class="box">
+        <div class="box-title"><span>✅</span> Currently Active Students</div>
+        <div class="twrap"><table>
+          <thead><tr><th>#</th><th>NAME</th><th>FATHER</th><th>VILLAGE</th><th>COURSE</th><th>ROOM</th><th>JOINING DATE</th><th>DAYS STAYING</th><th>RENT</th></tr></thead>
+          <tbody id="tbActive"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="pnl" id="pnl-settings">
+      <div class="box">
+        <div class="box-title"><span>🔐</span> Change Password</div>
+        <div class="fgrid" style="max-width:500px">
+          <div class="fg"><label>Current Password</label><input type="password" id="cp1" placeholder="Current"></div>
+          <div class="fg"><label>New Password</label><input type="password" id="cp2" placeholder="New password"></div>
+        </div>
+        <button class="btn p" onclick="chgPass()">🔐 Update Password</button>
+      </div>
+      <div class="box">
+        <div class="box-title"><span>⚠️</span> Danger Zone</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn d" onclick="if(confirm('Delete ALL students?')){localStorage.removeItem('al_students');renderStats();renderAll();renderActive();toast('All data cleared','e')}">🗑️ Clear All Students</button>
+          <button class="btn g" onclick="exportData()">📥 Export JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = 'al_students';
+const PASS_KEY = 'al_admin_pass';
+const DEFAULT_PASS = 'Sufiyan Panel Active';
+
+function getStudents(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch{return [];}}
+function saveStudents(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function getPass(){return localStorage.getItem(PASS_KEY)||DEFAULT_PASS;}
+
+// AUTH
+function dL(){
+  if(document.getElementById('lp').value===getPass()){
+    document.getElementById('lg').style.display='none';
+    document.getElementById('shell').style.display='block';
+    init();
+    toast('Welcome back! 👋','s');
+  } else {
+    document.getElementById('le').classList.add('show');
+    document.getElementById('lp').value='';
+  }
+}
+function dOut(){
+  document.getElementById('shell').style.display='none';
+  document.getElementById('lg').style.display='flex';
+  document.getElementById('lp').value='';
+}
+document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')dL();});
+
+function init(){
+  setInterval(()=>{document.getElementById('clk').textContent=new Date().toLocaleTimeString('en-IN');},1000);
+  document.getElementById('a_join').value=new Date().toISOString().split('T')[0];
+  renderStats();renderAll();renderActive();
+}
+
+// PANELS
+function sP(id,btn){
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pnl-'+id).classList.add('on');
+  btn.classList.add('on');
+  if(id==='all') renderAll();
+  if(id==='active') renderActive();
+  if(id==='settings') {}
+}
+
+// ADD
+function addStudent(){
+  const name=document.getElementById('a_name').value.trim();
+  const father=document.getElementById('a_father').value.trim();
+  const city=document.getElementById('a_city').value.trim();
+  const room=document.getElementById('a_room').value;
+  const join=document.getElementById('a_join').value;
+  if(!name||!father||!city||!room||!join){toast('Please fill all required fields!','e');return;}
+  const s={
+    id:'S'+Date.now(),
+    name,father,
+    phone:document.getElementById('a_phone').value,
+    city,
+    course:document.getElementById('a_course').value,
+    school:document.getElementById('a_school').value,
+    room,
+    roomNo:document.getElementById('a_roomno').value,
+    joinDate:join,
+    leaveDate:document.getElementById('a_leave').value,
+    rent:document.getElementById('a_rent').value||'650',
+    status:document.getElementById('a_status').value,
+    notes:document.getElementById('a_notes').value,
+    addedAt:new Date().toISOString()
+  };
+  const students=getStudents();
+  students.unshift(s);
+  saveStudents(students);
+  toast(`✅ ${name} added successfully!`,'s');
+  clearAdd();
+  renderStats();
+}
+
+function clearAdd(){
+  ['a_name','a_father','a_phone','a_city','a_course','a_school','a_roomno','a_rent','a_notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('a_room').value='';
+  document.getElementById('a_status').value='Active';
+  document.getElementById('a_leave').value='';
+  document.getElementById('a_join').value=new Date().toISOString().split('T')[0];
+}
+
+// STATS
+function renderStats(){
+  const S=getStudents();
+  const active=S.filter(s=>s.status==='Active').length;
+  const total=S.length;
+  const income=S.filter(s=>s.status==='Active').reduce((a,s)=>a+(parseFloat(s.rent)||0),0);
+  const rooms={triple:S.filter(s=>s.room&&s.room.includes('Triple')&&s.status==='Active').length,
+               double:S.filter(s=>s.room&&s.room.includes('Double')&&s.status==='Active').length,
+               single:S.filter(s=>s.room&&s.room.includes('Single')&&s.status==='Active').length};
+  document.getElementById('statsRow').innerHTML=`
+    <div class="sc" style="--sc:linear-gradient(90deg,#3b82f6,#6366f1)"><div class="sc-i">👥</div><div class="sc-n">${total}</div><div class="sc-l">TOTAL STUDENTS</div></div>
+    <div class="sc" style="--sc:linear-gradient(90deg,#10b981,#06b6d4)"><div class="sc-i">✅</div><div class="sc-n">${active}</div><div class="sc-l">CURRENTLY ACTIVE</div></div>
+    <div class="sc" style="--sc:linear-gradient(90deg,#f59e0b,#f97316)"><div class="sc-i">💰</div><div class="sc-n">₹${income.toLocaleString('en-IN')}</div><div class="sc-l">MONTHLY INCOME</div></div>
+    <div class="sc" style="--sc:linear-gradient(90deg,#ec4899,#8b5cf6)"><div class="sc-i">🏠</div><div class="sc-n">${rooms.triple}/${rooms.double}/${rooms.single}</div><div class="sc-l">T/D/S ROOMS</div></div>`;
+}
+
+// RENDER ALL
+function renderAll(){
+  const S=getStudents();
+  const q=(document.getElementById('srchAll')?.value||'').toLowerCase();
+  const F=q?S.filter(s=>(s.name+s.father+s.city+s.room+s.course).toLowerCase().includes(q)):S;
+  const tb=document.getElementById('tbAll');
+  if(!F.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:#64748b;padding:28px">No students found.</td></tr>';return;}
+  tb.innerHTML=F.map((s,i)=>`<tr>
+    <td style="color:#64748b">${i+1}</td>
+    <td><div style="font-weight:600">${s.name}</div>${s.phone?`<div style="font-size:11px;color:#64748b">+91 ${s.phone}</div>`:''}</td>
+    <td style="color:#94a3b8">${s.father||'—'}</td>
+    <td style="color:#94a3b8">${s.city||'—'}</td>
+    <td><div style="font-size:12px">${s.room||'—'}</div>${s.roomNo?`<div style="font-size:11px;color:#64748b">${s.roomNo}</div>`:''}</td>
+    <td style="color:#94a3b8;font-size:12px">${fmtDate(s.joinDate)}</td>
+    <td style="color:#10b981;font-weight:700">₹${s.rent||'—'}</td>
+    <td><span class="bdg ${s.status==='Active'?'a':'i'}">${s.status||'—'}</span></td>
+    <td><div style="display:flex;gap:5px">
+      <button class="btn g" style="padding:4px 9px;font-size:11px" onclick="editStudent('${s.id}')">✏️</button>
+      <button class="btn d" style="padding:4px 9px;font-size:11px" onclick="delStudent('${s.id}')">🗑️</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+// RENDER ACTIVE
+function renderActive(){
+  const S=getStudents().filter(s=>s.status==='Active');
+  const tb=document.getElementById('tbActive');
+  if(!S.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:#64748b;padding:28px">No active students.</td></tr>';return;}
+  tb.innerHTML=S.map((s,i)=>{
+    const days=s.joinDate?Math.floor((new Date()-new Date(s.joinDate))/86400000):0;
+    return `<tr>
+      <td style="color:#64748b">${i+1}</td>
+      <td><div style="font-weight:600">${s.name}</div>${s.phone?`<div style="font-size:11px;color:#64748b">+91 ${s.phone}</div>`:''}</td>
+      <td style="color:#94a3b8">${s.father||'—'}</td>
+      <td style="color:#94a3b8">${s.city||'—'}</td>
+      <td style="color:#94a3b8;font-size:12px">${s.course||'—'}</td>
+      <td style="font-size:12px">${s.room||'—'}</td>
+      <td style="color:#10b981;font-size:12px">${fmtDate(s.joinDate)}</td>
+      <td><span style="background:rgba(59,130,246,.15);color:#93c5fd;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700">${days} days</span></td>
+      <td style="color:#10b981;font-weight:700">₹${s.rent||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function delStudent(id){
+  if(!confirm('Remove this student?')) return;
+  saveStudents(getStudents().filter(s=>s.id!==id));
+  renderStats();renderAll();renderActive();
+  toast('Student removed','e');
+}
+
+function editStudent(id){
+  const s=getStudents().find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('a_name').value=s.name||'';
+  document.getElementById('a_father').value=s.father||'';
+  document.getElementById('a_phone').value=s.phone||'';
+  document.getElementById('a_city').value=s.city||'';
+  document.getElementById('a_course').value=s.course||'';
+  document.getElementById('a_school').value=s.school||'';
+  document.getElementById('a_room').value=s.room||'';
+  document.getElementById('a_roomno').value=s.roomNo||'';
+  document.getElementById('a_join').value=s.joinDate||'';
+  document.getElementById('a_leave').value=s.leaveDate||'';
+  document.getElementById('a_rent').value=s.rent||'';
+  document.getElementById('a_status').value=s.status||'Active';
+  document.getElementById('a_notes').value=s.notes||'';
+  // Remove old and re-add on save
+  saveStudents(getStudents().filter(x=>x.id!==id));
+  document.querySelector('[onclick="sP(\'add\',this)"]').click();
+  toast('Edit mode — save to update','i');
+}
+
+function chgPass(){
+  const c=document.getElementById('cp1').value;
+  const n=document.getElementById('cp2').value;
+  if(c!==getPass()){toast('Wrong current password!','e');return;}
+  if(n.length<6){toast('New password must be 6+ chars!','e');return;}
+  localStorage.setItem(PASS_KEY,n);
+  document.getElementById('cp1').value='';document.getElementById('cp2').value='';
+  toast('Password updated! ✅','s');
+}
+
+function exportData(){
+  const d=JSON.stringify(getStudents(),null,2);
+  const a=document.createElement('a');
+  a.href='data:text/json;charset=utf-8,'+encodeURIComponent(d);
+  a.download='antilodge-students.json';
+  a.click();
+}
+
+function fmtDate(d){
+  if(!d) return '—';
+  try{return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+  catch{return d;}
+}
+
+function toast(msg,type='i'){
+  const icons={s:'✅',e:'❌',i:'ℹ️'};
+  const el=document.createElement('div');
+  el.className=`tst ${type}`;
+  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('tc').appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+</script>
+</body>
+</html>
