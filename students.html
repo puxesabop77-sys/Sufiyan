@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="rDOPHZZI1ySXFZI8hlRiybdmiYGMTodknAoOZ4Wyab0" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Meet the students of Anti Lodge Bahadurganj — a community of motivated learners.">
+<title>Our Students | Anti Lodge Bahadurganj</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;color:#0b0f1a;background:#f8fafc;overflow-x:hidden}
+
+/* NAV */
+.nav{background:rgba(255,255,255,.94);backdrop-filter:blur(20px);border-bottom:1px solid rgba(37,99,235,.08);position:sticky;top:0;z-index:100;padding:0 5%}
+.nv{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px}
+.lg{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#0b0f1a}
+.lg span{color:#2563eb}
+.nl{display:flex;gap:4px;align-items:center}
+.nl a{color:#64748b;text-decoration:none;font-size:13px;font-weight:500;padding:7px 10px;border-radius:8px;transition:all .2s;white-space:nowrap}
+.nl a:hover{color:#0b0f1a;background:#eff6ff}
+.nbk{background:#0b0f1a;color:#fff!important;padding:8px 18px!important;border-radius:10px;font-weight:600!important}
+.nbk:hover{background:#2563eb!important}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+.hbg span{width:22px;height:2px;background:#0b0f1a;border-radius:2px;display:block}
+.lk{display:inline-block}
+@media(max-width:900px){.lk{display:none!important}.hbg{display:flex}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0b0f1a 0%,#1e3a5f 60%,#0b0f1a 100%);padding:72px 5% 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%);border-radius:50%}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.15),transparent 70%);border-radius:50%}
+.hi{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.htag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.9);padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:18px}
+.hdot{width:7px;height:7px;background:#10b981;border-radius:50%;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,50px);font-weight:800;color:#fff;margin-bottom:12px;line-height:1.15}
+.hero h1 span{background:linear-gradient(135deg,#93c5fd,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:rgba(255,255,255,.6);font-size:16px;line-height:1.8;max-width:520px}
+
+/* STATS STRIP */
+.strip{background:#fff;border-bottom:1px solid rgba(37,99,235,.08);padding:0 5%}
+.strip-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.si{padding:24px;text-align:center;border-right:1px solid rgba(37,99,235,.08);transition:background .2s}
+.si:last-child{border-right:none}
+.si:hover{background:#f0f7ff}
+.si-n{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;color:#0b0f1a}
+.si-l{font-size:12px;color:#64748b;margin-top:4px;font-weight:500}
+
+/* MAIN */
+.sec{padding:56px 5%}
+.in{max-width:1200px;margin:0 auto}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.srch{flex:1;min-width:200px;padding:11px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0b0f1a;background:#fff;outline:none;transition:all .2s}
+.srch:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.fbtn{padding:9px 16px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#64748b;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.fbtn:hover{border-color:#2563eb;color:#2563eb}
+.fbtn.on{border-color:#2563eb;background:#2563eb;color:#fff}
+.cnt{background:#eff6ff;color:#2563eb;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap}
+
+/* GRID */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+
+/* STUDENT CARD */
+.scard{background:#fff;border:1.5px solid rgba(37,99,235,.10);border-radius:20px;overflow:hidden;transition:all .3s;position:relative}
+.scard:hover{border-color:#2563eb;transform:translateY(-4px);box-shadow:0 12px 40px rgba(37,99,235,.10)}
+.scard-top{background:linear-gradient(135deg,#f0f7ff,#f0fff8);padding:20px 20px 14px;display:flex;align-items:center;gap:14px}
+.savatar{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--ac1),var(--ac2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
+.scard-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#0b0f1a;margin-bottom:3px}
+.scard-course{font-size:12px;color:#64748b}
+.scard-body{padding:14px 20px}
+.srow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#475569}
+.srow:last-child{border-bottom:none}
+.srow-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.scard-foot{padding:12px 20px;background:#f8fafc;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between}
+.join-pill{background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.days-pill{background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.status-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.status-active{background:#dcfce7;color:#166534}
+.status-inactive{background:#fee2e2;color:#991b1b}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:80px 20px;color:#94a3b8}
+.empty .ei{font-size:64px;margin-bottom:14px;display:block}
+.empty h3{font-family:'Syne',sans-serif;font-size:20px;color:#64748b;margin-bottom:8px}
+
+/* FOOTER */
+footer{background:#0b0f1a;color:rgba(255,255,255,.4);padding:36px 5% 20px}
+.fi{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px}
+.fl{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.fl span{color:#0ea5e9}
+
+/* WA */
+.wa{position:fixed;bottom:24px;right:24px;background:#25d366;color:#fff;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 20px rgba(37,211,102,.4);z-index:997;text-decoration:none;animation:wab 3s ease-in-out infinite}
+@keyframes wab{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+@media(max-width:700px){
+  .strip-in{grid-template-columns:1fr 1fr}
+  .si{border-bottom:1px solid rgba(37,99,235,.08)}
+  .sec{padding:40px 4%}
+  .sgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nv">
+    <a href="/antilodge" class="lg">Anti<span>Lodge</span></a>
+    <div class="nl">
+      <a href="/antilodge" class="lk">Home</a>
+      <a href="/rooms" class="lk">Rooms</a>
+      <a href="/gallery" class="lk">Gallery</a>
+      <a href="/community" class="lk">Community</a>
+      <a href="/contact-us" class="lk">Contact</a>
+      <a href="/booking" class="nbk lk">Book Now</a>
+      <button class="hbg" onclick="document.getElementById('mob').classList.toggle('open')"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hi">
+    <div class="htag"><div class="hdot"></div> Live Student Directory</div>
+    <h1>Our <span>Students</span><br>Anti Lodge Family</h1>
+    <p>Meet the motivated students who call Anti Lodge their second home in Bahadurganj, Kishanganj.</p>
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="strip">
+  <div class="strip-in" id="stripStats"></div>
+</div>
+
+<!-- MAIN SECTION -->
+<div class="sec">
+  <div class="in">
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <input class="srch" id="srch" placeholder="🔍 Search students by name, village, course..." oninput="applyFilters()">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="fbtn on" onclick="setFilter('all',this)">All</button>
+        <button class="fbtn" onclick="setFilter('active',this)">✅ Active</button>
+        <button class="fbtn" onclick="setFilter('triple',this)">🏘️ Triple</button>
+        <button class="fbtn" onclick="setFilter('double',this)">👥 Double</button>
+        <button class="fbtn" onclick="setFilter('single',this)">🛏️ Single</button>
+      </div>
+      <div class="cnt" id="cntBadge">0 students</div>
+    </div>
+
+    <!-- GRID -->
+    <div class="sgrid" id="sgrid"></div>
+    <div class="empty" id="emptyState" style="display:none">
+      <span class="ei">👥</span>
+      <h3>No students found</h3>
+      <p id="emptyMsg">No student records available yet.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi">
+    <div><div class="fl">Anti<span>Lodge</span></div><div style="margin-top:6px">Bahadurganj, Kishanganj, Bihar · ₹650/month</div></div>
+    <div style="text-align:right">
+      <div>© 2026 Anti Lodge. All rights reserved.</div>
+      <div style="margin-top:4px">👨‍💻 Developed by <strong style="color:rgba(255,255,255,.7)">Sufiyan Absar</strong></div>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/919942346634" target="_blank" class="wa">💬</a>
+
+<script>
+const KEY = 'al_students';
+let currentFilter = 'all';
+
+// Avatar gradient colours
+const COLORS = [
+  ['#3b82f6','#6366f1'],['#10b981','#06b6d4'],['#f59e0b','#f97316'],
+  ['#ec4899','#8b5cf6'],['#0ea5e9','#10b981'],['#f97316','#ef4444'],
+  ['#8b5cf6','#ec4899'],['#16a34a','#0ea5e9'],['#dc2626','#f97316'],
+  ['#7c3aed','#2563eb'],
+];
+function getColors(name){
+  const idx = (name||'').charCodeAt(0) % COLORS.length;
+  return COLORS[idx];
+}
+function initials(name){
+  return (name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+}
+function fmtDate(d){
+  if(!d) return '—';
+  try{return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+  catch{return d;}
+}
+function daysSince(d){
+  if(!d) return 0;
+  return Math.max(0,Math.floor((new Date()-new Date(d))/86400000));
+}
+
+function getStudents(){
+  try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch{return [];}
+}
+
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  applyFilters();
+}
+
+function applyFilters(){
+  const q = document.getElementById('srch').value.toLowerCase().trim();
+  let S = getStudents();
+
+  // Filter by status/room
+  if(currentFilter === 'active') S = S.filter(s=>s.status==='Active');
+  else if(currentFilter === 'triple') S = S.filter(s=>s.room&&s.room.toLowerCase().includes('triple'));
+  else if(currentFilter === 'double') S = S.filter(s=>s.room&&s.room.toLowerCase().includes('double'));
+  else if(currentFilter === 'single') S = S.filter(s=>s.room&&s.room.toLowerCase().includes('single'));
+
+  // Search
+  if(q) S = S.filter(s=>(s.name+s.city+s.course+s.school+s.room+s.father).toLowerCase().includes(q));
+
+  renderGrid(S);
+}
+
+function renderGrid(students){
+  const grid = document.getElementById('sgrid');
+  const empty = document.getElementById('emptyState');
+  const cnt = document.getElementById('cntBadge');
+
+  cnt.textContent = students.length + ' student' + (students.length!==1?'s':'');
+
+  if(!students.length){
+    grid.style.display='none';
+    empty.style.display='block';
+    document.getElementById('emptyMsg').textContent = getStudents().length
+      ? 'No students match your search or filter.'
+      : 'No student records yet. Admin will add students soon!';
+    return;
+  }
+  empty.style.display='none';
+  grid.style.display='grid';
+
+  grid.innerHTML = students.map((s,idx)=>{
+    const [c1,c2] = getColors(s.name);
+    const days = daysSince(s.joinDate);
+    const isActive = s.status === 'Active';
+    return `<div class="scard" style="animation:fadeUp .4s ${idx*0.04}s ease both">
+      <div class="scard-top">
+        <div class="savatar" style="--ac1:${c1};--ac2:${c2};background:linear-gradient(135deg,${c1},${c2})">${initials(s.name)}</div>
+        <div>
+          <div class="scard-name">${s.name}</div>
+          <div class="scard-course">${s.course||s.school||'Student'}</div>
+        </div>
+      </div>
+      <div class="scard-body">
+        ${s.city?`<div class="srow"><span class="srow-ic">📍</span>${s.city}</div>`:''}
+        ${s.room?`<div class="srow"><span class="srow-ic">🏠</span>${s.room}</div>`:''}
+        ${s.father?`<div class="srow"><span class="srow-ic">👨</span>S/O ${s.father}</div>`:''}
+        ${s.school&&s.school!==s.course?`<div class="srow"><span class="srow-ic">🏫</span>${s.school}</div>`:''}
+      </div>
+      <div class="scard-foot">
+        <div>
+          <div class="join-pill">📅 Joined ${fmtDate(s.joinDate)}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+          <span class="status-pill ${isActive?'status-active':'status-inactive'}">${isActive?'● Active':'● Left'}</span>
+          ${isActive&&days>0?`<span class="days-pill">${days}d staying</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats(){
+  const S = getStudents();
+  const active = S.filter(s=>s.status==='Active').length;
+  const villages = [...new Set(S.map(s=>s.city).filter(Boolean))].length;
+  const oldest = S.filter(s=>s.joinDate).sort((a,b)=>new Date(a.joinDate)-new Date(b.joinDate));
+  const maxDays = oldest.length ? daysSince(oldest[0].joinDate) : 0;
+  document.getElementById('stripStats').innerHTML = `
+    <div class="si"><div class="si-n">${S.length}</div><div class="si-l">Total Students</div></div>
+    <div class="si"><div class="si-n" style="color:#10b981">${active}</div><div class="si-l">Currently Active</div></div>
+    <div class="si"><div class="si-n" style="color:#2563eb">${villages}</div><div class="si-l">Villages Represented</div></div>
+    <div class="si"><div class="si-n" style="color:#f59e0b">${maxDays}</div><div class="si-l">Longest Stay (Days)</div></div>`;
+}
+
+// INIT
+window.addEventListener('load', ()=>{
+  // Add fadeUp animation
+  const style = document.createElement('style');
+  style.textContent = '@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  renderStats();
+  applyFilters();
+  // Auto-refresh every 30 seconds
+  setInterval(()=>{renderStats();applyFilters();}, 30000);
+});
+</script>
+</body>
+</html>
