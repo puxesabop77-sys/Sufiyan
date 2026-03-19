@@ -1,0 +1,264 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/antilodge",
+      "destination": "/antilodge.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/founder",
+      "destination": "/founder.html"
+    },
+    {
+      "source": "/mission",
+      "destination": "/mission.html"
+    },
+    {
+      "source": "/why-us",
+      "destination": "/why-us.html"
+    },
+    {
+      "source": "/facilities",
+      "destination": "/facilities.html"
+    },
+    {
+      "source": "/rooms",
+      "destination": "/rooms.html"
+    },
+    {
+      "source": "/room-types",
+      "destination": "/room-types.html"
+    },
+    {
+      "source": "/pricing",
+      "destination": "/pricing.html"
+    },
+    {
+      "source": "/availability",
+      "destination": "/availability.html"
+    },
+    {
+      "source": "/booking",
+      "destination": "/booking.html"
+    },
+    {
+      "source": "/apply",
+      "destination": "/apply.html"
+    },
+    {
+      "source": "/waiting-list",
+      "destination": "/waiting-list.html"
+    },
+    {
+      "source": "/life",
+      "destination": "/life.html"
+    },
+    {
+      "source": "/daily-routine",
+      "destination": "/daily-routine.html"
+    },
+    {
+      "source": "/study-env",
+      "destination": "/study-env.html"
+    },
+    {
+      "source": "/events",
+      "destination": "/events.html"
+    },
+    {
+      "source": "/community",
+      "destination": "/community.html"
+    },
+    {
+      "source": "/achievements",
+      "destination": "/achievements.html"
+    },
+    {
+      "source": "/success-stories",
+      "destination": "/success-stories.html"
+    },
+    {
+      "source": "/alumni",
+      "destination": "/alumni.html"
+    },
+    {
+      "source": "/testimonials",
+      "destination": "/testimonials.html"
+    },
+    {
+      "source": "/study-resources",
+      "destination": "/study-resources.html"
+    },
+    {
+      "source": "/exam-tips",
+      "destination": "/exam-tips.html"
+    },
+    {
+      "source": "/career",
+      "destination": "/career.html"
+    },
+    {
+      "source": "/coaching",
+      "destination": "/coaching.html"
+    },
+    {
+      "source": "/location",
+      "destination": "/location.html"
+    },
+    {
+      "source": "/nearby-essentials",
+      "destination": "/nearby-essentials.html"
+    },
+    {
+      "source": "/food",
+      "destination": "/food.html"
+    },
+    {
+      "source": "/transport",
+      "destination": "/transport.html"
+    },
+    {
+      "source": "/gallery",
+      "destination": "/gallery.html"
+    },
+    {
+      "source": "/video-gallery",
+      "destination": "/video-gallery.html"
+    },
+    {
+      "source": "/virtual-tour",
+      "destination": "/virtual-tour.html"
+    },
+    {
+      "source": "/photo-memories",
+      "destination": "/photo-memories.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/notice-board",
+      "destination": "/notice-board.html"
+    },
+    {
+      "source": "/announcements",
+      "destination": "/announcements.html"
+    },
+    {
+      "source": "/events-calendar",
+      "destination": "/events-calendar.html"
+    },
+    {
+      "source": "/complaint",
+      "destination": "/complaint.html"
+    },
+    {
+      "source": "/suggestion",
+      "destination": "/suggestion.html"
+    },
+    {
+      "source": "/maintenance",
+      "destination": "/maintenance.html"
+    },
+    {
+      "source": "/lost-found",
+      "destination": "/lost-found.html"
+    },
+    {
+      "source": "/parents",
+      "destination": "/parents.html"
+    },
+    {
+      "source": "/safety-parents",
+      "destination": "/safety-parents.html"
+    },
+    {
+      "source": "/parent-contact",
+      "destination": "/parent-contact.html"
+    },
+    {
+      "source": "/payment",
+      "destination": "/payment.html"
+    },
+    {
+      "source": "/payment-guide",
+      "destination": "/payment-guide.html"
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/refund-policy.html"
+    },
+    {
+      "source": "/faq-page",
+      "destination": "/faq-page.html"
+    },
+    {
+      "source": "/emergency",
+      "destination": "/emergency.html"
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact-us.html"
+    },
+    {
+      "source": "/support-center",
+      "destination": "/support-center.html"
+    },
+    {
+      "source": "/feedback",
+      "destination": "/feedback.html"
+    },
+    {
+      "source": "/connect",
+      "destination": "/connect.html"
+    },
+    {
+      "source": "/rules",
+      "destination": "/rules.html"
+    },
+    {
+      "source": "/student-dashboard",
+      "destination": "/student-dashboard.html"
+    },
+    {
+      "source": "/sufiyan",
+      "destination": "/sufiyan.html"
+    },
+    {
+      "source": "/birthday",
+      "destination": "/birthday.html"
+    },
+    {
+      "source": "/admin-receipt",
+      "destination": "/admin-receipt.html"
+    },
+    {
+      "source": "/student-receipt",
+      "destination": "/student-receipt.html"
+    },
+    {
+      "source": "/payment-receipt",
+      "destination": "/student-receipt.html"
+    },
+    {
+      "source": "/students",
+      "destination": "/students.html"
+    },
+    {
+      "source": "/admin-students",
+      "destination": "/admin-students.html"
+    },
+    {
+      "source": "/nexus",
+      "destination": "/nexus.html"
+    }
+  ]
+}
