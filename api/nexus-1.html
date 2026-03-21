@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXUS Admin | Anti Lodge</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00ffe0;--neon2:#ff00aa;--bg:#020812;--card:rgba(0,255,224,0.04);--border:rgba(0,255,224,0.12);--text:#c8fff8;--muted:rgba(200,255,248,0.4);--error:#ff4d6d;--gold:#f59e0b;--success:#00ffe0;--surface:#060f1a;--surface2:#0a1628;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,224,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,224,0.03) 1px,transparent 1px);background-size:60px 60px;z-index:0;pointer-events:none;}
+
+/* ── LOGIN ────────────────────────────────────────────── */
+#loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{width:380px;max-width:90vw;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:48px 36px;position:relative;}
+.login-box::before,.login-box::after{content:'';position:absolute;width:16px;height:16px;border-color:var(--neon);border-style:solid;}
+.login-box::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.login-box::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+.login-title{font-family:'Orbitron',monospace;font-size:18px;letter-spacing:6px;color:var(--neon);text-align:center;margin-bottom:4px;}
+.login-sub{text-align:center;font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:28px;}
+.lfield{margin-bottom:16px;}
+.lfield label{display:block;font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:7px;}
+.lfield input{width:100%;background:rgba(0,255,224,0.03);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;padding:12px 14px;outline:none;border-radius:2px;transition:all 0.3s;letter-spacing:1px;}
+.lfield input:focus{border-color:var(--neon);box-shadow:0 0 16px rgba(0,255,224,0.08);}
+.lbtn{width:100%;padding:14px;background:transparent;border:1px solid var(--neon);color:var(--neon);font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;cursor:pointer;border-radius:2px;position:relative;overflow:hidden;transition:all 0.3s;margin-top:8px;}
+.lbtn::before{content:'';position:absolute;inset:0;background:var(--neon);transform:translateX(-101%);transition:transform 0.3s;z-index:0;}
+.lbtn:hover::before{transform:translateX(0);}
+.lbtn:hover{color:var(--bg);}
+.lbtn span{position:relative;z-index:1;}
+.lerr{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--error);padding:9px 13px;border-radius:2px;font-size:12px;letter-spacing:1px;margin-top:10px;display:none;text-align:center;}
+.lerr.show{display:block;}
+
+/* ── TOPBAR ───────────────────────────────────────────── */
+#shell{display:none;flex-direction:column;height:100%;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;flex-shrink:0;position:relative;z-index:10;}
+.topbar-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:4px;color:var(--neon);display:flex;align-items:center;gap:10px;}
+.topbar-logo span{font-size:10px;font-weight:400;color:var(--muted);letter-spacing:2px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.tb-clock{font-family:'Orbitron',monospace;font-size:11px;color:var(--muted);background:var(--surface2);padding:5px 12px;border:1px solid var(--border);border-radius:2px;}
+.tb-out{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--error);padding:6px 14px;border-radius:2px;font-size:11px;letter-spacing:2px;cursor:pointer;font-family:'Orbitron',monospace;}
+.live-dot{width:7px;height:7px;background:var(--neon);border-radius:50%;animation:blink 2s infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── LAYOUT ───────────────────────────────────────────── */
+.body-wrap{display:flex;flex:1;overflow:hidden;position:relative;z-index:1;}
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:14px 0;overflow-y:auto;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:13px 20px;color:var(--muted);font-size:13px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;border-left:2px solid transparent;}
+.sidebar-item:hover{color:var(--text);background:rgba(0,255,224,0.03);}
+.sidebar-item.active{color:var(--neon);border-left-color:var(--neon);background:rgba(0,255,224,0.05);}
+.sidebar-ic{font-size:16px;width:20px;text-align:center;}
+.sidebar-section{font-size:9px;letter-spacing:3px;color:rgba(200,255,248,0.2);padding:16px 20px 6px;text-transform:uppercase;}
+.main{flex:1;overflow-y:auto;padding:24px;}
+.main::-webkit-scrollbar{width:4px;}
+.main::-webkit-scrollbar-thumb{background:rgba(0,255,224,0.15);border-radius:2px;}
+
+/* ── PANELS ───────────────────────────────────────────── */
+.panel{display:none;animation:pIn 0.3s ease;}
+.panel.active{display:block;}
+@keyframes pIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel-title{font-family:'Orbitron',monospace;font-size:14px;letter-spacing:4px;color:var(--neon);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.panel-title small{font-size:9px;letter-spacing:2px;color:var(--muted);font-family:'Rajdhani',sans-serif;}
+
+/* ── STATS ────────────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:20px;position:relative;overflow:hidden;transition:border-color 0.3s;}
+.stat-card:hover{border-color:rgba(0,255,224,0.3);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--sc,var(--neon));opacity:.5;}
+.stat-num{font-family:'Orbitron',monospace;font-size:28px;font-weight:700;color:#fff;margin-bottom:4px;}
+.stat-lbl{font-size:11px;letter-spacing:2px;color:var(--muted);}
+.stat-ic{position:absolute;right:14px;top:14px;font-size:20px;opacity:.2;}
+
+/* ── TABLE ────────────────────────────────────────────── */
+.box{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:20px;margin-bottom:18px;}
+.box-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.box-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:var(--neon);}
+.srch{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:14px;padding:8px 14px;border-radius:2px;outline:none;transition:border-color 0.2s;width:240px;}
+.srch:focus{border-color:var(--neon);}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+td{padding:11px 12px;border-bottom:1px solid rgba(0,255,224,0.04);font-size:13px;vertical-align:middle;letter-spacing:.5px;}
+tr:hover td{background:rgba(0,255,224,0.02);}
+.badge{padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;}
+.badge.new{background:rgba(0,255,224,0.12);color:var(--neon);border:1px solid rgba(0,255,224,0.25);}
+.badge.ok{background:rgba(16,185,129,0.12);color:#6ee7b7;border:1px solid rgba(16,185,129,0.25);}
+.badge.fail{background:rgba(255,77,109,0.12);color:var(--error);border:1px solid rgba(255,77,109,0.25);}
+.badge.warn{background:rgba(245,158,11,0.12);color:var(--gold);border:1px solid rgba(245,158,11,0.25);}
+.phone-cell{font-family:'Orbitron',monospace;font-size:11px;color:var(--neon);}
+.ts-cell{font-size:11px;color:var(--muted);}
+.empty-row td{text-align:center;color:var(--muted);padding:40px;letter-spacing:2px;font-size:12px;}
+.del-btn{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.2);color:var(--error);padding:4px 10px;border-radius:2px;font-size:10px;letter-spacing:1px;cursor:pointer;font-family:'Rajdhani',sans-serif;}
+.del-btn:hover{background:rgba(255,77,109,0.2);}
+
+/* ── REFRESH BTN ──────────────────────────────────────── */
+.ref-btn{background:rgba(0,255,224,0.06);border:1px solid rgba(0,255,224,0.2);color:var(--neon);padding:7px 16px;border-radius:2px;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'Orbitron',monospace;}
+.ref-btn:hover{background:rgba(0,255,224,0.12);}
+
+/* ── LOADING ──────────────────────────────────────────── */
+.loader{text-align:center;padding:40px;color:var(--muted);font-size:12px;letter-spacing:3px;}
+.loader::after{content:'';display:block;width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--neon);border-radius:50%;animation:spin 0.7s linear infinite;margin:12px auto 0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── ALERT ────────────────────────────────────────────── */
+.alert-strip{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);color:var(--error);padding:8px 14px;border-radius:2px;font-size:12px;letter-spacing:1px;margin-bottom:14px;display:none;}
+.alert-strip.s{background:rgba(0,255,224,0.07);border-color:rgba(0,255,224,0.3);color:var(--neon);}
+.alert-strip.show{display:block;}
+
+/* ── TOAST ────────────────────────────────────────────── */
+.toast-wrap{position:fixed;top:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:6px;}
+.toast{background:var(--surface2);border:1px solid var(--border);border-radius:2px;padding:10px 16px;font-size:12px;letter-spacing:1px;display:flex;align-items:center;gap:8px;min-width:220px;animation:tIn 0.3s ease;}
+.toast.s{border-left:2px solid var(--neon);}
+.toast.e{border-left:2px solid var(--error);}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr;}.sidebar{display:none;}.srch{width:160px;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-title">NEXUS</div>
+    <div class="login-sub">ADMIN ACCESS TERMINAL</div>
+    <div class="lfield">
+      <label>ADMIN PASSWORD</label>
+      <input type="password" id="lpass" placeholder="ENTER PASSKEY" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="lbtn" onclick="doLogin()"><span>AUTHENTICATE →</span></button>
+    <div class="lerr" id="lerr">ACCESS DENIED — WRONG PASSWORD</div>
+  </div>
+</div>
+
+<!-- ══ SHELL ═══════════════════════════════════════════════ -->
+<div id="shell">
+  <div class="topbar">
+    <div class="topbar-logo"><div class="live-dot"></div>NEXUS <span>ANTI LODGE ADMIN</span></div>
+    <div class="topbar-right">
+      <div class="tb-clock" id="clock">--:--:--</div>
+      <button class="tb-out" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </div>
+
+  <div class="body-wrap">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">OVERVIEW</div>
+      <div class="sidebar-item active" onclick="showPanel('dashboard',this)"><span class="sidebar-ic">📊</span>DASHBOARD</div>
+      <div class="sidebar-section">USERS</div>
+      <div class="sidebar-item" onclick="showPanel('users',this)"><span class="sidebar-ic">👥</span>ALL USERS</div>
+      <div class="sidebar-item" onclick="showPanel('logs',this)"><span class="sidebar-ic">📋</span>ACTIVITY LOG</div>
+      <div class="sidebar-item" onclick="showPanel('otps',this)"><span class="sidebar-ic">🔢</span>OTP LOG</div>
+      <div class="sidebar-section">SYSTEM</div>
+      <div class="sidebar-item" onclick="showPanel('blocked',this)"><span class="sidebar-ic">🚫</span>BLOCKED USERS</div>
+      <div class="sidebar-item" onclick="showPanel('settings',this)"><span class="sidebar-ic">⚙️</span>SETTINGS</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="panel-title">📊 DASHBOARD <small>REAL-TIME OVERVIEW</small></div>
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card" style="--sc:#00ffe0"><div class="stat-ic">👥</div><div class="stat-num" id="s1">—</div><div class="stat-lbl">TOTAL USERS</div></div>
+          <div class="stat-card" style="--sc:#ff00aa"><div class="stat-ic">🆕</div><div class="stat-num" id="s2">—</div><div class="stat-lbl">TODAY SIGNUPS</div></div>
+          <div class="stat-card" style="--sc:#f59e0b"><div class="stat-ic">📱</div><div class="stat-num" id="s3">—</div><div class="stat-lbl">OTPS SENT</div></div>
+          <div class="stat-card" style="--sc:#ef4444"><div class="stat-ic">⚠️</div><div class="stat-num" id="s4">—</div><div class="stat-lbl">FAILED LOGINS</div></div>
+        </div>
+        <div class="box">
+          <div class="box-head"><div class="box-title">RECENT SIGNUPS</div><button class="ref-btn" onclick="loadDashboard()">↺ REFRESH</button></div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>PHONE</th><th>REGISTERED AT</th><th>OTP SESSION</th><th>DEVICE</th><th>ACTION</th></tr></thead>
+            <tbody id="recentTb"></tbody>
+          </table></div>
+        </div>
+        <div class="box">
+          <div class="box-head"><div class="box-title">LIVE ACTIVITY FEED</div></div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>PHONE</th><th>ACTION</th><th>TIMESTAMP</th><th>DEVICE</th></tr></thead>
+            <tbody id="feedTb"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ALL USERS -->
+      <div class="panel" id="panel-users">
+        <div class="panel-title">👥 ALL REGISTERED USERS <small id="userCount">LOADING...</small></div>
+        <div class="box">
+          <div class="box-head">
+            <div class="box-title">USER DATABASE</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="srch" id="userSearch" placeholder="SEARCH PHONE..." oninput="filterUsers()">
+              <button class="ref-btn" onclick="loadUsers()">↺ REFRESH</button>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>#</th><th>PHONE NUMBER</th><th>REGISTERED AT</th><th>OTP SESSION</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+            <tbody id="usersTb"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div class="panel" id="panel-logs">
+        <div class="panel-title">📋 ACTIVITY LOG <small>ALL EVENTS</small></div>
+        <div class="box">
+          <div class="box-head">
+            <div class="box-title">FULL AUDIT TRAIL</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="srch" id="logSearch" placeholder="FILTER..." oninput="filterLogs()">
+              <button class="ref-btn" onclick="loadLogs()">↺ REFRESH</button>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>#</th><th>PHONE</th><th>ACTION</th><th>TIMESTAMP</th><th>DEVICE</th></tr></thead>
+            <tbody id="logsTb"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- OTP LOG -->
+      <div class="panel" id="panel-otps">
+        <div class="panel-title">🔢 OTP LOG <small>ALL SENT OTPs</small></div>
+        <div class="box">
+          <div class="box-head"><div class="box-title">OTP DISPATCH RECORDS</div><button class="ref-btn" onclick="loadOtps()">↺ REFRESH</button></div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>#</th><th>PHONE</th><th>SESSION ID</th><th>SENT AT</th><th>USED FOR</th></tr></thead>
+            <tbody id="otpsTb"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- BLOCKED -->
+      <div class="panel" id="panel-blocked">
+        <div class="panel-title">🚫 BLOCKED USERS</div>
+        <div class="alert-strip show s" style="display:flex !important;align-items:center;gap:8px;">ℹ️ Blocking a user prevents them from signing in. Their account remains in the database.</div>
+        <div class="box">
+          <div class="box-head"><div class="box-title">BLOCKED NUMBERS</div><button class="ref-btn" onclick="loadUsers()">↺ REFRESH</button></div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>PHONE</th><th>BLOCKED SINCE</th><th>ACTION</th></tr></thead>
+            <tbody id="blockedTb"></tbody>
+          </table></div>
+        </div>
+        <div class="box">
+          <div class="box-title" style="margin-bottom:14px">BLOCK A NUMBER</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input class="srch" style="width:220px" id="blockInput" placeholder="+91 XXXXXXXXXX">
+            <button class="ref-btn" style="background:rgba(255,77,109,0.1);border-color:rgba(255,77,109,0.3);color:var(--error);" onclick="blockUser()">BLOCK NUMBER</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="panel" id="panel-settings">
+        <div class="panel-title">⚙️ SETTINGS</div>
+        <div class="box">
+          <div class="box-title" style="margin-bottom:16px">ADMIN PASSWORD</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px">
+            <div class="lfield"><label>CURRENT PASSWORD</label><input type="password" id="cp1"></div>
+            <div class="lfield"><label>NEW PASSWORD</label><input type="password" id="cp2"></div>
+          </div>
+          <button class="ref-btn" onclick="changePass()">UPDATE PASSWORD</button>
+        </div>
+        <div class="box">
+          <div class="box-title" style="margin-bottom:14px">SUPABASE CONFIG</div>
+          <div style="background:rgba(0,255,224,0.03);border:1px solid var(--border);padding:16px;border-radius:2px;font-family:'Orbitron',monospace;font-size:11px;color:var(--muted);line-height:2">
+            Connected to Supabase PostgreSQL<br>
+            Tables: nexus_users · nexus_logs · nexus_otps<br>
+            Auth: Anon Key (row-level security enabled)
+          </div>
+        </div>
+        <div class="box" style="border-color:rgba(255,77,109,0.2)">
+          <div class="box-title" style="margin-bottom:14px;color:var(--error)">DANGER ZONE</div>
+          <button class="del-btn" onclick="if(confirm('WIPE ALL USERS? THIS CANNOT BE UNDONE.'))clearAll()">WIPE ALL USER DATA</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://nbwqsinimvcstnifryqp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5id3FzaW5pbXZjc3RuaWZyeXFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzA3MDIsImV4cCI6MjA4OTY0NjcwMn0.ROFbHUyWX0MpkU7nurmng0upFQwJ_44uRvI8i3Tz338';
+const ADMIN_PASS_KEY = 'nexus_admin_pass';
+const DEFAULT_PASS = 'Sufiyan Panel Active';
+
+let allUsers = [], allLogs = [], allOtps = [];
+
+// ── AUTH ─────────────────────────────────────────────────
+function getPass(){return localStorage.getItem(ADMIN_PASS_KEY)||DEFAULT_PASS;}
+function doLogin(){
+  if(document.getElementById('lpass').value===getPass()){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('shell').style.display='flex';
+    init();toast('SYSTEMS ONLINE','s');
+  } else {
+    document.getElementById('lerr').classList.add('show');
+    document.getElementById('lpass').value='';
+  }
+}
+function doLogout(){
+  document.getElementById('shell').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lpass').value='';
+}
+document.getElementById('lpass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ── INIT ─────────────────────────────────────────────────
+function init(){
+  setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN');},1000);
+  loadDashboard();
+  loadUsers();
+  loadLogs();
+  loadOtps();
+  // Auto-refresh every 30s
+  setInterval(()=>{ loadDashboard(); loadLogs(); },30000);
+}
+
+// ── PANELS ───────────────────────────────────────────────
+function showPanel(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── SUPABASE ─────────────────────────────────────────────
+async function sb(endpoint,method='GET',body=null){
+  const opts={method,headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Prefer':'return=representation'}};
+  if(body)opts.body=JSON.stringify(body);
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`,opts);
+    const d=await r.json();
+    return{ok:r.ok,status:r.status,data:d};
+  }catch(e){return{ok:false,error:e.message};}
+}
+
+// ── DASHBOARD ────────────────────────────────────────────
+async function loadDashboard(){
+  // Stats
+  const[users,logs]=await Promise.all([
+    sb('nexus_users?select=id,phone,registered_at,otp_log&order=registered_at.desc&limit=10'),
+    sb('nexus_logs?select=*&order=ts.desc&limit=20'),
+  ]);
+  if(users.ok&&Array.isArray(users.data)){
+    document.getElementById('s1').textContent=users.data.length<10?users.data.length:'10+';
+    const today=new Date().toISOString().slice(0,10);
+    const todaySignups=users.data.filter(u=>u.registered_at?.startsWith(today)).length;
+    document.getElementById('s2').textContent=todaySignups;
+    renderRecentTb(users.data);
+  }
+  if(logs.ok&&Array.isArray(logs.data)){
+    const otpCount=logs.data.filter(l=>l.action==='SIGNUP').length;
+    const failCount=logs.data.filter(l=>l.action==='FAILED_LOGIN').length;
+    document.getElementById('s3').textContent=otpCount;
+    document.getElementById('s4').textContent=failCount;
+    renderFeed(logs.data.slice(0,8));
+  }
+  // Get total count
+  const total=await sb('nexus_users?select=id');
+  if(total.ok&&Array.isArray(total.data))document.getElementById('s1').textContent=total.data.length;
+}
+
+function renderRecentTb(data){
+  const tb=document.getElementById('recentTb');
+  if(!data||!data.length){tb.innerHTML='<tr class="empty-row"><td colspan="5">NO USERS YET</td></tr>';return;}
+  tb.innerHTML=data.map(u=>`<tr>
+    <td class="phone-cell">+91 ${u.phone||'—'}</td>
+    <td class="ts-cell">${fmtTs(u.registered_at)}</td>
+    <td class="ts-cell" style="font-size:10px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${u.otp_log||'—'}</td>
+    <td class="ts-cell" style="font-size:10px;max-width:120px;overflow:hidden;text-overflow:ellipsis">—</td>
+    <td><button class="del-btn" onclick="deleteUser('${u.phone}')">REMOVE</button></td>
+  </tr>`).join('');
+}
+
+function renderFeed(data){
+  const tb=document.getElementById('feedTb');
+  if(!data||!data.length){tb.innerHTML='<tr class="empty-row"><td colspan="4">NO ACTIVITY YET</td></tr>';return;}
+  tb.innerHTML=data.map(l=>`<tr>
+    <td class="phone-cell">${l.phone?'+91 '+l.phone:'—'}</td>
+    <td><span class="badge ${l.action==='SIGNUP'?'new':l.action==='SIGNIN'?'ok':l.action==='FAILED_LOGIN'?'fail':'warn'}">${l.action||'—'}</span></td>
+    <td class="ts-cell">${fmtTs(l.ts)}</td>
+    <td class="ts-cell" style="font-size:10px;max-width:140px;overflow:hidden;text-overflow:ellipsis">${(l.device||'').slice(0,50)||'—'}</td>
+  </tr>`).join('');
+}
+
+// ── USERS ────────────────────────────────────────────────
+async function loadUsers(){
+  const{ok,data}=await sb('nexus_users?select=*&order=registered_at.desc');
+  if(!ok){toast('FAILED TO LOAD USERS','e');return;}
+  allUsers=Array.isArray(data)?data:[];
+  document.getElementById('userCount').textContent=`${allUsers.length} TOTAL`;
+  renderUsers(allUsers);
+  renderBlocked();
+}
+
+function renderUsers(data){
+  const tb=document.getElementById('usersTb');
+  if(!data||!data.length){tb.innerHTML='<tr class="empty-row"><td colspan="6">NO USERS REGISTERED YET</td></tr>';return;}
+  tb.innerHTML=data.map((u,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td class="phone-cell">+91 ${u.phone||'—'}</td>
+    <td class="ts-cell">${fmtTs(u.registered_at)}</td>
+    <td class="ts-cell" style="font-size:10px">${u.otp_log||'—'}</td>
+    <td><span class="badge ${u.blocked?'fail':'ok'}">${u.blocked?'BLOCKED':'ACTIVE'}</span></td>
+    <td style="display:flex;gap:6px">
+      <button class="del-btn" onclick="deleteUser('${u.phone}')">DELETE</button>
+      <button class="del-btn" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--gold)" onclick="toggleBlock('${u.phone}',${!u.blocked})">${u.blocked?'UNBLOCK':'BLOCK'}</button>
+    </td>
+  </tr>`).join('');
+}
+
+function filterUsers(){
+  const q=(document.getElementById('userSearch')?.value||'').toLowerCase();
+  renderUsers(q?allUsers.filter(u=>(u.phone||'').includes(q)):allUsers);
+}
+
+function renderBlocked(){
+  const blocked=allUsers.filter(u=>u.blocked);
+  const tb=document.getElementById('blockedTb');
+  if(!blocked.length){tb.innerHTML='<tr class="empty-row"><td colspan="3">NO BLOCKED USERS</td></tr>';return;}
+  tb.innerHTML=blocked.map(u=>`<tr>
+    <td class="phone-cell">+91 ${u.phone}</td>
+    <td class="ts-cell">${fmtTs(u.blocked_at)}</td>
+    <td><button class="del-btn" style="color:var(--neon);border-color:rgba(0,255,224,0.2)" onclick="toggleBlock('${u.phone}',false)">UNBLOCK</button></td>
+  </tr>`).join('');
+}
+
+// ── LOGS ─────────────────────────────────────────────────
+async function loadLogs(){
+  const{ok,data}=await sb('nexus_logs?select=*&order=ts.desc&limit=200');
+  if(!ok){toast('FAILED TO LOAD LOGS','e');return;}
+  allLogs=Array.isArray(data)?data:[];
+  renderLogs(allLogs);
+}
+
+function renderLogs(data){
+  const tb=document.getElementById('logsTb');
+  if(!data||!data.length){tb.innerHTML='<tr class="empty-row"><td colspan="5">NO ACTIVITY LOGGED YET</td></tr>';return;}
+  tb.innerHTML=data.map((l,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td class="phone-cell">${l.phone?'+91 '+l.phone:'SYSTEM'}</td>
+    <td><span class="badge ${l.action==='SIGNUP'?'new':l.action==='SIGNIN'?'ok':l.action==='FAILED_LOGIN'?'fail':'warn'}">${l.action||'—'}</span></td>
+    <td class="ts-cell">${fmtTs(l.ts)}</td>
+    <td class="ts-cell" style="font-size:10px;max-width:180px;overflow:hidden;text-overflow:ellipsis">${(l.device||'').slice(0,60)||'—'}</td>
+  </tr>`).join('');
+}
+
+function filterLogs(){
+  const q=(document.getElementById('logSearch')?.value||'').toLowerCase();
+  renderLogs(q?allLogs.filter(l=>((l.phone||'')+(l.action||'')).toLowerCase().includes(q)):allLogs);
+}
+
+// ── OTPs ─────────────────────────────────────────────────
+async function loadOtps(){
+  const{ok,data}=await sb('nexus_logs?select=phone,otp_session,ts,action&action=eq.SIGNUP&order=ts.desc&limit=100');
+  if(!ok)return;
+  allOtps=Array.isArray(data)?data:[];
+  renderOtps(allOtps);
+}
+
+function renderOtps(data){
+  const tb=document.getElementById('otpsTb');
+  if(!data||!data.length){tb.innerHTML='<tr class="empty-row"><td colspan="5">NO OTP RECORDS YET</td></tr>';return;}
+  tb.innerHTML=data.map((o,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px">${i+1}</td>
+    <td class="phone-cell">${o.phone?'+91 '+o.phone:'—'}</td>
+    <td class="ts-cell" style="font-size:10px">${o.otp_session||'—'}</td>
+    <td class="ts-cell">${fmtTs(o.ts)}</td>
+    <td><span class="badge ok">VERIFIED</span></td>
+  </tr>`).join('');
+}
+
+// ── ACTIONS ──────────────────────────────────────────────
+async function deleteUser(phone){
+  if(!confirm(`DELETE USER +91 ${phone}? THIS CANNOT BE UNDONE.`))return;
+  const{ok}=await sb(`nexus_users?phone=eq.${phone}`,'DELETE');
+  if(ok){toast(`USER ${phone} DELETED`,'s');loadUsers();loadDashboard();}
+  else toast('DELETE FAILED','e');
+}
+
+async function toggleBlock(phone,block){
+  const{ok}=await sb(`nexus_users?phone=eq.${phone}`,'PATCH',{blocked:block,blocked_at:block?new Date().toISOString():null});
+  if(ok){toast(`${phone} ${block?'BLOCKED':'UNBLOCKED'}`,'s');loadUsers();}
+  else toast('ACTION FAILED','e');
+}
+
+async function blockUser(){
+  const val=document.getElementById('blockInput').value.trim().replace(/\D/g,'');
+  if(val.length!==10){toast('ENTER VALID 10-DIGIT NUMBER','e');return;}
+  await toggleBlock(val,true);
+  document.getElementById('blockInput').value='';
+}
+
+async function clearAll(){
+  const{ok}=await sb('nexus_users','DELETE');
+  if(ok){toast('ALL USERS WIPED','s');loadDashboard();loadUsers();}
+  else toast('WIPE FAILED','e');
+}
+
+function changePass(){
+  const c=document.getElementById('cp1').value;
+  const n=document.getElementById('cp2').value;
+  if(c!==getPass()){toast('WRONG CURRENT PASSWORD','e');return;}
+  if(n.length<6){toast('MIN 6 CHARACTERS REQUIRED','e');return;}
+  localStorage.setItem(ADMIN_PASS_KEY,n);
+  document.getElementById('cp1').value='';document.getElementById('cp2').value='';
+  toast('PASSWORD UPDATED','s');
+}
+
+// ── HELPERS ──────────────────────────────────────────────
+function fmtTs(ts){
+  if(!ts)return'—';
+  try{return new Date(ts).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
+  catch{return ts;}
+}
+
+function toast(msg,type='s'){
+  const ic={s:'◉',e:'✕'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${ic[type]||'·'}</span><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+</script>
+</body>
+</html>

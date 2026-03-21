@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sufiyan Empire — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Monaco Editor CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+<style>
+/* ══ RESET & ROOT ══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:#060a12;}
+:root{
+  --ink:#060a12;--ink2:#0a1020;--ink3:#0f1828;
+  --gold:#d4a843;--gold2:#e8c068;--gold3:rgba(212,168,67,.15);
+  --gold-border:rgba(212,168,67,.2);
+  --text:#e8dcc8;--text2:rgba(232,220,200,.6);--text3:rgba(232,220,200,.3);
+  --blue:#3b7dd8;--green:#2ecc71;--red:#e74c3c;--orange:#f39c12;
+  --surface:#0d1525;--surface2:#111e30;--surface3:#162236;
+  --border:rgba(212,168,67,.1);--border2:rgba(212,168,67,.18);
+  --r:10px;--r2:16px;
+  --shadow:0 4px 24px rgba(0,0,0,.3);
+  --shadow-gold:0 0 30px rgba(212,168,67,.08);
+}
+body{font-family:'DM Sans',sans-serif;color:var(--text);}
+
+/* ══ LOGIN ═════════════════════════════════════════════════ */
+#loginScreen{
+  position:fixed;inset:0;background:var(--ink);
+  display:flex;align-items:center;justify-content:center;z-index:9999;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%,#0d1a2e,#060a12);
+}
+/* Animated stars */
+.stars{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.star{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;animation:twinkle linear infinite;}
+@keyframes twinkle{0%{opacity:0;transform:scale(0)}50%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
+
+.login-wrap{
+  position:relative;z-index:1;
+  width:400px;max-width:92vw;
+}
+.login-crown{text-align:center;margin-bottom:36px;}
+.crown-icon{font-size:52px;display:block;margin-bottom:10px;animation:crownFloat 3s ease-in-out infinite;}
+@keyframes crownFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.crown-title{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-0.5px;
+}
+.crown-sub{font-size:11px;color:var(--text3);letter-spacing:3px;margin-top:4px;}
+
+.login-card{
+  background:var(--surface);
+  border:1px solid var(--gold-border);
+  border-radius:var(--r2);padding:36px;
+  box-shadow:var(--shadow),var(--shadow-gold);
+  position:relative;overflow:hidden;
+}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent);}
+.lf{margin-bottom:18px;}
+.lf label{display:block;font-size:11px;letter-spacing:2px;color:var(--text3);margin-bottom:7px;font-weight:600;}
+.lf input{
+  width:100%;background:var(--ink2);border:1px solid var(--border2);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;
+  padding:12px 16px;border-radius:var(--r);outline:none;transition:all .25s;
+}
+.lf input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.08);}
+.lf input::placeholder{color:var(--text3);}
+.login-btn{
+  width:100%;padding:14px;margin-top:4px;
+  background:linear-gradient(135deg,var(--gold),#b8872a);
+  border:none;color:var(--ink);font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:800;letter-spacing:1px;
+  border-radius:var(--r);cursor:pointer;transition:all .3s;
+}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,.3);}
+.lerr{
+  background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);
+  color:#f1948a;border-radius:var(--r);padding:10px 14px;
+  font-size:13px;margin-top:12px;text-align:center;display:none;
+}
+.lerr.show{display:block;}
+
+/* ══ SHELL ═════════════════════════════════════════════════ */
+#shell{display:none;flex-direction:column;height:100%;}
+
+/* ── TOPBAR ──────────────────────────────────────────────── */
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  height:56px;display:flex;align-items:center;
+  padding:0 20px;gap:16px;flex-shrink:0;z-index:100;
+  position:relative;
+}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3;}
+.tb-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-size:16px;font-weight:900;color:var(--gold);white-space:nowrap;}
+.tb-logo-crown{font-size:20px;}
+.tb-logo-sub{font-size:10px;color:var(--text3);letter-spacing:2px;font-family:'DM Sans',sans-serif;font-weight:400;}
+.tb-sep{width:1px;height:24px;background:var(--border);}
+.tb-tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;}
+.tb-tabs::-webkit-scrollbar{display:none;}
+.tb-tab{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:8px;
+  font-size:13px;font-weight:500;cursor:pointer;
+  color:var(--text2);border:1px solid transparent;
+  transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.tb-tab:hover{background:var(--surface2);color:var(--text);}
+.tb-tab.active{background:var(--gold3);border-color:var(--gold-border);color:var(--gold);}
+.tb-tab .tab-ic{font-size:15px;}
+.tb-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
+.clock{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);background:var(--ink2);padding:5px 12px;border-radius:6px;border:1px solid var(--border);}
+.logout-btn{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);color:#e74c3c;padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s;}
+.logout-btn:hover{background:rgba(231,76,60,.2);}
+
+/* ══ BODY ══════════════════════════════════════════════════ */
+.body-wrap{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.sidebar{
+  width:240px;flex-shrink:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sidebar-search{padding:12px 14px;border-bottom:1px solid var(--border);}
+.sidebar-search input{
+  width:100%;background:var(--ink2);border:1px solid var(--border);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;
+  padding:8px 12px;border-radius:8px;outline:none;transition:all .2s;
+}
+.sidebar-search input:focus{border-color:var(--gold);}
+.sidebar-search input::placeholder{color:var(--text3);}
+.sidebar-list{flex:1;overflow-y:auto;padding:6px;}
+.sidebar-list::-webkit-scrollbar{width:3px;}
+.sidebar-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.page-item{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 10px;border-radius:8px;cursor:pointer;
+  transition:all .2s;border:1px solid transparent;margin-bottom:2px;
+  position:relative;
+}
+.page-item:hover{background:var(--surface2);}
+.page-item.active{background:var(--gold3);border-color:var(--gold-border);}
+.page-item-ic{font-size:14px;flex-shrink:0;}
+.page-item-name{flex:1;font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.page-item.active .page-item-name{color:var(--gold);}
+.page-item-url{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;display:block;margin-top:1px;}
+.page-item-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.page-item-dot.builtin{background:#3b7dd8;}
+.page-item-dot.custom{background:var(--green);}
+.page-item-actions{display:none;gap:4px;}
+.page-item:hover .page-item-actions{display:flex;}
+.page-action-btn{width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.page-action-btn.edit{background:rgba(59,125,216,.15);color:#3b7dd8;}
+.page-action-btn.del{background:rgba(231,76,60,.1);color:#e74c3c;}
+.page-action-btn:hover{transform:scale(1.1);}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);}
+.new-page-btn{
+  width:100%;padding:10px;border:1px dashed var(--gold-border);
+  background:var(--gold3);color:var(--gold);
+  border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:'DM Sans',sans-serif;
+}
+.new-page-btn:hover{background:rgba(212,168,67,.2);border-color:var(--gold);}
+
+/* ══ MAIN EDITOR AREA ══════════════════════════════════════ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── EDITOR TOPBAR ───────────────────────────────────────── */
+.editor-bar{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:0 16px;display:flex;align-items:center;gap:10px;height:48px;flex-shrink:0;
+}
+.editor-filename{
+  font-family:'DM Mono',monospace;font-size:13px;color:var(--text);
+  background:var(--ink2);border:1px solid var(--border);
+  padding:5px 12px;border-radius:6px;flex:1;max-width:280px;
+  outline:none;transition:border-color .2s;
+}
+.editor-filename:focus{border-color:var(--gold);}
+.editor-url-prefix{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);}
+.bar-sep{width:1px;height:24px;background:var(--border);}
+.bar-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.bar-btn.primary{background:linear-gradient(135deg,var(--gold),#b8872a);color:var(--ink);}
+.bar-btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(212,168,67,.3);}
+.bar-btn.preview{background:rgba(59,125,216,.15);color:#3b7dd8;border:1px solid rgba(59,125,216,.2);}
+.bar-btn.preview:hover{background:rgba(59,125,216,.25);}
+.bar-btn.danger{background:rgba(231,76,60,.1);color:#e74c3c;border:1px solid rgba(231,76,60,.2);}
+.bar-btn.danger:hover{background:rgba(231,76,60,.2);}
+.bar-btn.ghost{background:var(--surface3);color:var(--text2);border:1px solid var(--border);}
+.bar-btn.ghost:hover{color:var(--text);}
+.save-status{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;margin-left:auto;}
+.save-dot{width:6px;height:6px;border-radius:50%;}
+.save-dot.saved{background:var(--green);}
+.save-dot.unsaved{background:var(--orange);animation:pulse2 1.5s ease infinite;}
+.save-dot.saving{background:var(--gold);animation:pulse2 .5s ease infinite;}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── EDITOR WRAP ─────────────────────────────────────────── */
+.editor-tabs{
+  display:flex;align-items:center;gap:1px;
+  background:var(--ink2);border-bottom:1px solid var(--border);
+  padding:0 12px;flex-shrink:0;height:38px;
+}
+.e-tab{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 14px;font-size:12px;cursor:pointer;
+  color:var(--text3);border-bottom:2px solid transparent;transition:all .2s;
+}
+.e-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.e-tab:hover{color:var(--text);}
+.editor-container{flex:1;display:flex;overflow:hidden;position:relative;}
+#monacoEditor{flex:1;height:100%;}
+
+/* Preview */
+#previewFrame{
+  position:absolute;inset:0;border:none;
+  background:#fff;display:none;z-index:5;
+}
+.preview-bar{
+  position:absolute;top:10px;right:10px;z-index:10;
+  display:none;gap:8px;
+}
+#previewFrame.show,#previewFrame.show + .preview-bar{display:flex;}
+
+/* ── SPLIT VIEW ──────────────────────────────────────────── */
+.split-wrap{flex:1;display:flex;overflow:hidden;position:relative;}
+.split-editor{flex:1;min-width:0;}
+.split-divider{width:4px;background:var(--border);cursor:col-resize;flex-shrink:0;transition:background .2s;}
+.split-divider:hover{background:var(--gold);}
+.split-preview{flex:1;min-width:0;background:#fff;}
+.split-preview iframe{width:100%;height:100%;border:none;}
+
+/* ══ PANELS ════════════════════════════════════════════════ */
+.panel{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.panel.active{display:flex;}
+
+/* ── WELCOME PANEL ───────────────────────────────────────── */
+#panel-welcome{align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 50%,#0d1a2e,#060a12);}
+.welcome-inner{text-align:center;max-width:560px;padding:40px 20px;}
+.welcome-crown{font-size:80px;display:block;margin-bottom:20px;animation:crownFloat 3s ease-in-out infinite;}
+.welcome-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+.welcome-sub{color:var(--text2);font-size:15px;line-height:1.8;margin-bottom:36px;}
+.welcome-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;}
+.wc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px;cursor:pointer;transition:all .25s;}
+.wc:hover{border-color:var(--gold-border);background:var(--surface2);transform:translateY(-3px);}
+.wc-ic{font-size:28px;margin-bottom:8px;}
+.wc-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;}
+.wc-desc{font-size:12px;color:var(--text3);line-height:1.6;}
+
+/* ── DASHBOARD PANEL ─────────────────────────────────────── */
+#panel-dashboard{overflow-y:auto;}
+.dash-inner{max-width:1000px;margin:0 auto;padding:28px;}
+.dash-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);margin-bottom:6px;}
+.dash-sub{color:var(--text3);font-size:14px;margin-bottom:28px;}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.ds{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px;position:relative;overflow:hidden;transition:all .3s;}
+.ds:hover{border-color:var(--gold-border);transform:translateY(-2px);}
+.ds::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ds-c,var(--gold));}
+.ds-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;}
+.ds-lbl{font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:.5px;}
+.ds-ic{position:absolute;right:14px;top:14px;font-size:22px;opacity:.2;}
+.dash-pages{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px;}
+.dp-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.dp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.dp-tile{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;text-align:center;}
+.dp-tile:hover{border-color:var(--gold-border);background:var(--surface3);}
+.dp-tile-ic{font-size:24px;margin-bottom:6px;}
+.dp-tile-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dp-tile-url{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;}
+.dp-tile-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;margin-top:4px;}
+.dp-tile-badge.builtin{background:rgba(59,125,216,.15);color:#3b7dd8;}
+.dp-tile-badge.custom{background:rgba(46,204,113,.12);color:#2ecc71;}
+
+/* ── UPLOAD PANEL ────────────────────────────────────────── */
+#panel-upload{overflow-y:auto;}
+.upload-inner{max-width:700px;margin:0 auto;padding:28px;}
+.up-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);margin-bottom:6px;}
+.up-sub{color:var(--text3);font-size:14px;margin-bottom:24px;}
+.up-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-bottom:18px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11px;letter-spacing:2px;color:var(--text3);margin-bottom:7px;font-weight:600;}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--ink2);border:1px solid var(--border2);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
+  padding:11px 14px;border-radius:var(--r);outline:none;transition:all .2s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.06);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3);}
+.field select option{background:var(--surface);}
+.url-row{display:flex;align-items:center;gap:0;}
+.url-prefix{background:var(--surface2);border:1px solid var(--border2);border-right:none;color:var(--text3);padding:11px 14px;border-radius:var(--r) 0 0 var(--r);font-size:14px;font-family:'DM Mono',monospace;white-space:nowrap;}
+.url-row input{border-radius:0 var(--r) var(--r) 0 !important;}
+
+/* Drop Zone */
+.dropzone{
+  border:2px dashed var(--gold-border);border-radius:var(--r2);
+  padding:48px 20px;text-align:center;cursor:pointer;
+  transition:all .3s;position:relative;background:var(--gold3);
+}
+.dropzone:hover,.dropzone.dragover{border-color:var(--gold);background:rgba(212,168,67,.1);}
+.dz-icon{font-size:48px;margin-bottom:12px;}
+.dz-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.dz-sub{font-size:13px;color:var(--text3);}
+.dz-or{font-size:12px;color:var(--text3);margin:12px 0;}
+.dz-file-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.dz-selected{margin-top:12px;background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.25);border-radius:var(--r);padding:10px 14px;font-size:13px;color:#2ecc71;display:none;}
+.dz-selected.show{display:block;}
+
+/* Code paste area */
+.code-paste{
+  width:100%;min-height:200px;resize:vertical;
+  background:var(--ink2);border:1px solid var(--border2);
+  color:#e8dcc8;font-family:'DM Mono',monospace;font-size:13px;
+  padding:14px;border-radius:var(--r);outline:none;transition:border-color .2s;
+  line-height:1.6;
+}
+.code-paste:focus{border-color:var(--gold);}
+.up-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--gold),#b8872a);
+  border:none;color:var(--ink);font-family:'Syne',sans-serif;
+  font-size:15px;font-weight:800;letter-spacing:.5px;
+  border-radius:var(--r);cursor:pointer;transition:all .3s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.up-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,.25);}
+.up-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.up-tabs{display:flex;gap:3px;margin-bottom:20px;background:var(--ink2);border:1px solid var(--border);border-radius:10px;padding:4px;}
+.up-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border-radius:7px;color:var(--text3);transition:all .2s;}
+.up-tab.active{background:var(--gold3);color:var(--gold);border:1px solid var(--gold-border);}
+
+/* ══ TOAST ═════════════════════════════════════════════════ */
+.toast-wrap{position:fixed;top:70px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:6px;}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;display:flex;align-items:center;gap:9px;min-width:220px;box-shadow:var(--shadow);animation:tIn .3s ease;}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.s{border-left:3px solid var(--green);}
+.toast.e{border-left:3px solid var(--red);}
+.toast.i{border-left:3px solid var(--gold);}
+
+/* ══ MODAL ═════════════════════════════════════════════════ */
+.modal-ov{position:fixed;inset:0;background:rgba(6,10,18,.8);z-index:9000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.modal-ov.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r2);padding:32px;width:500px;max-width:92vw;max-height:85vh;overflow-y:auto;position:relative;box-shadow:var(--shadow),var(--shadow-gold);}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold);margin-bottom:6px;}
+.modal-sub{color:var(--text3);font-size:13px;margin-bottom:22px;}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--surface2);border:none;color:var(--text3);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{color:var(--text);}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.mbtn{flex:1;padding:12px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+.mbtn.p{background:linear-gradient(135deg,var(--gold),#b8872a);color:var(--ink);}
+.mbtn.p:hover{transform:translateY(-1px);}
+.mbtn.g{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+.mbtn.d{background:rgba(231,76,60,.12);color:var(--red);border:1px solid rgba(231,76,60,.2);}
+
+/* ══ MISC ══════════════════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;}
+.badge.blue{background:rgba(59,125,216,.15);color:#3b7dd8;}
+.badge.green{background:rgba(46,204,113,.12);color:#2ecc71;}
+.badge.gold{background:var(--gold3);color:var(--gold);border:1px solid var(--gold-border);}
+.hint{font-size:11px;color:var(--text3);margin-top:5px;padding-left:2px;}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .dash-stats{grid-template-columns:1fr 1fr;}
+  .welcome-cards{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .topbar{padding:0 12px;}
+  .tb-logo-sub{display:none;}
+  .dash-inner,.upload-inner{padding:16px;}
+}
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══ LOGIN ═══════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="stars" id="starsContainer"></div>
+  <div class="login-wrap">
+    <div class="login-crown">
+      <span class="crown-icon">👑</span>
+      <div class="crown-title">Sufiyan Empire</div>
+      <div class="crown-sub">COMMAND CENTER · ANTI LODGE</div>
+    </div>
+    <div class="login-card">
+      <div class="lf"><label>MASTER PASSWORD</label><input type="password" id="lpass" placeholder="Enter your passkey..." onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="login-btn" onclick="doLogin()">👑 ENTER THE EMPIRE</button>
+      <div class="lerr" id="lerr">⚠ Access Denied — Wrong Password</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHELL ════════════════════════════════════════════════ -->
+<div id="shell">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-logo"><span class="tb-logo-crown">👑</span><div><div>Sufiyan Empire</div><div class="tb-logo-sub">COMMAND CENTER</div></div></div>
+    <div class="tb-sep"></div>
+    <div class="tb-tabs">
+      <div class="tb-tab active" onclick="showPanel('welcome',this)"><span class="tab-ic">🏠</span>Home</div>
+      <div class="tb-tab" onclick="showPanel('dashboard',this)"><span class="tab-ic">📊</span>Dashboard</div>
+      <div class="tb-tab" onclick="showPanel('upload',this)"><span class="tab-ic">➕</span>New Page</div>
+      <div class="tb-tab" id="editorTab" style="display:none" onclick="showPanel('editor',this)"><span class="tab-ic">✏️</span><span id="editorTabName">editor</span></div>
+    </div>
+    <div class="tb-right">
+      <div class="clock" id="clock">--:--:--</div>
+      <button class="logout-btn" onclick="doLogout()">⏻ Exit</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body-wrap">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-search"><input type="text" placeholder="🔍 Search pages..." id="sidebarSearch" oninput="renderSidebar()"></div>
+      <div class="sidebar-list" id="sidebarList"></div>
+      <div class="sidebar-footer">
+        <button class="new-page-btn" onclick="showPanel('upload',document.querySelector('[onclick*=upload]'))">➕ Create New Page</button>
+      </div>
+    </div>
+
+    <!-- PANELS -->
+
+    <!-- WELCOME -->
+    <div class="panel active" id="panel-welcome">
+      <div class="welcome-inner">
+        <span class="welcome-crown">👑</span>
+        <div class="welcome-title">Welcome, Sufiyan</div>
+        <div class="welcome-sub">This is your empire's command center. Create, edit, and manage every page of Anti Lodge from right here.</div>
+        <div class="welcome-cards">
+          <div class="wc" onclick="showPanel('dashboard',document.querySelector('[onclick*=dashboard]'))">
+            <div class="wc-ic">📊</div>
+            <div class="wc-title">Dashboard</div>
+            <div class="wc-desc">See all pages, stats and a live overview of your empire.</div>
+          </div>
+          <div class="wc" onclick="showPanel('upload',document.querySelector('[onclick*=upload]'))">
+            <div class="wc-ic">➕</div>
+            <div class="wc-title">Create New Page</div>
+            <div class="wc-desc">Upload HTML code or paste it — new page deployed instantly.</div>
+          </div>
+          <div class="wc" onclick="showPanel('dashboard',document.querySelector('[onclick*=dashboard]'))">
+            <div class="wc-ic">✏️</div>
+            <div class="wc-title">Edit Pages</div>
+            <div class="wc-desc">Click any page in the sidebar to open it in the code editor.</div>
+          </div>
+          <div class="wc" onclick="openPage('/antilodge')">
+            <div class="wc-ic">🌐</div>
+            <div class="wc-title">View Live Site</div>
+            <div class="wc-desc">Open Anti Lodge website to see your changes live.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="panel" id="panel-dashboard">
+      <div class="dash-inner">
+        <div class="dash-title">👑 Dashboard</div>
+        <div class="dash-sub">Complete overview of your Anti Lodge website empire.</div>
+        <div class="dash-stats" id="dashStats"></div>
+        <div class="dash-pages">
+          <div class="dp-title">All Pages <span style="font-size:12px;color:var(--text3);font-family:'DM Sans',sans-serif;font-weight:400"><span id="pageCount">0</span> pages total</span></div>
+          <div class="dp-grid" id="dpGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD / CREATE -->
+    <div class="panel" id="panel-upload">
+      <div class="upload-inner">
+        <div class="up-title">➕ Create New Page</div>
+        <div class="up-sub">Upload an HTML file or paste your code — page goes live immediately.</div>
+
+        <!-- Page info -->
+        <div class="up-card">
+          <div class="field">
+            <label>PAGE TITLE *</label>
+            <input type="text" id="newTitle" placeholder="e.g. About Anti Lodge">
+          </div>
+          <div class="field">
+            <label>PAGE URL *</label>
+            <div class="url-row">
+              <div class="url-prefix">antilodge.vercel.app/</div>
+              <input type="text" id="newSlug" placeholder="about" oninput="sanitizeSlug(this)">
+            </div>
+            <div class="hint">Only lowercase letters, numbers and hyphens. No spaces.</div>
+          </div>
+          <div class="field">
+            <label>CATEGORY</label>
+            <select id="newCat">
+              <option>Core Pages</option><option>Rooms & Booking</option><option>Student Life</option>
+              <option>Achievements</option><option>Student Support</option><option>Local Info</option>
+              <option>Media</option><option>Services</option><option>Parents</option>
+              <option>Payment</option><option>Support</option><option>Custom</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Upload method tabs -->
+        <div class="up-tabs">
+          <div class="up-tab active" onclick="setUploadTab('file',this)">📁 Upload HTML File</div>
+          <div class="up-tab" onclick="setUploadTab('paste',this)">📋 Paste HTML Code</div>
+          <div class="up-tab" onclick="setUploadTab('template',this)">🎨 Use Template</div>
+        </div>
+
+        <!-- File Upload -->
+        <div id="upMethod-file" class="up-card">
+          <div class="dropzone" id="dropzone">
+            <input type="file" class="dz-file-input" accept=".html,.htm" id="fileInput" onchange="handleFileSelect(this)">
+            <div class="dz-icon">📁</div>
+            <div class="dz-title">Drop your HTML file here</div>
+            <div class="dz-sub">Supports .html and .htm files</div>
+            <div class="dz-or">— or click to browse —</div>
+            <div class="dz-selected" id="dzSelected"></div>
+          </div>
+        </div>
+
+        <!-- Paste Code -->
+        <div id="upMethod-paste" style="display:none" class="up-card">
+          <div class="field">
+            <label>PASTE YOUR HTML CODE</label>
+            <textarea class="code-paste" id="codeInput" placeholder="<!DOCTYPE html>&#10;<html>&#10;  ...paste your full HTML here...&#10;</html>"></textarea>
+          </div>
+        </div>
+
+        <!-- Template -->
+        <div id="upMethod-template" style="display:none" class="up-card">
+          <div class="field"><label>SELECT TEMPLATE</label>
+            <select id="templateSelect" onchange="loadTemplate()">
+              <option value="">-- Choose a template --</option>
+              <option value="blank">Blank Page (Anti Lodge style)</option>
+              <option value="content">Content Page (with nav + footer)</option>
+              <option value="form">Form Page (with WhatsApp submit)</option>
+              <option value="gallery">Gallery / Grid Page</option>
+            </select>
+          </div>
+          <div id="templatePreview" style="margin-top:14px;"></div>
+        </div>
+
+        <button class="up-btn" onclick="createPage()" id="createBtn">
+          ✨ Create Page & Go to Editor
+        </button>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="panel" id="panel-editor" style="flex-direction:column;">
+      <div class="editor-bar">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--text3);margin-bottom:3px;">EDITING PAGE</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="editingSlug" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold);">/page</span>
+            <span class="badge gold" id="editBadge">custom</span>
+          </div>
+        </div>
+        <div class="bar-sep"></div>
+        <button class="bar-btn ghost" onclick="toggleView('split')">⬛ Split View</button>
+        <button class="bar-btn preview" onclick="toggleView('preview')">👁 Preview</button>
+        <button class="bar-btn primary" onclick="savePage()">💾 Save Changes</button>
+        <button class="bar-btn ghost" onclick="openLivePage()">🌐 Open Live</button>
+        <div class="save-status"><div class="save-dot saved" id="saveDot"></div><span id="saveText">All changes saved</span></div>
+      </div>
+      <div class="editor-tabs">
+        <div class="e-tab active" onclick="setEditorTab('code',this)">📄 HTML</div>
+        <div class="e-tab" onclick="setEditorTab('info',this)">ℹ️ Page Info</div>
+      </div>
+      <!-- Code editor -->
+      <div class="split-wrap" id="editorMain">
+        <div class="split-editor" id="editorWrapper"><div id="monacoEditor"></div></div>
+        <div class="split-divider" id="splitDivider" style="display:none"></div>
+        <div class="split-preview" id="splitPreview" style="display:none"><iframe id="splitFrame"></iframe></div>
+      </div>
+      <!-- Page info tab -->
+      <div id="editorInfoTab" style="display:none;flex:1;overflow-y:auto;padding:24px;">
+        <div style="max-width:500px">
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold);margin-bottom:20px">Page Settings</div>
+          <div class="field"><label>PAGE TITLE</label><input type="text" id="ei_title"></div>
+          <div class="field"><label>PAGE URL</label><div class="url-row"><div class="url-prefix">antilodge.vercel.app/</div><input type="text" id="ei_slug" oninput="sanitizeSlug(this)"></div></div>
+          <div class="field"><label>CATEGORY</label>
+            <select id="ei_cat">
+              <option>Core Pages</option><option>Rooms & Booking</option><option>Student Life</option>
+              <option>Achievements</option><option>Custom</option>
+            </select>
+          </div>
+          <button class="bar-btn primary" onclick="savePageInfo()" style="width:auto;padding:10px 20px">Save Page Info</button>
+          <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border)">
+            <div style="color:var(--red);font-size:14px;font-weight:600;margin-bottom:10px">Danger Zone</div>
+            <button class="bar-btn danger" onclick="confirmDelete()" style="width:auto;padding:10px 20px">🗑️ Delete This Page</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-ov" id="deleteModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('deleteModal')">✕</button>
+    <div class="modal-title">🗑️ Delete Page</div>
+    <div class="modal-sub">This will permanently remove the page from your empire.</div>
+    <div style="background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:var(--r);padding:14px;font-size:14px;color:#f1948a;margin-bottom:8px;">
+      Deleting: <strong id="deletePageName"></strong>
+    </div>
+    <div class="modal-actions">
+      <button class="mbtn g" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="mbtn d" onclick="deletePage()">Delete Forever</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ CONSTANTS ════════════════════════════════════════════
+const PASS_KEY = 'se_pass';
+const PAGES_KEY = 'se_pages';
+const DEFAULT_PASS = 'Sufiyan Panel Active';
+
+// Built-in pages (can be edited but not deleted from empire)
+const BUILTIN_PAGES = [
+  {slug:'antilodge',title:'Home — Anti Lodge',cat:'Core Pages',builtin:true},
+  {slug:'about',title:'About Us',cat:'Core Pages',builtin:true},
+  {slug:'founder',title:"Founder's Message",cat:'Core Pages',builtin:true},
+  {slug:'mission',title:'Mission & Vision',cat:'Core Pages',builtin:true},
+  {slug:'why-us',title:'Why Choose Us',cat:'Core Pages',builtin:true},
+  {slug:'facilities',title:'Facilities',cat:'Core Pages',builtin:true},
+  {slug:'rooms',title:'All Rooms',cat:'Rooms & Booking',builtin:true},
+  {slug:'room-types',title:'Room Types',cat:'Rooms & Booking',builtin:true},
+  {slug:'pricing',title:'Pricing',cat:'Rooms & Booking',builtin:true},
+  {slug:'availability',title:'Availability',cat:'Rooms & Booking',builtin:true},
+  {slug:'booking',title:'Book a Room',cat:'Rooms & Booking',builtin:true},
+  {slug:'apply',title:'Apply / Admission',cat:'Rooms & Booking',builtin:true},
+  {slug:'waiting-list',title:'Waiting List',cat:'Rooms & Booking',builtin:true},
+  {slug:'life',title:'Student Life',cat:'Student Life',builtin:true},
+  {slug:'daily-routine',title:'Daily Routine',cat:'Student Life',builtin:true},
+  {slug:'study-env',title:'Study Environment',cat:'Student Life',builtin:true},
+  {slug:'events',title:'Events',cat:'Student Life',builtin:true},
+  {slug:'community',title:'Community',cat:'Student Life',builtin:true},
+  {slug:'achievements',title:'Achievements',cat:'Achievements',builtin:true},
+  {slug:'success-stories',title:'Success Stories',cat:'Achievements',builtin:true},
+  {slug:'alumni',title:'Alumni Network',cat:'Achievements',builtin:true},
+  {slug:'testimonials',title:'Testimonials',cat:'Achievements',builtin:true},
+  {slug:'study-resources',title:'Study Resources',cat:'Student Support',builtin:true},
+  {slug:'exam-tips',title:'Exam Tips',cat:'Student Support',builtin:true},
+  {slug:'career',title:'Career Guidance',cat:'Student Support',builtin:true},
+  {slug:'coaching',title:'Nearby Coaching',cat:'Student Support',builtin:true},
+  {slug:'location',title:'Location & Map',cat:'Local Info',builtin:true},
+  {slug:'nearby-essentials',title:'Nearby Essentials',cat:'Local Info',builtin:true},
+  {slug:'food',title:'Food & Mess',cat:'Local Info',builtin:true},
+  {slug:'transport',title:'Transport Guide',cat:'Local Info',builtin:true},
+  {slug:'gallery',title:'Photo Gallery',cat:'Media',builtin:true},
+  {slug:'video-gallery',title:'Video Gallery',cat:'Media',builtin:true},
+  {slug:'virtual-tour',title:'Virtual Tour',cat:'Media',builtin:true},
+  {slug:'photo-memories',title:'Photo Memories',cat:'Media',builtin:true},
+  {slug:'blog',title:'Blog',cat:'Media',builtin:true},
+  {slug:'notice-board',title:'Notice Board',cat:'Services',builtin:true},
+  {slug:'announcements',title:'Announcements',cat:'Services',builtin:true},
+  {slug:'events-calendar',title:'Events Calendar',cat:'Services',builtin:true},
+  {slug:'complaint',title:'Complaint Portal',cat:'Services',builtin:true},
+  {slug:'suggestion',title:'Suggestion Box',cat:'Services',builtin:true},
+  {slug:'maintenance',title:'Maintenance',cat:'Services',builtin:true},
+  {slug:'lost-found',title:'Lost & Found',cat:'Services',builtin:true},
+  {slug:'parents',title:'Parents Corner',cat:'Parents',builtin:true},
+  {slug:'safety-parents',title:'Safety for Parents',cat:'Parents',builtin:true},
+  {slug:'parent-contact',title:'Parent Contact Guide',cat:'Parents',builtin:true},
+  {slug:'payment',title:'Payment / UPI',cat:'Payment',builtin:true},
+  {slug:'payment-guide',title:'Payment Guide',cat:'Payment',builtin:true},
+  {slug:'refund-policy',title:'Refund Policy',cat:'Payment',builtin:true},
+  {slug:'student-receipt',title:'Student Receipt',cat:'Payment',builtin:true},
+  {slug:'faq-page',title:'FAQ',cat:'Support',builtin:true},
+  {slug:'emergency',title:'Emergency',cat:'Support',builtin:true},
+  {slug:'contact-us',title:'Contact Us',cat:'Support',builtin:true},
+  {slug:'support-center',title:'Support Center',cat:'Support',builtin:true},
+  {slug:'feedback',title:'Feedback',cat:'Support',builtin:true},
+  {slug:'rules',title:'Rules',cat:'Support',builtin:true},
+  {slug:'students',title:'Our Students',cat:'Core Pages',builtin:true},
+  {slug:'student-dashboard',title:'Student Dashboard',cat:'Core Pages',builtin:true},
+  {slug:'connect',title:'All Links',cat:'Core Pages',builtin:true},
+  {slug:'birthday',title:'Birthday Page',cat:'Core Pages',builtin:true},
+];
+
+let monacoEditor = null;
+let currentPage = null;
+let currentView = 'code';
+let hasUnsavedChanges = false;
+let deleteTarget = null;
+let uploadMethod = 'file';
+let fileContent = '';
+
+// ══ STARS ════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('starsContainer');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;opacity:${Math.random()*.8}`;
+    c.appendChild(s);
+  }
+})();
+
+// ══ AUTH ═════════════════════════════════════════════════
+function getPass(){return localStorage.getItem(PASS_KEY)||DEFAULT_PASS;}
+function doLogin(){
+  if(document.getElementById('lpass').value===getPass()){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('shell').style.display='flex';
+    init();
+    toast('Welcome to your Empire, Sufiyan 👑','i');
+  }else{
+    document.getElementById('lerr').classList.add('show');
+    document.getElementById('lpass').value='';
+    setTimeout(()=>document.getElementById('lerr').classList.remove('show'),3000);
+  }
+}
+function doLogout(){
+  document.getElementById('shell').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lpass').value='';
+}
+document.getElementById('lpass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ══ INIT ═════════════════════════════════════════════════
+function init(){
+  setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN'),1000);
+  renderSidebar();
+  renderDashboard();
+  initMonaco();
+  setupDragDrop();
+}
+
+// ══ PAGES DATA ════════════════════════════════════════════
+function getCustomPages(){
+  try{return JSON.parse(localStorage.getItem(PAGES_KEY)||'[]');}catch{return[];}
+}
+function saveCustomPages(p){localStorage.setItem(PAGES_KEY,JSON.stringify(p));}
+function getAllPages(){
+  const custom=getCustomPages();
+  return [...BUILTIN_PAGES,...custom];
+}
+
+// ══ SIDEBAR ══════════════════════════════════════════════
+function renderSidebar(){
+  const q=(document.getElementById('sidebarSearch')?.value||'').toLowerCase();
+  const pages=getAllPages().filter(p=>!q||(p.title+p.slug).toLowerCase().includes(q));
+  const catMap={};
+  pages.forEach(p=>{if(!catMap[p.cat])catMap[p.cat]=[];catMap[p.cat].push(p);});
+
+  let html='';
+  Object.entries(catMap).forEach(([cat,catPages])=>{
+    html+=`<div style="font-size:9px;letter-spacing:2px;color:var(--text3);padding:10px 12px 4px;font-weight:700">${cat.toUpperCase()}</div>`;
+    catPages.forEach(p=>{
+      const isActive=currentPage&&currentPage.slug===p.slug;
+      const pageIcons={'Core Pages':'🏠','Rooms & Booking':'🛏️','Student Life':'🎓','Achievements':'🏆','Student Support':'📚','Local Info':'📍','Media':'📸','Services':'🛠️','Parents':'👨‍👩‍👦','Payment':'💳','Support':'🆘','Custom':'📄'};
+      const ic=pageIcons[p.cat]||'📄';
+      html+=`<div class="page-item${isActive?' active':''}" onclick="editPage('${p.slug}')">
+        <span class="page-item-ic">${ic}</span>
+        <div style="flex:1;min-width:0">
+          <div class="page-item-name">${p.title}</div>
+          <span class="page-item-url">/${p.slug}</span>
+        </div>
+        <div class="page-item-actions" onclick="event.stopPropagation()">
+          <button class="page-action-btn edit" onclick="editPage('${p.slug}')">✏️</button>
+          ${!p.builtin?`<button class="page-action-btn del" onclick="confirmDeleteFromSidebar('${p.slug}')">🗑️</button>`:''}
+        </div>
+      </div>`;
+    });
+  });
+  document.getElementById('sidebarList').innerHTML=html||'<div style="text-align:center;color:var(--text3);padding:28px;font-size:13px">No pages found</div>';
+}
+
+// ══ DASHBOARD ════════════════════════════════════════════
+function renderDashboard(){
+  const all=getAllPages();
+  const custom=getCustomPages();
+  const cats=new Set(all.map(p=>p.cat)).size;
+  document.getElementById('dashStats').innerHTML=`
+    <div class="ds" style="--ds-c:#d4a843"><div class="ds-ic">📄</div><div class="ds-num">${all.length}</div><div class="ds-lbl">TOTAL PAGES</div></div>
+    <div class="ds" style="--ds-c:#2ecc71"><div class="ds-ic">✨</div><div class="ds-num">${custom.length}</div><div class="ds-lbl">CUSTOM PAGES</div></div>
+    <div class="ds" style="--ds-c:#3b7dd8"><div class="ds-ic">🏗️</div><div class="ds-num">${BUILTIN_PAGES.length}</div><div class="ds-lbl">BUILT-IN PAGES</div></div>
+    <div class="ds" style="--ds-c:#9b59b6"><div class="ds-ic">🗂️</div><div class="ds-num">${cats}</div><div class="ds-lbl">CATEGORIES</div></div>`;
+  document.getElementById('pageCount').textContent=all.length;
+  const catIcons={'Core Pages':'🏠','Rooms & Booking':'🛏️','Student Life':'🎓','Achievements':'🏆','Student Support':'📚','Local Info':'📍','Media':'📸','Services':'🛠️','Parents':'👨‍👩‍👦','Payment':'💳','Support':'🆘','Custom':'📄'};
+  document.getElementById('dpGrid').innerHTML=all.map(p=>`
+    <div class="dp-tile" onclick="editPage('${p.slug}')">
+      <div class="dp-tile-ic">${catIcons[p.cat]||'📄'}</div>
+      <div class="dp-tile-name">${p.title}</div>
+      <div class="dp-tile-url">/${p.slug}</div>
+      <span class="dp-tile-badge ${p.builtin?'builtin':'custom'}">${p.builtin?'Built-in':'Custom'}</span>
+    </div>`).join('');
+}
+
+// ══ MONACO EDITOR ════════════════════════════════════════
+function initMonaco(){
+  require.config({paths:{vs:'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs'}});
+  require(['vs/editor/editor.main'],function(){
+    monacoEditor=monaco.editor.create(document.getElementById('monacoEditor'),{
+      value:'',language:'html',theme:'vs-dark',
+      fontSize:14,fontFamily:"'DM Mono',monospace",
+      minimap:{enabled:false},wordWrap:'on',
+      lineNumbers:'on',scrollBeyondLastLine:false,
+      automaticLayout:true,
+      tabSize:2,insertSpaces:true,
+      folding:true,
+      bracketPairColorization:{enabled:true},
+      formatOnPaste:true,
+    });
+    monacoEditor.onDidChangeModelContent(()=>{
+      if(!hasUnsavedChanges){
+        hasUnsavedChanges=true;
+        setSaveStatus('unsaved');
+      }
+    });
+  });
+}
+
+// ══ EDIT PAGE ════════════════════════════════════════════
+function editPage(slug){
+  const page=getAllPages().find(p=>p.slug===slug);
+  if(!page)return;
+  currentPage=page;
+
+  // Try load saved content from localStorage
+  const savedContent=localStorage.getItem('se_content_'+slug)||'';
+  const defaultContent=savedContent||generateDefaultContent(page);
+
+  if(monacoEditor){
+    monacoEditor.setValue(defaultContent);
+    monacoEditor.setScrollPosition({scrollTop:0});
+  }
+
+  // Update editor bar
+  document.getElementById('editingSlug').textContent='/'+slug;
+  document.getElementById('editBadge').textContent=page.builtin?'built-in':'custom';
+  document.getElementById('editorTabName').textContent=page.title.slice(0,16)+(page.title.length>16?'...':'');
+  document.getElementById('editorTab').style.display='flex';
+
+  // Update info tab
+  document.getElementById('ei_title').value=page.title;
+  document.getElementById('ei_slug').value=page.slug;
+  document.getElementById('ei_cat').value=page.cat;
+
+  hasUnsavedChanges=false;
+  setSaveStatus('saved');
+  showPanel('editor',document.getElementById('editorTab'));
+  renderSidebar();
+}
+
+function generateDefaultContent(page){
+  // For built-in pages, show a placeholder pointing to the real file
+  return `<!-- 
+  📄 PAGE: ${page.title}
+  🔗 URL: /${page.slug}
+  
+  This is a built-in Anti Lodge page.
+  
+  To edit this page:
+  1. Open the actual HTML file from your computer
+  2. Copy the code
+  3. Paste it here and click Save
+  
+  Your edits will be stored locally and you can copy-paste
+  the final code back to your GitHub repository.
+  
+  Or paste your new code below:
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>${page.title} | Anti Lodge</title>
+</head>
+<body>
+  <h1>${page.title}</h1>
+  <p>Paste your full HTML code here...</p>
+</body>
+</html>`;
+}
+
+// ══ SAVE PAGE ════════════════════════════════════════════
+function savePage(){
+  if(!currentPage||!monacoEditor)return;
+  const content=monacoEditor.getValue();
+  if(!content.trim()){toast('Cannot save empty file!','e');return;}
+
+  setSaveStatus('saving');
+  localStorage.setItem('se_content_'+currentPage.slug,content);
+
+  setTimeout(()=>{
+    hasUnsavedChanges=false;
+    setSaveStatus('saved');
+    toast(`✅ "${currentPage.title}" saved!`,'s');
+  },400);
+}
+
+function savePageInfo(){
+  if(!currentPage)return;
+  const title=document.getElementById('ei_title').value.trim();
+  const slug=document.getElementById('ei_slug').value.trim();
+  const cat=document.getElementById('ei_cat').value;
+  if(!title||!slug){toast('Title and URL are required!','e');return;}
+  if(currentPage.builtin){
+    toast('Built-in pages info cannot be changed','i');return;
+  }
+  const pages=getCustomPages();
+  const idx=pages.findIndex(p=>p.slug===currentPage.slug);
+  if(idx!==-1){
+    // Migrate saved content if slug changed
+    if(currentPage.slug!==slug){
+      const old=localStorage.getItem('se_content_'+currentPage.slug)||'';
+      localStorage.setItem('se_content_'+slug,old);
+      localStorage.removeItem('se_content_'+currentPage.slug);
+    }
+    pages[idx]={...pages[idx],title,slug,cat};
+    saveCustomPages(pages);
+    currentPage={...currentPage,title,slug,cat};
+    document.getElementById('editingSlug').textContent='/'+slug;
+    document.getElementById('editorTabName').textContent=title.slice(0,16);
+    renderSidebar();renderDashboard();
+    toast('Page info updated!','s');
+  }
+}
+
+function setSaveStatus(state){
+  const dot=document.getElementById('saveDot');
+  const txt=document.getElementById('saveText');
+  dot.className='save-dot '+state;
+  if(state==='saved'){txt.textContent='All changes saved';}
+  else if(state==='unsaved'){txt.textContent='Unsaved changes';}
+  else{txt.textContent='Saving...';}
+}
+
+// ══ CREATE PAGE ══════════════════════════════════════════
+function createPage(){
+  const title=document.getElementById('newTitle').value.trim();
+  const slug=document.getElementById('newSlug').value.trim();
+  const cat=document.getElementById('newCat').value;
+  if(!title){toast('Please enter a page title!','e');return;}
+  if(!slug){toast('Please enter a page URL!','e');return;}
+  if(!/^[a-z0-9-]+$/.test(slug)){toast('URL: only lowercase letters, numbers and hyphens!','e');return;}
+
+  // Check duplicate
+  if(getAllPages().find(p=>p.slug===slug)){toast('A page with this URL already exists!','e');return;}
+
+  // Get code
+  let code='';
+  if(uploadMethod==='file') code=fileContent;
+  else if(uploadMethod==='paste') code=document.getElementById('codeInput').value.trim();
+  else if(uploadMethod==='template') code=getTemplateCode(slug,title);
+
+  if(!code){
+    // Use blank template
+    code=`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google-site-verification" content="rDOPHZZI1ySXFZI8hlRiybdmiYGMTodknAoOZ4Wyab0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>${title} | Anti Lodge Bahadurganj</title>
+</head>
+<body>
+  <h1>${title}</h1>
+  <p>Edit this page from the Sufiyan Empire editor.</p>
+</body>
+</html>`;
+  }
+
+  // Save to custom pages
+  const pages=getCustomPages();
+  const newPage={slug,title,cat,builtin:false,createdAt:new Date().toISOString()};
+  pages.push(newPage);
+  saveCustomPages(pages);
+  localStorage.setItem('se_content_'+slug,code);
+
+  // Reset form
+  document.getElementById('newTitle').value='';
+  document.getElementById('newSlug').value='';
+  fileContent='';
+  document.getElementById('dzSelected').classList.remove('show');
+
+  renderSidebar();renderDashboard();
+  toast(`Page "/${slug}" created!`,'s');
+
+  // Go to editor
+  setTimeout(()=>editPage(slug),300);
+}
+
+// ══ DELETE PAGE ══════════════════════════════════════════
+function confirmDelete(){
+  if(!currentPage||currentPage.builtin){toast('Built-in pages cannot be deleted','i');return;}
+  deleteTarget=currentPage.slug;
+  document.getElementById('deletePageName').textContent=currentPage.title+' (/'+currentPage.slug+')';
+  document.getElementById('deleteModal').classList.add('show');
+}
+function confirmDeleteFromSidebar(slug){
+  const page=getAllPages().find(p=>p.slug===slug);
+  if(!page||page.builtin)return;
+  deleteTarget=slug;
+  document.getElementById('deletePageName').textContent=page.title+' (/'+slug+')';
+  document.getElementById('deleteModal').classList.add('show');
+}
+function deletePage(){
+  const pages=getCustomPages().filter(p=>p.slug!==deleteTarget);
+  saveCustomPages(pages);
+  localStorage.removeItem('se_content_'+deleteTarget);
+  if(currentPage&&currentPage.slug===deleteTarget){
+    currentPage=null;
+    document.getElementById('editorTab').style.display='none';
+    showPanel('dashboard',document.querySelector('[onclick*=dashboard]'));
+  }
+  closeModal('deleteModal');
+  renderSidebar();renderDashboard();
+  toast('Page deleted','s');
+}
+
+// ══ PREVIEW & VIEW ═══════════════════════════════════════
+function toggleView(mode){
+  if(mode==='preview'){
+    currentView=currentView==='preview'?'code':'preview';
+    const frame=document.getElementById('splitFrame').parentElement;
+    if(currentView==='preview'){
+      // Full preview
+      document.getElementById('editorWrapper').style.display='none';
+      document.getElementById('splitDivider').style.display='none';
+      document.getElementById('splitPreview').style.display='block';
+      updatePreview();
+    }else{
+      document.getElementById('editorWrapper').style.display='flex';
+      document.getElementById('editorWrapper').style.flex='1';
+      document.getElementById('splitDivider').style.display='none';
+      document.getElementById('splitPreview').style.display='none';
+    }
+  }else if(mode==='split'){
+    currentView=currentView==='split'?'code':'split';
+    if(currentView==='split'){
+      document.getElementById('editorWrapper').style.flex='1';
+      document.getElementById('splitDivider').style.display='block';
+      document.getElementById('splitPreview').style.display='block';
+      document.getElementById('editorWrapper').style.display='flex';
+      updatePreview();
+      // Resize on change
+      if(monacoEditor)monacoEditor.onDidChangeModelContent(()=>updatePreview());
+    }else{
+      document.getElementById('splitDivider').style.display='none';
+      document.getElementById('splitPreview').style.display='none';
+    }
+  }
+  if(monacoEditor)monacoEditor.layout();
+}
+
+function updatePreview(){
+  const code=monacoEditor?monacoEditor.getValue():'';
+  const frame=document.getElementById('splitFrame');
+  const doc=frame.contentDocument||frame.contentWindow.document;
+  doc.open();doc.write(code);doc.close();
+}
+
+function openLivePage(){
+  if(currentPage)window.open('/'+currentPage.slug,'_blank');
+}
+function openPage(url){window.open(url,'_blank');}
+
+// ══ EDITOR TABS ══════════════════════════════════════════
+function setEditorTab(tab,el){
+  document.querySelectorAll('.e-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab==='code'){
+    document.getElementById('editorMain').style.display='flex';
+    document.getElementById('editorInfoTab').style.display='none';
+  }else{
+    document.getElementById('editorMain').style.display='none';
+    document.getElementById('editorInfoTab').style.display='block';
+  }
+}
+
+// ══ PANELS ═══════════════════════════════════════════════
+function showPanel(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='editor'&&monacoEditor)setTimeout(()=>monacoEditor.layout(),50);
+}
+
+// ══ UPLOAD METHODS ════════════════════════════════════════
+function setUploadTab(method,el){
+  uploadMethod=method;
+  document.querySelectorAll('.up-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['file','paste','template'].forEach(m=>{
+    const el2=document.getElementById('upMethod-'+m);
+    if(el2)el2.style.display=m===method?'block':'none';
+  });
+}
+
+function setupDragDrop(){
+  const dz=document.getElementById('dropzone');
+  if(!dz)return;
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();dz.classList.remove('dragover');
+    const file=e.dataTransfer.files[0];
+    if(file&&(file.name.endsWith('.html')||file.name.endsWith('.htm'))){
+      readFile(file);
+      // Auto-fill slug from filename
+      const slug=file.name.replace(/\.(html|htm)$/,'').replace(/[^a-z0-9-]/gi,'-').toLowerCase();
+      document.getElementById('newSlug').value=slug;
+    }else toast('Please upload an HTML file!','e');
+  });
+}
+
+function handleFileSelect(inp){
+  const file=inp.files[0];
+  if(!file)return;
+  if(!file.name.endsWith('.html')&&!file.name.endsWith('.htm')){toast('Only HTML files allowed!','e');return;}
+  readFile(file);
+  const slug=file.name.replace(/\.(html|htm)$/,'').replace(/[^a-z0-9-]/gi,'-').toLowerCase();
+  if(!document.getElementById('newSlug').value)document.getElementById('newSlug').value=slug;
+  if(!document.getElementById('newTitle').value)document.getElementById('newTitle').value=file.name.replace(/\.(html|htm)$/,'').replace(/[-_]/g,' ');
+}
+function readFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    fileContent=e.target.result;
+    const dz=document.getElementById('dzSelected');
+    dz.textContent='✅ '+file.name+' ('+Math.round(file.size/1024)+'KB) — Ready to create!';
+    dz.classList.add('show');
+    toast('File loaded: '+file.name,'s');
+  };
+  reader.readAsText(file);
+}
+
+function sanitizeSlug(inp){
+  inp.value=inp.value.toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-');
+}
+
+// ══ TEMPLATES ════════════════════════════════════════════
+function getTemplateCode(slug,title){
+  const t=document.getElementById('templateSelect')?.value||'blank';
+  const base=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="rDOPHZZI1ySXFZI8hlRiybdmiYGMTodknAoOZ4Wyab0" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${title} | Anti Lodge Bahadurganj</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">`;
+  if(t==='blank')return base+`
+<style>
+body{font-family:'DM Sans',sans-serif;color:#1a1a2e;background:#fafaf8;padding:60px 5%;}
+h1{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;margin-bottom:16px;}
+p{color:#6a6a8a;font-size:16px;line-height:1.8;}
+</style>
+</head>
+<body>
+<h1>${title}</h1>
+<p>This is a blank Anti Lodge page. Start editing!</p>
+</body>
+</html>`;
+
+  if(t==='form')return base+`
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;color:#1a1a2e;background:#fafaf8;}
+.hero{background:linear-gradient(135deg,#0b0f1a,#1e3a5f);padding:60px 5%;color:#fff;text-align:center;}
+.hero h1{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;margin-bottom:8px;}
+.sec{padding:60px 5%;max-width:680px;margin:0 auto;}
+.card{background:#fff;border:1.5px solid rgba(37,99,235,.1);border-radius:16px;padding:32px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a2e;background:#f8fafc;outline:none;}
+.field textarea{resize:none;min-height:90px;}
+.btn{width:100%;padding:13px;background:#1a4a3c;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="hero"><h1>${title}</h1><p>Fill the form below — your message will be sent to our team.</p></div>
+<div class="sec"><div class="card">
+<div class="field"><label>Your Name *</label><input type="text" id="fn" placeholder="Full name"></div>
+<div class="field"><label>Mobile Number *</label><input type="tel" id="fp" placeholder="10-digit" maxlength="10"></div>
+<div class="field"><label>Message</label><textarea id="fm" placeholder="Write your message..."></textarea></div>
+<button class="btn" onclick="var n=document.getElementById('fn').value,p=document.getElementById('fp').value;if(!n||!p){alert('Fill required fields!');return;}window.open('https://wa.me/919942346634?text='+encodeURIComponent('${title}\\nName: '+n+'\\nPhone: '+p+'\\nMsg: '+document.getElementById('fm').value),'_blank')">💬 Submit via WhatsApp</button>
+</div></div>
+</body>
+</html>`;
+
+  return base+`</head><body><h1>${title}</h1></body></html>`;
+}
+
+function loadTemplate(){
+  const t=document.getElementById('templateSelect').value;
+  if(!t)return;
+  const title=document.getElementById('newTitle').value||'New Page';
+  const slug=document.getElementById('newSlug').value||'new-page';
+  const code=getTemplateCode(slug,title);
+  document.getElementById('templatePreview').innerHTML=`<div style="background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);max-height:200px;overflow:auto;white-space:pre">${code.replace(/</g,'&lt;').slice(0,500)}...</div><div style="font-size:12px;color:var(--text3);margin-top:8px">✅ Template ready — click Create Page to use it</div>`;
+}
+
+// ══ MODAL ════════════════════════════════════════════════
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+// ══ TOAST ════════════════════════════════════════════════
+function toast(msg,type='s'){
+  const icons={s:'✅',e:'❌',i:'👑'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]||'·'}</span><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// Ctrl+S to save
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();if(currentPage)savePage();}
+});
+</script>
+</body>
+</html>
