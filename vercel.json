@@ -18,7 +18,7 @@
     },
     {
       "source": "/mission",
-      "destination": "/mission.html"
+      "destination": "/mission.css"
     },
     {
       "source": "/why-us",
