@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti Lodge – Receipt Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --accent: #0ea5e9;
+    --accent2: #14b8a6;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --navy: #1a237e;
+    --navy-light: #283593;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .logo-box {
+    width: 48px; height: 48px;
+    border: 2.5px solid var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -1px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+  .header p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── FORM CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 540px;
+    margin-bottom: 1.5rem;
+  }
+  .card-title {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+    font-weight: 600;
+  }
+
+  .field { margin-bottom: 1.1rem; }
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--accent);
+  }
+  .field select option { background: var(--surface); }
+  .field textarea { resize: vertical; min-height: 60px; }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* receipt number auto */
+  .receipt-no-display {
+    font-size: 0.85rem;
+    color: var(--accent2);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+  .btn-secondary {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    margin-top: 10px;
+  }
+  .btn:hover { opacity: 0.9; }
+
+  /* ── PREVIEW ── */
+  #preview-section {
+    display: none;
+    width: 100%;
+    max-width: 620px;
+    margin-bottom: 1.5rem;
+  }
+  .preview-label {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  /* ── RECEIPT (the actual printable design) ── */
+  #receipt-wrapper {
+    background: #fdf6e3;
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+
+  .receipt {
+    background: #fdf6e3;
+    color: #111;
+    font-family: 'Inter', sans-serif;
+    padding: 28px 32px 22px;
+    border-radius: 6px;
+    position: relative;
+    width: 560px;
+  }
+
+  /* Top header */
+  .r-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .r-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .r-logo {
+    width: 52px; height: 52px;
+    border: 2.5px solid var(--navy);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 900;
+    color: var(--navy);
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .r-brand-text h2 {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+  .r-brand-text h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+  }
+  .r-brand-text p {
+    font-size: 0.62rem;
+    color: var(--navy);
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+  .r-no-date {
+    text-align: right;
+    font-size: 0.82rem;
+    color: var(--navy);
+    font-weight: 600;
+    line-height: 1.8;
+    border: 1.5px solid var(--navy);
+    padding: 6px 12px;
+    border-radius: 4px;
+    min-width: 130px;
+  }
+
+  /* CEO bar */
+  .r-ceo-bar {
+    border: 1.5px solid var(--navy);
+    text-align: center;
+    padding: 5px 8px;
+    margin: 8px 0 4px;
+    border-radius: 3px;
+  }
+  .r-ceo-bar p:first-child {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+  }
+  .r-ceo-bar p:last-child {
+    font-size: 0.68rem;
+    color: var(--navy);
+    letter-spacing: 1px;
+  }
+  .r-ceo-title {
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: 1px;
+    border: 1.5px solid var(--navy);
+    border-top: none;
+    padding: 4px;
+    border-radius: 0 0 3px 3px;
+    margin-bottom: 10px;
+  }
+
+  /* Divider */
+  .r-divider {
+    border: none;
+    border-top: 1.5px solid var(--navy);
+    margin: 8px 0;
+  }
+
+  /* Fields */
+  .r-date-row {
+    text-align: right;
+    font-size: 0.82rem;
+    color: #111;
+    margin-bottom: 8px;
+  }
+  .r-field-line {
+    font-size: 0.82rem;
+    color: #111;
+    margin-bottom: 7px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .r-field-line span.lbl { flex-shrink: 0; font-weight: 500; }
+  .r-field-line span.val {
+    border-bottom: 1px solid #888;
+    flex: 1;
+    min-width: 80px;
+    padding-left: 4px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .r-amount-row {
+    display: flex;
+    gap: 8px;
+    font-size: 0.82rem;
+    margin-bottom: 7px;
+    align-items: baseline;
+  }
+  .r-amount-row .lbl { flex-shrink: 0; font-weight: 500; }
+  .r-amount-row .val-words {
+    border-bottom: 1px solid #888;
+    flex: 1;
+    padding-left: 4px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .r-amount-row .mid { flex-shrink: 0; font-weight: 500; }
+  .r-amount-row .val-fig {
+    border-bottom: 1px solid #888;
+    width: 90px;
+    padding-left: 4px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .r-purpose-row {
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 4px;
+    align-items: baseline;
+  }
+  .r-purpose-row .lbl { flex-shrink: 0; font-weight: 500; }
+  .r-purpose-row .val {
+    border-bottom: 1px solid #888;
+    flex: 1;
+    padding-left: 4px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  /* Table */
+  .r-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+  }
+  .r-table th {
+    background: #e8e4d0;
+    border: 1.5px solid var(--navy);
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--navy);
+    text-align: center;
+  }
+  .r-table td {
+    border: 1.5px solid var(--navy);
+    padding: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .r-table .td-amt { text-align: right; min-width: 90px; }
+  .r-table .td-blank { height: 36px; }
+  .r-table .td-total { font-weight: 800; text-align: right; }
+  .r-table .td-total-lbl { font-weight: 700; }
+
+  /* Footer */
+  .r-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 6px;
+  }
+  .r-footer-left {
+    font-size: 0.68rem;
+    color: #444;
+    max-width: 240px;
+    line-height: 1.5;
+  }
+  .r-footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .r-stamp {
+    width: 64px; height: 64px;
+    border: 2px solid var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    font-size: 0.45rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    padding: 4px;
+  }
+  .r-sig-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 18px;
+  }
+  .r-sig {
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #111;
+  }
+  .r-sig::before {
+    content: '';
+    display: block;
+    width: 130px;
+    border-top: 1.5px solid #444;
+    margin-bottom: 3px;
+  }
+
+  /* ── PAGE 2 PREVIEW ── */
+  .receipt-p2 {
+    background: #fdf6e3;
+    color: #111;
+    font-family: 'Inter', sans-serif;
+    padding: 50px 40px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 380px;
+    text-align: center;
+    width: 560px;
+  }
+  .r-thank-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+  .r-lang-thanks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .r-lang-line {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy-light);
+  }
+  .r-lang-sub {
+    font-size: 0.72rem;
+    color: #777;
+    letter-spacing: 1px;
+    margin-top: -6px;
+  }
+  .r-quote-box {
+    border-top: 1.5px solid var(--navy);
+    border-bottom: 1.5px solid var(--navy);
+    padding: 14px 20px;
+    margin-top: 10px;
+    max-width: 440px;
+  }
+  .r-quote {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: #333;
+    line-height: 1.7;
+  }
+  .r-quote-author {
+    font-size: 0.72rem;
+    color: var(--navy);
+    font-weight: 700;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  .r-p2-logo {
+    margin-top: 24px;
+    font-size: 0.7rem;
+    color: #888;
+    letter-spacing: 2px;
+  }
+
+  footer {
+    margin-top: 2rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-row">
+    <div class="logo-box">AL</div>
+    <h1>Anti Lodge</h1>
+  </div>
+  <p>Official Receipt Generator &nbsp;·&nbsp; Admin Panel</p>
+</div>
+
+<!-- FORM -->
+<div class="card">
+  <p class="card-title">Receipt Details</p>
+
+  <div class="receipt-no-display">Receipt No: <span id="display-rno">—</span></div>
+
+  <div class="field">
+    <label>Received From (Student Name)</label>
+    <input type="text" id="f-name" placeholder="e.g. Mohammad Ali Khan" oninput="liveUpdate()">
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label>Room Number</label>
+      <input type="text" id="f-room" placeholder="e.g. 204" oninput="liveUpdate()">
+    </div>
+    <div class="field">
+      <label>Room Price (₹/month)</label>
+      <input type="number" id="f-roomprice" placeholder="e.g. 3500" oninput="liveUpdate()">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Amount Received (₹)</label>
+    <input type="number" id="f-amount" placeholder="e.g. 7000" oninput="liveUpdate()">
+  </div>
+
+  <div class="field">
+    <label>Purpose of Payment</label>
+    <input type="text" id="f-purpose" placeholder="e.g. Room Rent – June & July 2025" oninput="liveUpdate()">
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label>Date</label>
+      <input type="date" id="f-date" oninput="liveUpdate()">
+    </div>
+    <div class="field">
+      <label>Receipt Number</label>
+      <input type="text" id="f-recno" placeholder="Auto / Manual" oninput="liveUpdate()">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="generateReceipt()">Generate Receipt</button>
+</div>
+
+<!-- PREVIEW -->
+<div id="preview-section">
+  <p class="preview-label">Preview — Page 1</p>
+  <div id="receipt-wrapper">
+    <div class="receipt" id="receipt-p1">
+
+      <div class="r-header">
+        <div class="r-brand">
+          <div class="r-logo">AL</div>
+          <div class="r-brand-text">
+            <h2>ANTI LODGE</h2>
+            <h3>OFFICIAL RECEIPT</h3>
+            <p>HOME AWAY FROM HOME – STUDENT ECOSYSTEM</p>
+          </div>
+        </div>
+        <div class="r-no-date">
+          <div>No. &nbsp;<span id="r-no">____</span></div>
+          <div>Date &nbsp;<span id="r-hdate">__/__/__</span></div>
+        </div>
+      </div>
+
+      <div class="r-ceo-bar">
+        <p>FOUNDER/CEO: SUFIYAN ABSAR</p>
+        <p>REGISTERED OFFICE: BAHADURGANJ, INDIA</p>
+      </div>
+      <div class="r-ceo-title">CEO: SUFIYAN ABSAR</div>
+
+      <div class="r-date-row">Date: &nbsp;<span id="r-date2">____/____/________</span></div>
+
+      <div class="r-field-line">
+        <span class="lbl">Received from (Mr./Ms./Organization):</span>
+        <span class="val" id="r-name">__________________________</span>
+      </div>
+
+      <div class="r-amount-row">
+        <span class="lbl">Sum of Rupees (in words):</span>
+        <span class="val-words" id="r-words">__________________________</span>
+        <span class="mid">and figures):</span>
+        <span class="val-fig" id="r-fig">__________</span>
+      </div>
+
+      <div class="r-purpose-row">
+        <span class="lbl">Purpose of Payment (e.g., Room Rent, Admission Fee):</span>
+        <span class="val" id="r-purpose">__________________________</span>
+      </div>
+
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th style="width:70%">PARTICULARS</th>
+            <th>AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="r-particular" class="td-blank"></td>
+            <td class="td-amt td-blank" id="r-amt-cell"></td>
+          </tr>
+          <tr>
+            <td class="td-total-lbl">TOTAL</td>
+            <td class="td-total td-amt" id="r-total">₹ ——</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="r-footer">
+        <div class="r-footer-left">
+          This is an official receipt of the Anti Lodge Association.<br>
+          All contributions are acknowledged. Thank you for your support.<br><br>
+          For more information, contact: CEO Sufiyan Absar at<br>
+          antilodge.vercel.app
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:16px;">
+          <div class="r-stamp">
+            <div style="font-size:0.55rem;letter-spacing:1px;">ANTI LODGE</div>
+            <div style="font-size:0.9rem; font-weight:900; margin:2px 0;">AL</div>
+            <div style="font-size:0.45rem; letter-spacing:0.5px;">BAHADURGANJ</div>
+          </div>
+          <div class="r-sig-block">
+            <div class="r-sig">Authorised Signatory</div>
+            <div class="r-sig">Receiver's Signature</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /receipt-p1 -->
+  </div><!-- /wrapper -->
+
+  <p class="preview-label" style="margin-top:16px">Preview — Page 2</p>
+  <div id="receipt-wrapper2" style="background:#fdf6e3; border-radius:10px; padding:6px; box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+    <div class="receipt-p2" id="receipt-p2">
+      <div class="r-thank-title">THANK YOU</div>
+      <div class="r-lang-thanks">
+        <div>
+          <div class="r-lang-line">شکریہ &nbsp;—&nbsp; Shukriya</div>
+          <div class="r-lang-sub">URDU</div>
+        </div>
+        <div>
+          <div class="r-lang-line">धन्यवाद &nbsp;—&nbsp; Dhanyavaad</div>
+          <div class="r-lang-sub">HINDI</div>
+        </div>
+        <div>
+          <div class="r-lang-line">Thank You &nbsp;—&nbsp; We Appreciate You</div>
+          <div class="r-lang-sub">ENGLISH</div>
+        </div>
+      </div>
+      <div class="r-quote-box">
+        <div class="r-quote">
+          "Education is the most powerful weapon which you can use to change the world.
+          Anti Lodge is proud to be a part of your journey."
+        </div>
+        <div class="r-quote-author">— Anti Lodge &nbsp;·&nbsp; Home Away From Home</div>
+      </div>
+      <div class="r-p2-logo">ANTI LODGE &nbsp;·&nbsp; BAHADURGANJ, KISHANGANJ, BIHAR &nbsp;·&nbsp; antilodge.vercel.app</div>
+    </div>
+  </div>
+
+  <button class="btn btn-secondary" onclick="downloadPDF()">⬇ Download as PDF</button>
+</div>
+
+<footer>Anti Lodge &nbsp;·&nbsp; Lumivox Studios &nbsp;·&nbsp; Sufiyan Absar</footer>
+
+<script>
+// ── AUTO INIT ──
+window.onload = () => {
+  const today = new Date();
+  document.getElementById('f-date').value = today.toISOString().split('T')[0];
+  const rno = 'AL-' + String(Math.floor(Math.random() * 9000) + 1000);
+  document.getElementById('f-recno').value = rno;
+  document.getElementById('display-rno').textContent = rno;
+  liveUpdate();
+};
+
+// ── NUMBER TO WORDS ──
+function numToWords(n) {
+  const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine',
+             'Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen',
+             'Seventeen','Eighteen','Nineteen'];
+  const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  if (n === 0) return 'Zero';
+  if (n < 20) return a[n];
+  if (n < 100) return b[Math.floor(n/10)] + (n%10 ? ' ' + a[n%10] : '');
+  if (n < 1000) return a[Math.floor(n/100)] + ' Hundred' + (n%100 ? ' ' + numToWords(n%100) : '');
+  if (n < 100000) return numToWords(Math.floor(n/1000)) + ' Thousand' + (n%1000 ? ' ' + numToWords(n%1000) : '');
+  if (n < 10000000) return numToWords(Math.floor(n/100000)) + ' Lakh' + (n%100000 ? ' ' + numToWords(n%100000) : '');
+  return numToWords(Math.floor(n/10000000)) + ' Crore' + (n%10000000 ? ' ' + numToWords(n%10000000) : '');
+}
+
+function fmtDate(val) {
+  if (!val) return '__/__/____';
+  const [y,m,d] = val.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function liveUpdate() {
+  const rno = document.getElementById('f-recno').value;
+  document.getElementById('display-rno').textContent = rno || '—';
+}
+
+// ── GENERATE ──
+function generateReceipt() {
+  const name     = document.getElementById('f-name').value.trim();
+  const room     = document.getElementById('f-room').value.trim();
+  const roomprice= document.getElementById('f-roomprice').value;
+  const amount   = parseFloat(document.getElementById('f-amount').value) || 0;
+  const purpose  = document.getElementById('f-purpose').value.trim();
+  const dateVal  = document.getElementById('f-date').value;
+  const recno    = document.getElementById('f-recno').value.trim();
+
+  if (!name || !amount) {
+    alert('Bhai name aur amount toh daalo!');
+    return;
+  }
+
+  const dateStr = fmtDate(dateVal);
+  const words = numToWords(amount) + ' Rupees Only';
+  const fig = '₹ ' + amount.toLocaleString('en-IN');
+  const particular = `Room No. ${room || '—'} | Room Price: ₹${Number(roomprice||0).toLocaleString('en-IN')}/month | ${purpose || 'Room Rent'}`;
+
+  // Fill receipt
+  document.getElementById('r-no').textContent = recno || '—';
+  document.getElementById('r-hdate').textContent = dateStr;
+  document.getElementById('r-date2').textContent = dateStr;
+  document.getElementById('r-name').textContent = name;
+  document.getElementById('r-words').textContent = words;
+  document.getElementById('r-fig').textContent = fig;
+  document.getElementById('r-purpose').textContent = purpose || '—';
+  document.getElementById('r-particular').textContent = particular;
+  document.getElementById('r-amt-cell').textContent = fig;
+  document.getElementById('r-total').textContent = fig;
+
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── PDF DOWNLOAD ──
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a5', orientation: 'landscape' });
+
+  // ─ PAGE 1: RECEIPT ─
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+
+  // Cream background
+  doc.setFillColor(253, 246, 227);
+  doc.rect(0, 0, W, H, 'F');
+
+  // Outer border
+  doc.setDrawColor(26, 35, 126);
+  doc.setLineWidth(0.8);
+  doc.rect(6, 6, W-12, H-12);
+
+  // ── Logo box ──
+  doc.setDrawColor(26, 35, 126);
+  doc.setLineWidth(0.6);
+  doc.rect(10, 10, 16, 16);
+  doc.setFontSize(11); doc.setFont('helvetica','bold');
+  doc.setTextColor(26, 35, 126);
+  doc.text('AL', 18, 21, { align: 'center' });
+
+  // Brand name
+  doc.setFontSize(14); doc.setFont('helvetica','bold');
+  doc.setTextColor(26, 35, 126);
+  doc.text('ANTI LODGE', 30, 16);
+  doc.setFontSize(9);
+  doc.text('OFFICIAL RECEIPT', 30, 21);
+  doc.setFontSize(6); doc.setFont('helvetica','normal');
+  doc.text('HOME AWAY FROM HOME – STUDENT ECOSYSTEM', 30, 25);
+
+  // No / Date box
+  const recno  = document.getElementById('f-recno').value || '—';
+  const dateStr= fmtDate(document.getElementById('f-date').value);
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.5);
+  doc.rect(W-52, 10, 46, 16);
+  doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.setTextColor(26,35,126);
+  doc.text(`No. ${recno}`, W-29, 17, { align: 'center' });
+  doc.text(`Date: ${dateStr}`, W-29, 23, { align: 'center' });
+
+  // CEO bar
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.5);
+  doc.rect(10, 28, W-20, 8);
+  doc.setFontSize(7); doc.setFont('helvetica','bold'); doc.setTextColor(26,35,126);
+  doc.text('FOUNDER/CEO: SUFIYAN ABSAR', W/2, 32.5, { align: 'center' });
+  doc.setFont('helvetica','normal'); doc.setFontSize(6);
+  doc.text('REGISTERED OFFICE: BAHADURGANJ, INDIA', W/2, 35.5, { align: 'center' });
+
+  doc.rect(10, 36, W-20, 6);
+  doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+  doc.text('CEO: SUFIYAN ABSAR', W/2, 40.5, { align: 'center' });
+
+  // Date field
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(30,30,30);
+  doc.text(`Date: ${dateStr}`, W-10, 48, { align: 'right' });
+
+  // Fields
+  const name = document.getElementById('r-name').textContent;
+  const words= document.getElementById('r-words').textContent;
+  const fig  = document.getElementById('r-fig').textContent;
+  const purp = document.getElementById('r-purpose').textContent;
+  const part = document.getElementById('r-particular').textContent;
+
+  let y = 53;
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(30,30,30);
+  doc.text('Received from (Mr./Ms./Organization):', 10, y);
+  doc.setFont('helvetica','bold'); doc.setTextColor(26,35,126);
+  doc.text(name, 80, y);
+  doc.setDrawColor(100,100,100); doc.setLineWidth(0.3);
+  doc.line(79, y+0.5, W-10, y+0.5);
+
+  y += 8;
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text('Sum of Rupees (in words):', 10, y);
+  doc.setFont('helvetica','bold'); doc.setTextColor(26,35,126);
+  const wordsTrunc = doc.splitTextToSize(words, 80)[0];
+  doc.text(wordsTrunc, 56, y);
+  doc.line(55, y+0.5, 140, y+0.5);
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text('and figures):', 142, y);
+  doc.setFont('helvetica','bold'); doc.setTextColor(26,35,126);
+  doc.text(fig, 165, y);
+  doc.line(163, y+0.5, W-10, y+0.5);
+
+  y += 8;
+  doc.setFont('helvetica','normal'); doc.setTextColor(30,30,30);
+  doc.text('Purpose of Payment:', 10, y);
+  doc.setFont('helvetica','bold'); doc.setTextColor(26,35,126);
+  doc.text(purp, 48, y);
+  doc.line(47, y+0.5, W-10, y+0.5);
+
+  // Table
+  y += 5;
+  const tH = 22;
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.5);
+  // Header row
+  doc.setFillColor(232, 228, 208);
+  doc.rect(10, y, W-50, 8, 'FD');
+  doc.rect(W-40, y, 34, 8, 'FD');
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(26,35,126);
+  doc.text('PARTICULARS', (10 + W-40)/2, y+5, { align:'center' });
+  doc.text('AMOUNT', W-40+17, y+5, { align:'center' });
+
+  // Data row
+  doc.rect(10, y+8, W-50, 12, 'S');
+  doc.rect(W-40, y+8, 34, 12, 'S');
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(26,35,126);
+  const partLines = doc.splitTextToSize(part, W-56);
+  doc.text(partLines[0] || '', 12, y+15);
+  if(partLines[1]) doc.text(partLines[1], 12, y+19);
+  doc.setFont('helvetica','bold'); doc.setFontSize(7);
+  doc.text(fig, W-40+17, y+15, { align:'center' });
+
+  // Total row
+  doc.rect(10, y+20, W-50, 7, 'S');
+  doc.rect(W-40, y+20, 34, 7, 'S');
+  doc.setFont('helvetica','bold'); doc.setFontSize(7);
+  doc.text('TOTAL', 12, y+25.5);
+  doc.text(fig, W-40+17, y+25.5, { align:'center' });
+
+  // Footer
+  y += 32;
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(80,80,80);
+  doc.text('This is an official receipt of the Anti Lodge Association.', 10, y);
+  doc.text('All contributions are acknowledged. Thank you for your support.', 10, y+4);
+  doc.text('Contact: CEO Sufiyan Absar | antilodge.vercel.app', 10, y+8);
+
+  // Stamp
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.6);
+  doc.circle(W-38, y+2, 9);
+  doc.setFont('helvetica','bold'); doc.setFontSize(5); doc.setTextColor(26,35,126);
+  doc.text('ANTI LODGE', W-38, y-3, { align:'center' });
+  doc.setFontSize(9);
+  doc.text('AL', W-38, y+3.5, { align:'center' });
+  doc.setFontSize(4.5);
+  doc.text('BAHADURGANJ', W-38, y+7, { align:'center' });
+
+  // Sig lines
+  doc.setDrawColor(60,60,60); doc.setLineWidth(0.4);
+  doc.line(W-22, y-2, W-6, y-2);
+  doc.setFontSize(6); doc.setTextColor(30,30,30);
+  doc.text('Authorised Signatory', W-14, y+1, { align:'center' });
+  doc.line(W-22, y+8, W-6, y+8);
+  doc.text("Receiver's Signature", W-14, y+12, { align:'center' });
+
+  // ─ PAGE 2: THANK YOU ─
+  doc.addPage();
+  doc.setFillColor(253, 246, 227);
+  doc.rect(0, 0, W, H, 'F');
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.8);
+  doc.rect(6, 6, W-12, H-12);
+
+  // Title
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(26,35,126);
+  doc.text('THANK YOU', W/2, 30, { align:'center' });
+
+  // Decorative line
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.5);
+  doc.line(W/2-35, 33, W/2+35, 33);
+
+  // 3 languages
+  let ly = 45;
+  const langs = [
+    { main: 'شکریہ  —  Shukriya', sub: 'URDU' },
+    { main: 'धन्यवाद  —  Dhanyavaad', sub: 'HINDI' },
+    { main: 'Thank You  —  We Appreciate You', sub: 'ENGLISH' },
+  ];
+  for (const l of langs) {
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(26,35,126);
+    doc.text(l.main, W/2, ly, { align:'center' });
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120);
+    doc.text(l.sub, W/2, ly+4, { align:'center' });
+    ly += 14;
+  }
+
+  // Quote box
+  ly += 2;
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.4);
+  doc.line(W/2-60, ly, W/2+60, ly);
+  doc.setFont('helvetica','bolditalic'); doc.setFontSize(7.5); doc.setTextColor(60,60,60);
+  const quote = '"Education is the most powerful weapon which you can use to change the world. Anti Lodge is proud to be a part of your journey."';
+  const qLines = doc.splitTextToSize(quote, 110);
+  ly += 8;
+  for (const ql of qLines) {
+    doc.text(ql, W/2, ly, { align:'center' });
+    ly += 5;
+  }
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(26,35,126);
+  ly += 2;
+  doc.text('— Anti Lodge  ·  Home Away From Home', W/2, ly, { align:'center' });
+  ly += 6;
+  doc.setDrawColor(26,35,126); doc.setLineWidth(0.4);
+  doc.line(W/2-60, ly, W/2+60, ly);
+
+  // Footer
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(120,120,120);
+  doc.text('ANTI LODGE  ·  BAHADURGANJ, KISHANGANJ, BIHAR  ·  antilodge.vercel.app', W/2, H-10, { align:'center' });
+
+  // Save
+  const nm = document.getElementById('f-name').value.trim().replace(/\s+/g,'_') || 'Student';
+  const rn = document.getElementById('f-recno').value || 'receipt';
+  doc.save(`AntiLodge_Receipt_${nm}_${rn}.pdf`);
+}
+</script>
+</body>
+</html>
