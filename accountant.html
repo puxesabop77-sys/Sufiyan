@@ -1,0 +1,38 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Admin Bill</title>
+<style>
+body{font-family:Arial;margin:20px}label{display:block;margin-top:8px}
+#receipt{border:2px solid #000;padding:20px;margin-top:20px}
+input{width:100%;padding:6px}
+button{margin-top:10px;padding:10px}
+</style></head><body>
+<h2>Anti Lodge Accountant Receipt Generator</h2>
+<label>Name<input id=name></label>
+<label>Amount<input id=amt type=number></label>
+<label>Purpose<input id=purpose></label>
+<label>Room Price<input id=price></label>
+<label>Room No<input id=room></label>
+<button onclick="gen()">Generate Receipt</button>
+<button onclick="window.print()">Print / Save as PDF</button>
+<div id=receipt style="display:none">
+<h1>ANTI LODGE OFFICIAL RECEIPT</h1>
+<p><b>Name:</b> <span id=rn></span></p>
+<p><b>Amount:</b> ₹<span id=ra></span></p>
+<p><b>Purpose:</b> <span id=rp></span></p>
+<p><b>Room Price:</b> ₹<span id=rrp></span></p>
+<p><b>Room No:</b> <span id=rr></span></p>
+<hr><h3>Thank You</h3>
+<p>English: Thank you for choosing Anti Lodge.</p>
+<p>हिन्दी: एंटी लॉज चुनने के लिए धन्यवाद।</p>
+<p>اردو: اینٹی لاج کا شکریہ۔</p>
+</div>
+<script>
+function gen(){
+receipt.style.display='block';
+rn.textContent=name.value;
+ra.textContent=amt.value;
+rp.textContent=purpose.value;
+rrp.textContent=price.value;
+rr.textContent=room.value;
+}
+</script></body></html>
