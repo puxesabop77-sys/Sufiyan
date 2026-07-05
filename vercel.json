@@ -262,7 +262,12 @@
     },
     {
       "source": "/sufiyanempire",
-      "destination": "/sufiyanempire.html"
-    }
+      "destination": "/sufiyanempire.html
+    },
+    {
+      "source": "/privacy
+      "destination": "/privacy.html
+    },
+
   ]
     }
